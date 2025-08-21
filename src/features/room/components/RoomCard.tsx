@@ -51,7 +51,7 @@ export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
           mb="$3"
           p="$4"
         >
-          <XStack gap="$3" ai="center">
+          <XStack gap="$3" items="center">
             <Avatar circular size="$5" bg="$color5" opacity={0.2}>
               {room.icon ? (
                 <Text fontSize="$6">{room.icon}</Text>
@@ -61,12 +61,12 @@ export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
             </Avatar>
 
             <YStack flex={1} gap="$1">
-              <XStack jc="space-between" ai="center">
+              <XStack justify="space-between" items="center">
                 <Paragraph fontWeight="600" fontSize="$5">
                   {room.name}
                 </Paragraph>
                 {room.lastMessageAt && (
-                  <XStack gap="$1" ai="center">
+                  <XStack gap="$1" items="center">
                     <Clock size={12} opacity={0.5} />
                     <Text fontSize="$2" opacity={0.5}>
                       {formatTime(room.lastMessageAt)}
