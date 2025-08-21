@@ -4,13 +4,7 @@
     "enabled": true
   },
   "files": {
-    "ignore": [
-      ".expo/**",
-      "node_modules/**",
-      "android/**",
-      "ios/**",
-      "dist/**"
-    ]
+    "ignore": [".expo/**", "node_modules/**", "android/**", "ios/**", "dist/**"]
   },
   "linter": {
     "enabled": true,
