@@ -27,9 +27,9 @@ export interface UpdateRoomInput extends Partial<CreateRoomInput> {
   id: string;
 }
 
-export type RoomColor = 
+export type RoomColor =
   | 'blue'
-  | 'purple' 
+  | 'purple'
   | 'green'
   | 'orange'
   | 'pink'
@@ -37,7 +37,4 @@ export type RoomColor =
   | 'yellow'
   | 'gray';
 
-export type RoomSortOrder = 
-  | 'lastUpdated'
-  | 'alphabetical'
-  | 'createdAt';
+export type RoomSortOrder = 'lastUpdated' | 'alphabetical' | 'createdAt';

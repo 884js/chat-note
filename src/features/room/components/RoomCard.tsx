@@ -1,4 +1,13 @@
-import { Card, XStack, YStack, Paragraph, Avatar, Text, Theme, type ThemeName } from 'tamagui';
+import {
+  Card,
+  XStack,
+  YStack,
+  Paragraph,
+  Avatar,
+  Text,
+  Theme,
+  type ThemeName,
+} from 'tamagui';
 import { MessageCircle, Clock } from '@tamagui/lucide-icons';
 import { TouchableOpacity } from 'react-native';
 
@@ -17,7 +26,10 @@ interface RoomCardProps {
 }
 
 export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
-  console.log('RoomCard rendered:', room.id, { onPress: !!onPress, onLongPress: !!onLongPress });
+  console.log('RoomCard rendered:', room.id, {
+    onPress: !!onPress,
+    onLongPress: !!onLongPress,
+  });
 
   const handlePress = () => {
     console.log('Card pressed directly:', room.id);

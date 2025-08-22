@@ -51,7 +51,7 @@ export function MessageInput({
           borderWidth={1}
           borderColor="$borderColor"
         />
-        
+
         <Button
           size="$4"
           icon={Send}

@@ -11,32 +11,23 @@ interface EmptyStateProps {
   };
 }
 
-export function EmptyState({ title, description, icon, action }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  icon,
+  action,
+}: EmptyStateProps) {
   return (
-    <YStack
-      flex={1}
-      justify="center"
-      items="center"
-      p="$6"
-      gap="$4"
-    >
-      {icon && (
-        <YStack opacity={0.5}>
-          {icon}
-        </YStack>
-      )}
-      
+    <YStack flex={1} justify="center" items="center" p="$6" gap="$4">
+      {icon && <YStack opacity={0.5}>{icon}</YStack>}
+
       <YStack gap="$2" items="center">
         <Text fontSize="$6" fontWeight="600">
           {title}
         </Text>
-        
+
         {description && (
-          <Paragraph 
-            fontSize="$4" 
-            opacity={0.7}
-            maxW={300}
-          >
+          <Paragraph fontSize="$4" opacity={0.7} maxW={300}>
             {description}
           </Paragraph>
         )}

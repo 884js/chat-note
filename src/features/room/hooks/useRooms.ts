@@ -48,30 +48,32 @@ export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
   const fetchRooms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // 実際の実装では SQLite からデータを取得
-      await new Promise(resolve => setTimeout(resolve, 500)); // 仮の遅延
-      
+      await new Promise((resolve) => setTimeout(resolve, 500)); // 仮の遅延
+
       let sortedRooms = [...MOCK_ROOMS];
-      
+
       // ソート処理
       switch (sortOrder) {
         case 'lastUpdated':
-          sortedRooms.sort((a, b) => 
-            (b.lastMessageAt?.getTime() || 0) - (a.lastMessageAt?.getTime() || 0)
+          sortedRooms.sort(
+            (a, b) =>
+              (b.lastMessageAt?.getTime() || 0) -
+              (a.lastMessageAt?.getTime() || 0),
           );
           break;
         case 'alphabetical':
           sortedRooms.sort((a, b) => a.name.localeCompare(b.name));
           break;
         case 'createdAt':
-          sortedRooms.sort((a, b) => 
-            b.createdAt.getTime() - a.createdAt.getTime()
+          sortedRooms.sort(
+            (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
           );
           break;
       }
-      
+
       setRooms(sortedRooms);
     } catch (err) {
       setError(err as Error);
@@ -92,8 +94,8 @@ export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      
-      setRooms(prev => [newRoom, ...prev]);
+
+      setRooms((prev) => [newRoom, ...prev]);
       return newRoom;
     } catch (err) {
       setError(err as Error);
@@ -104,7 +106,7 @@ export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
   // ルーム削除
   const deleteRoom = useCallback(async (roomId: string) => {
     try {
-      setRooms(prev => prev.filter(room => room.id !== roomId));
+      setRooms((prev) => prev.filter((room) => room.id !== roomId));
     } catch (err) {
       setError(err as Error);
       throw err;

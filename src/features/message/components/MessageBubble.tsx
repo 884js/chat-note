@@ -1,6 +1,8 @@
 import { memo } from 'react';
 import { YStack, XStack, Text, Paragraph, Image } from 'tamagui';
 import { TouchableOpacity } from 'react-native';
+import { Clock, Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { formatTime } from '@/lib/dateUtils';
 import type { Message } from '../types';
 
 interface MessageBubbleProps {
@@ -14,13 +16,6 @@ export const MessageBubble = memo(function MessageBubble({
   onLongPress,
   onImagePress,
 }: MessageBubbleProps) {
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('ja-JP', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   const handleLongPress = () => {
     if (onLongPress && !message.isDeleted) {
       onLongPress(message);
@@ -35,59 +30,95 @@ export const MessageBubble = memo(function MessageBubble({
 
   if (message.isDeleted) {
     return (
-      <XStack py="$2" px="$4" opacity={0.5}>
-        <Text fontSize="$3" fontStyle="italic">
-          このメッセージは削除されました
-        </Text>
+      <XStack py="$1.5" px="$4" opacity={0.5}>
+        <YStack
+          bg="$color1"
+          rounded="$5"
+          p="$3"
+          maxW="80%"
+          borderWidth={1}
+          borderColor="$color3"
+          borderStyle="dashed"
+          opacity={0.7}
+        >
+          <XStack items="center" gap="$2">
+            <Trash2 size="$1" color="$color8" />
+            <Text fontSize="$3" fontStyle="italic" color="$color8">
+              このメッセージは削除されました
+            </Text>
+          </XStack>
+        </YStack>
       </XStack>
     );
   }
 
   return (
-    <TouchableOpacity onLongPress={handleLongPress} activeOpacity={0.7}>
-      <XStack
-        px="$4"
-        py="$2"
-        animation="quick"
-        enterStyle={{ opacity: 0, x: -20 }}
-        opacity={1}
-        x={0}
-      >
+    <TouchableOpacity onLongPress={handleLongPress} activeOpacity={0.9}>
+      <XStack px="$4" py="$1.5">
         <YStack
-          background="$gray3"
-          rounded="$4"
-          p="$3"
           maxW="80%"
-          gap="$2"
+          bg="$color1"
+          rounded="$4"
+          overflow="hidden"
+          // 柔らかい影
+          shadowColor="$shadowColor"
+          shadowOpacity={0.06}
+          shadowRadius={12}
+          shadowOffset={{ width: 0, height: 3 }}
+          elevationAndroid={1}
+          borderWidth={0.5}
+          borderColor="$color3"
         >
+          {/* 画像セクション */}
           {message.imageUri && (
-            <TouchableOpacity onPress={handleImagePress}>
+            <TouchableOpacity onPress={handleImagePress} activeOpacity={0.95}>
               <Image
                 source={{ uri: message.imageUri }}
-                width={200}
+                width="100%"
                 height={200}
-                rounded="$3"
-                resizeMode="cover"
+                objectFit="cover"
               />
             </TouchableOpacity>
           )}
-          
-          {message.content && (
-            <Paragraph fontSize="$4" color="$color12">
-              {message.content}
-            </Paragraph>
-          )}
-          
-          <XStack items="center" gap="$2">
-            <Text fontSize="$2" color="$color10">
-              {formatTime(message.createdAt)}
-            </Text>
-            {message.updatedAt > message.createdAt && (
-              <Text fontSize="$2" color="$color10">
-                (編集済み)
-              </Text>
+
+          {/* コンテンツセクション */}
+          <YStack p="$3" gap="$2">
+            {message.content && (
+              <Paragraph
+                fontSize="$4"
+                color="$color12"
+                lineHeight="$5"
+                fontWeight="400"
+                letterSpacing={0.2}
+              >
+                {message.content}
+              </Paragraph>
             )}
-          </XStack>
+
+            {/* メタ情報セクション */}
+            <XStack items="center" gap="$2" mt="$2">
+              <XStack items="center" gap="$1">
+                <Clock size="$0.5" color="$color8" />
+                <Text fontSize="$2" color="$color8" fontWeight="400">
+                  {formatTime(message.createdAt)}
+                </Text>
+              </XStack>
+
+              {message.updatedAt > message.createdAt && (
+                <>
+                  <Text fontSize="$2" color="$color7">
+                    ·
+                  </Text>
+                  <XStack items="center" gap="$0.5">
+                    <Edit3 size="$0.5" color="$color8" />
+                    <Text fontSize="$2" color="$color8" fontWeight="400">
+                      編集済み
+                    </Text>
+                  </XStack>
+                </>
+              )}
+            </XStack>
+          </YStack>
         </YStack>
       </XStack>
     </TouchableOpacity>

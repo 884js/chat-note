@@ -12,7 +12,7 @@ import { TamaguiProvider } from 'tamagui';
 import { useFonts } from 'expo-font';
 import tamaguiConfig from '../../tamagui.config';
 import { useEffect } from 'react';
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,11 +27,11 @@ export default function RootLayout() {
     if (error) throw error;
   }, [error]);
 
-    useEffect(() => {
-      if (fontsLoaded) {
-        SplashScreen.hideAsync();
-      }
-    }, [fontsLoaded]);
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;
@@ -45,16 +45,16 @@ export default function RootLayout() {
     <KeyboardProvider>
       <TamaguiProvider config={tamaguiConfig}>
         <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
         >
           <StatusBar style="auto" />
           <Stack>
-            <Stack.Screen name="index" options={{ title: "メモ一覧" }} />
+            <Stack.Screen name="index" options={{ title: 'メモ一覧' }} />
             <Stack.Screen
               name="room/[id]"
               options={{
                 headerShown: false,
-                presentation: "card",
+                presentation: 'card',
               }}
             />
           </Stack>

@@ -31,16 +31,15 @@ export const RoomList = memo(function RoomList({
       <RoomCard
         room={item}
         onPress={() => onRoomPress(item.id)}
-        onLongPress={onRoomLongPress ? () => onRoomLongPress(item.id) : undefined}
+        onLongPress={
+          onRoomLongPress ? () => onRoomLongPress(item.id) : undefined
+        }
       />
     ),
-    [onRoomPress, onRoomLongPress]
+    [onRoomPress, onRoomLongPress],
   );
 
-  const keyExtractor = useCallback(
-    (item: RoomWithLastMessage) => item.id,
-    []
-  );
+  const keyExtractor = useCallback((item: RoomWithLastMessage) => item.id, []);
 
   const ListEmptyComponent = useCallback(
     () => (
@@ -58,7 +57,7 @@ export const RoomList = memo(function RoomList({
         }
       />
     ),
-    [onCreateRoom]
+    [onCreateRoom],
   );
 
   const ListHeaderComponent = useCallback(
@@ -69,7 +68,7 @@ export const RoomList = memo(function RoomList({
         </Text>
       </YStack>
     ),
-    [rooms.length]
+    [rooms.length],
   );
 
   if (isLoading && rooms.length === 0) {

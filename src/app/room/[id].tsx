@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
-import { YStack, XStack, H2, Text, Theme, Button } from 'tamagui';
+import { YStack, XStack, Text, Theme, Button } from 'tamagui';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { ArrowLeft, MoreVertical } from '@tamagui/lucide-icons';
-import { Alert } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MessageList } from '@/features/message/components/MessageList';
 import { MessageInput } from '@/features/message/components/MessageInput';
 import { useMessages } from '@/features/message/hooks/useMessages';
@@ -12,6 +13,7 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const roomName = 'アイデアメモ'; // 仮のルーム名
 
@@ -35,7 +37,7 @@ export default function ChatScreen() {
         Alert.alert('エラー', 'メッセージの送信に失敗しました');
       }
     },
-    [id, sendMessage]
+    [id, sendMessage],
   );
 
   // メッセージ長押し
@@ -63,25 +65,21 @@ export default function ChatScreen() {
             text: '削除',
             style: 'destructive',
             onPress: () => {
-              Alert.alert(
-                '削除の確認',
-                'このメッセージを削除しますか？',
-                [
-                  { text: 'キャンセル', style: 'cancel' },
-                  {
-                    text: '削除',
-                    style: 'destructive',
-                    onPress: () => deleteMessage(message.id),
-                  },
-                ],
-              );
+              Alert.alert('削除の確認', 'このメッセージを削除しますか？', [
+                { text: 'キャンセル', style: 'cancel' },
+                {
+                  text: '削除',
+                  style: 'destructive',
+                  onPress: () => deleteMessage(message.id),
+                },
+              ]);
             },
           },
           { text: 'キャンセル', style: 'cancel' },
         ],
       );
     },
-    [deleteMessage]
+    [deleteMessage],
   );
 
   // 画像タップ
@@ -99,81 +97,87 @@ export default function ChatScreen() {
 
   // その他メニュー
   const handleMorePress = useCallback(() => {
-    Alert.alert(
-      'ルーム設定',
-      undefined,
-      [
-        {
-          text: 'ルーム情報を編集',
-          onPress: () => {
-            // TODO: 編集画面へ遷移
-            console.log('Edit room');
-          },
+    Alert.alert('ルーム設定', undefined, [
+      {
+        text: 'ルーム情報を編集',
+        onPress: () => {
+          // TODO: 編集画面へ遷移
+          console.log('Edit room');
         },
-        {
-          text: 'メッセージを検索',
-          onPress: () => {
-            // TODO: 検索画面へ遷移
-            console.log('Search messages');
-          },
+      },
+      {
+        text: 'メッセージを検索',
+        onPress: () => {
+          // TODO: 検索画面へ遷移
+          console.log('Search messages');
         },
-        {
-          text: 'エクスポート',
-          onPress: () => {
-            // TODO: エクスポート機能
-            console.log('Export messages');
-          },
+      },
+      {
+        text: 'エクスポート',
+        onPress: () => {
+          // TODO: エクスポート機能
+          console.log('Export messages');
         },
-        { text: 'キャンセル', style: 'cancel' },
-      ],
-    );
+      },
+      { text: 'キャンセル', style: 'cancel' },
+    ]);
   }, []);
 
   return (
     <>
       <Stack.Screen
         options={{
-          header: () => (
-            <XStack
-              bg="$background"
-              // pt={insets.top}
-              pb="$3"
-              px="$4"
-              borderBottomWidth={1}
-              borderBottomColor="$borderColor"
-              items="center"
-              gap="$3"
-            >
-              <Button
-                size="$3"
-                variant="outlined"
-                icon={ArrowLeft}
-                onPress={() => router.back()}
-                circular
-              />
-
-              <YStack flex={1}>
-                <H2 fontSize="$6" fontWeight="600">
-                  {roomName}
-                </H2>
-                <Text fontSize="$2" color="$color10">
-                  {id}
-                </Text>
-              </YStack>
-
-              <Button
-                size="$3"
-                variant="outlined"
-                icon={MoreVertical}
-                onPress={handleMorePress}
-                circular
-              />
-            </XStack>
-          ),
+          headerShown: false,
         }}
       />
       <Theme name="light">
         <YStack flex={1} bg="$background">
+          {/* カスタムヘッダー */}
+          <XStack
+            bg="$background"
+            pt={insets.top}
+            pb="$3"
+            px="$4"
+            borderBottomWidth={1}
+            borderBottomColor="$color4"
+            items="center"
+            gap="$3"
+            animation="quick"
+            enterStyle={{ opacity: 0, y: -10 }}
+            opacity={1}
+            y={0}
+          >
+            <Button
+              size="$4"
+              icon={ArrowLeft}
+              onPress={() => router.push('/')}
+              chromeless
+              pressStyle={{ scale: 0.95, opacity: 0.6 }}
+              animation="quick"
+              color="$primary"
+            >
+              戻る
+            </Button>
+
+            <YStack flex={1}>
+              <Text fontSize="$5" fontWeight="700" color="$color12">
+                {roomName}
+              </Text>
+              <Text fontSize="$2" color="$color10">
+                Room ID: {id}
+              </Text>
+            </YStack>
+
+            <TouchableOpacity
+              onPress={handleMorePress}
+              activeOpacity={0.7}
+              style={{ padding: 8 }}
+            >
+              <MoreVertical size="$1.5" color="$color11" />
+            </TouchableOpacity>
+          </XStack>
+
+          {/* メッセージリスト */}
           <MessageList
             messageGroups={messageGroups}
             onMessageLongPress={handleMessageLongPress}
@@ -184,7 +188,9 @@ export default function ChatScreen() {
             onRefresh={handleRefresh}
             isRefreshing={isRefreshing}
           />
-          <KeyboardAvoidingView behavior={"padding"}>
+
+          {/* メッセージ入力 */}
+          <KeyboardAvoidingView behavior={'padding'}>
             <MessageInput
               onSend={handleSend}
               placeholder="メッセージを入力..."
