@@ -2,44 +2,44 @@ import { memo, useCallback } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import { YStack, Spinner, Text } from 'tamagui';
 import { RefreshControl } from 'react-native';
-import { RoomCard } from './RoomCard';
+import { GroupCard } from './GroupCard';
 import { EmptyState } from '@/components/ui/EmptyState';
-import type { RoomWithLastMessage } from '../types';
+import type { GroupWithLastMemo } from '../types';
 import { FileText } from '@tamagui/lucide-icons';
 
-interface RoomListProps {
-  rooms: RoomWithLastMessage[];
-  onRoomPress: (roomId: string) => void;
-  onRoomLongPress?: (roomId: string) => void;
-  onCreateRoom?: () => void;
+interface GroupListProps {
+  groups: GroupWithLastMemo[];
+  onGroupPress: (groupId: string) => void;
+  onGroupLongPress?: (groupId: string) => void;
+  onCreateGroup?: () => void;
   isLoading?: boolean;
   isRefreshing?: boolean;
   onRefresh?: () => void;
 }
 
-export const RoomList = memo(function RoomList({
-  rooms,
-  onRoomPress,
-  onRoomLongPress,
-  onCreateRoom,
+export const GroupList = memo(function GroupList({
+  groups,
+  onGroupPress,
+  onGroupLongPress,
+  onCreateGroup,
   isLoading = false,
   isRefreshing = false,
   onRefresh,
-}: RoomListProps) {
+}: GroupListProps) {
   const renderItem = useCallback(
-    ({ item }: { item: RoomWithLastMessage }) => (
-      <RoomCard
-        room={item}
-        onPress={() => onRoomPress(item.id)}
+    ({ item }: { item: GroupWithLastMemo }) => (
+      <GroupCard
+        group={item}
+        onPress={() => onGroupPress(item.id)}
         onLongPress={
-          onRoomLongPress ? () => onRoomLongPress(item.id) : undefined
+          onGroupLongPress ? () => onGroupLongPress(item.id) : undefined
         }
       />
     ),
-    [onRoomPress, onRoomLongPress],
+    [onGroupPress, onGroupLongPress],
   );
 
-  const keyExtractor = useCallback((item: RoomWithLastMessage) => item.id, []);
+  const keyExtractor = useCallback((item: GroupWithLastMemo) => item.id, []);
 
   const ListEmptyComponent = useCallback(
     () => (
@@ -48,30 +48,30 @@ export const RoomList = memo(function RoomList({
         description="新しいメモグループを作成して、思いついたことを記録しましょう"
         icon={<FileText size={48} opacity={0.5} />}
         action={
-          onCreateRoom
+          onCreateGroup
             ? {
-                label: '最初のメモを作成',
-                onPress: onCreateRoom,
+                label: '最初のグループを作成',
+                onPress: onCreateGroup,
               }
             : undefined
         }
       />
     ),
-    [onCreateRoom],
+    [onCreateGroup],
   );
 
   const ListHeaderComponent = useCallback(
     () => (
       <YStack p="$4" gap="$2">
         <Text fontSize="$2" opacity={0.6}>
-          {rooms.length} 個のメモグループ
+          {groups.length} 個のグループ
         </Text>
       </YStack>
     ),
-    [rooms.length],
+    [groups.length],
   );
 
-  if (isLoading && rooms.length === 0) {
+  if (isLoading && groups.length === 0) {
     return (
       <YStack flex={1} justify="center" items="center">
         <Spinner size="large" />
@@ -82,11 +82,11 @@ export const RoomList = memo(function RoomList({
   return (
     <YStack flex={1} bg="$background">
       <FlashList
-        data={rooms}
+        data={groups}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListEmptyComponent={ListEmptyComponent}
-        ListHeaderComponent={rooms.length > 0 ? ListHeaderComponent : null}
+        ListHeaderComponent={groups.length > 0 ? ListHeaderComponent : null}
         contentContainerStyle={{
           paddingHorizontal: 16,
           paddingBottom: 100, // FABのスペース

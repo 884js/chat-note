@@ -3,17 +3,17 @@ import { XStack, Input, Button } from 'tamagui';
 import { Send } from '@tamagui/lucide-icons';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 
-interface MessageInputProps {
+interface MemoInputProps {
   onSend: (content: string) => void;
   placeholder?: string;
   isLoading?: boolean;
 }
 
-export function MessageInput({
+export function MemoInput({
   onSend,
-  placeholder = 'メッセージを入力...',
+  placeholder = 'メモを入力...',
   isLoading = false,
-}: MessageInputProps) {
+}: MemoInputProps) {
   const [message, setMessage] = useState('');
 
   const handleSend = useCallback(() => {

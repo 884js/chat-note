@@ -13,7 +13,7 @@ export const colors = {
     900: '#312E81',
     950: '#1E1B4B',
   },
-  
+
   // セカンダリカラー（スレートグレー）
   secondary: {
     50: '#F8FAFC',
@@ -28,7 +28,7 @@ export const colors = {
     900: '#0F172A',
     950: '#020617',
   },
-  
+
   // アクセントカラー（アンバー）
   accent: {
     50: '#FFFBEB',
@@ -43,7 +43,7 @@ export const colors = {
     900: '#78350F',
     950: '#451A03',
   },
-  
+
   // ルーム用カラーパレット
   roomColors: {
     blue: {
@@ -97,7 +97,7 @@ export const colors = {
       dark: '#374151',
     },
   },
-  
+
   // システムカラー
   system: {
     success: '#10B981',
@@ -105,7 +105,7 @@ export const colors = {
     error: '#F43F5E',
     info: '#3B82F6',
   },
-  
+
   // 背景色
   background: {
     light: {
@@ -119,7 +119,7 @@ export const colors = {
       tertiary: '#334155',
     },
   },
-  
+
   // テキストカラー
   text: {
     light: {
@@ -135,13 +135,13 @@ export const colors = {
       disabled: '#475569',
     },
   },
-  
+
   // ボーダーカラー
   border: {
     light: '#E2E8F0',
     dark: '#334155',
   },
-  
+
   // 影
   shadow: {
     light: 'rgba(0, 0, 0, 0.1)',

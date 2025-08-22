@@ -3,32 +3,32 @@ import { YStack, XStack, Text, Paragraph, Image } from 'tamagui';
 import { TouchableOpacity } from 'react-native';
 import { Clock, Edit3, Trash2 } from '@tamagui/lucide-icons';
 import { formatTime } from '@/lib/dateUtils';
-import type { Message } from '../types';
+import type { Memo } from '../types';
 
-interface MessageBubbleProps {
-  message: Message;
-  onLongPress?: (message: Message) => void;
+interface MemoBubbleProps {
+  memo: Memo;
+  onLongPress?: (memo: Memo) => void;
   onImagePress?: (imageUri: string) => void;
 }
 
-export const MessageBubble = memo(function MessageBubble({
-  message,
+export const MemoBubble = memo(function MemoBubble({
+  memo,
   onLongPress,
   onImagePress,
-}: MessageBubbleProps) {
+}: MemoBubbleProps) {
   const handleLongPress = () => {
-    if (onLongPress && !message.isDeleted) {
-      onLongPress(message);
+    if (onLongPress && !memo.isDeleted) {
+      onLongPress(memo);
     }
   };
 
   const handleImagePress = () => {
-    if (onImagePress && message.imageUri) {
-      onImagePress(message.imageUri);
+    if (onImagePress && memo.imageUri) {
+      onImagePress(memo.imageUri);
     }
   };
 
-  if (message.isDeleted) {
+  if (memo.isDeleted) {
     return (
       <XStack py="$1.5" px="$4" opacity={0.5}>
         <YStack
@@ -44,7 +44,7 @@ export const MessageBubble = memo(function MessageBubble({
           <XStack items="center" gap="$2">
             <Trash2 size="$1" color="$color8" />
             <Text fontSize="$3" fontStyle="italic" color="$color8">
-              このメッセージは削除されました
+              このメモは削除されました
             </Text>
           </XStack>
         </YStack>
@@ -70,10 +70,10 @@ export const MessageBubble = memo(function MessageBubble({
           borderColor="$color3"
         >
           {/* 画像セクション */}
-          {message.imageUri && (
+          {memo.imageUri && (
             <TouchableOpacity onPress={handleImagePress} activeOpacity={0.95}>
               <Image
-                source={{ uri: message.imageUri }}
+                source={{ uri: memo.imageUri }}
                 width="100%"
                 height={200}
                 objectFit="cover"
@@ -83,7 +83,7 @@ export const MessageBubble = memo(function MessageBubble({
 
           {/* コンテンツセクション */}
           <YStack p="$3" gap="$2">
-            {message.content && (
+            {memo.content && (
               <Paragraph
                 fontSize="$4"
                 color="$color12"
@@ -91,7 +91,7 @@ export const MessageBubble = memo(function MessageBubble({
                 fontWeight="400"
                 letterSpacing={0.2}
               >
-                {message.content}
+                {memo.content}
               </Paragraph>
             )}
 
@@ -100,11 +100,11 @@ export const MessageBubble = memo(function MessageBubble({
               <XStack items="center" gap="$1">
                 <Clock size="$0.5" color="$color8" />
                 <Text fontSize="$2" color="$color8" fontWeight="400">
-                  {formatTime(message.createdAt)}
+                  {formatTime(memo.createdAt)}
                 </Text>
               </XStack>
 
-              {message.updatedAt > message.createdAt && (
+              {memo.updatedAt > memo.createdAt && (
                 <>
                   <Text fontSize="$2" color="$color7">
                     ·

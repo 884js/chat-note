@@ -23,7 +23,7 @@ export const SearchBox = memo(function SearchBox({
   return (
     <XStack
       bg="$color2"
-      borderRadius="$10"
+      rounded="$10"
       px="$3"
       py="$2"
       items="center"
@@ -41,7 +41,6 @@ export const SearchBox = memo(function SearchBox({
       }}
     >
       <Search size="$1" color="$color10" />
-      
       <Input
         flex={1}
         value={value}
@@ -57,7 +56,7 @@ export const SearchBox = memo(function SearchBox({
         autoCorrect={false}
         clearButtonMode="never"
       />
-      
+
       {value.length > 0 && (
         <Button
           size="$2"

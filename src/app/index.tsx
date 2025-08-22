@@ -2,42 +2,43 @@ import { useCallback, useState, useMemo } from 'react';
 import { YStack, Text, Theme } from 'tamagui';
 import { useRouter, Stack } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RoomList } from '@/features/room/components/RoomList';
+import { GroupList } from '@/features/group/components/GroupList';
 import { FAB } from '@/components/ui/FAB';
 import { SearchBox } from '@/components/ui/SearchBox';
-import { useRooms } from '@/features/room/hooks/useRooms';
+import { useGroups } from '@/features/group/hooks/useGroups';
 import { Plus } from '@tamagui/lucide-icons';
 import { Alert } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { rooms, isLoading, refetch, deleteRoom } = useRooms('lastUpdated');
+  const { groups, isLoading, refetch, deleteGroup } = useGroups('lastUpdated');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   // 検索フィルタリング
-  const filteredRooms = useMemo(() => {
+  const filteredGroups = useMemo(() => {
     if (!searchQuery.trim()) {
-      return rooms;
+      return groups;
     }
-    
-    const query = searchQuery.toLowerCase();
-    return rooms.filter(room => 
-      room.name.toLowerCase().includes(query) ||
-      room.description?.toLowerCase().includes(query) ||
-      room.lastMessage?.toLowerCase().includes(query)
-    );
-  }, [rooms, searchQuery]);
 
-  // ルームタップ時の処理
-  const handleRoomPress = useCallback(
-    (roomId: string) => {
-      console.log('Room pressed:', roomId);
-      // チャット画面へ遷移
+    const query = searchQuery.toLowerCase();
+    return groups.filter(
+      (group) =>
+        group.name.toLowerCase().includes(query) ||
+        group.description?.toLowerCase().includes(query) ||
+        group.lastMemo?.toLowerCase().includes(query),
+    );
+  }, [groups, searchQuery]);
+
+  // グループタップ時の処理
+  const handleGroupPress = useCallback(
+    (groupId: string) => {
+      console.log('Group pressed:', groupId);
+      // メモ画面へ遷移
       try {
-        router.push(`/room/${roomId}`);
-        console.log('Navigation triggered to:', `/room/${roomId}`);
+        router.push(`/room/${groupId}`);
+        console.log('Navigation triggered to:', `/room/${groupId}`);
       } catch (error) {
         console.error('Navigation error:', error);
       }
@@ -45,19 +46,19 @@ export default function HomeScreen() {
     [router],
   );
 
-  // ルーム長押し時の処理
-  const handleRoomLongPress = useCallback(
-    (roomId: string) => {
-      const room = rooms.find((r) => r.id === roomId);
-      if (!room) return;
+  // グループ長押し時の処理
+  const handleGroupLongPress = useCallback(
+    (groupId: string) => {
+      const group = groups.find((g) => g.id === groupId);
+      if (!group) return;
 
-      Alert.alert(room.name, '選択してください', [
+      Alert.alert(group.name, 'アクションを選択', [
         {
           text: '編集',
           onPress: () => {
-            console.log(`Edit room ${roomId}`);
+            console.log(`Edit group ${groupId}`);
             // TODO: 編集画面のルートを作成後、パスを修正
-            // router.push(`/room/${roomId}/edit`);
+            // router.push(`/room/${groupId}/edit`);
           },
         },
         {
@@ -66,7 +67,7 @@ export default function HomeScreen() {
           onPress: () => {
             Alert.alert(
               '削除の確認',
-              `「${room.name}」を削除しますか？\nこの操作は取り消せません。`,
+              `グループ「${group.name}」を削除しますか？\nこの操作は取り消せません。`,
               [
                 { text: 'キャンセル', style: 'cancel' },
                 {
@@ -74,9 +75,9 @@ export default function HomeScreen() {
                   style: 'destructive',
                   onPress: async () => {
                     try {
-                      await deleteRoom(roomId);
+                      await deleteGroup(groupId);
                     } catch (error) {
-                      Alert.alert('エラー', '削除に失敗しました');
+                      Alert.alert('エラー', 'グループの削除に失敗しました');
                     }
                   },
                 },
@@ -87,12 +88,12 @@ export default function HomeScreen() {
         { text: 'キャンセル', style: 'cancel' },
       ]);
     },
-    [rooms, deleteRoom],
+    [groups, deleteGroup],
   );
 
-  // 新規ルーム作成
-  const handleCreateRoom = useCallback(() => {
-    console.log('Create new room');
+  // 新規グループ作成
+  const handleCreateGroup = useCallback(() => {
+    console.log('Create new group');
     // TODO: 作成画面のルートを作成後、パスを修正
     // router.push('/room/create');
   }, []);
@@ -127,23 +128,23 @@ export default function HomeScreen() {
             <SearchBox
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="ルームを検索..."
+              placeholder="グループを検索..."
             />
-            
+
             {/* 検索結果数 */}
             {searchQuery && (
               <Text fontSize="$2" color="$color10" px="$2">
-                {filteredRooms.length}件の検索結果
+                {filteredGroups.length}件の検索結果
               </Text>
             )}
           </YStack>
 
-          {/* ルームリスト */}
-          <RoomList
-            rooms={filteredRooms}
-            onRoomPress={handleRoomPress}
-            onRoomLongPress={handleRoomLongPress}
-            onCreateRoom={handleCreateRoom}
+          {/* グループリスト */}
+          <GroupList
+            groups={filteredGroups}
+            onGroupPress={handleGroupPress}
+            onGroupLongPress={handleGroupLongPress}
+            onCreateGroup={handleCreateGroup}
             isLoading={isLoading}
             isRefreshing={isRefreshing}
             onRefresh={handleRefresh}
@@ -152,7 +153,7 @@ export default function HomeScreen() {
           {/* FABボタン */}
           <FAB
             icon={<Plus size={24} color="white" />}
-            onPress={handleCreateRoom}
+            onPress={handleCreateGroup}
           />
         </YStack>
       </Theme>

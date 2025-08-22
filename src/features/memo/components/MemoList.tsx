@@ -1,15 +1,15 @@
 import { memo, useCallback, useRef, useEffect } from 'react';
 import { FlashList } from '@shopify/flash-list';
-import { YStack, XStack, Spinner, Text, AnimatePresence } from 'tamagui';
+import { YStack, Spinner, Text } from 'tamagui';
 import { RefreshControl } from 'react-native';
 import { MessageSquare } from '@tamagui/lucide-icons';
-import { MessageBubble } from './MessageBubble';
+import { MemoBubble } from './MemoBubble';
 import { DateDivider } from './DateDivider';
-import type { Message, MessageGroup } from '../types';
+import type { Memo, MemoGroup } from '../types';
 
-interface MessageListProps {
-  messageGroups: MessageGroup[];
-  onMessageLongPress?: (message: Message) => void;
+interface MemoListProps {
+  memoGroups: MemoGroup[];
+  onMemoLongPress?: (memo: Memo) => void;
   onImagePress?: (imageUri: string) => void;
   onLoadMore?: () => void;
   isLoading?: boolean;
@@ -18,28 +18,26 @@ interface MessageListProps {
   isRefreshing?: boolean;
 }
 
-type ListItem =
-  | { type: 'date'; date: string }
-  | { type: 'message'; message: Message };
+type ListItem = { type: 'date'; date: string } | { type: 'memo'; memo: Memo };
 
-export const MessageList = memo(function MessageList({
-  messageGroups,
-  onMessageLongPress,
+export const MemoList = memo(function MemoList({
+  memoGroups,
+  onMemoLongPress,
   onImagePress,
   onLoadMore,
   isLoading = false,
   hasMore = false,
   onRefresh,
   isRefreshing = false,
-}: MessageListProps) {
+}: MemoListProps) {
   const listRef = useRef<any>(null);
 
   // フラットなリストアイテムに変換
-  const listItems: ListItem[] = messageGroups.flatMap((group) => [
+  const listItems: ListItem[] = memoGroups.flatMap((group) => [
     { type: 'date' as const, date: group.date },
-    ...group.messages.map((msg) => ({
-      type: 'message' as const,
-      message: msg,
+    ...group.memos.map((memo) => ({
+      type: 'memo' as const,
+      memo: memo,
     })),
   ]);
 
@@ -49,21 +47,21 @@ export const MessageList = memo(function MessageList({
         return <DateDivider date={item.date} />;
       }
       return (
-        <MessageBubble
-          message={item.message}
-          onLongPress={onMessageLongPress}
+        <MemoBubble
+          memo={item.memo}
+          onLongPress={onMemoLongPress}
           onImagePress={onImagePress}
         />
       );
     },
-    [onMessageLongPress, onImagePress],
+    [onMemoLongPress, onImagePress],
   );
 
   const keyExtractor = useCallback((item: ListItem, index: number) => {
     if (item.type === 'date') {
       return `date-${item.date}-${index}`;
     }
-    return `msg-${item.message.id}`;
+    return `memo-${item.memo.id}`;
   }, []);
 
   const getItemType = useCallback((item: ListItem) => {
@@ -112,7 +110,7 @@ export const MessageList = memo(function MessageList({
         >
           <Spinner size="large" color="$color11" />
           <Text fontSize="$3" color="$color10" mt="$4">
-            メッセージを読み込んでいます
+            メモを読み込んでいます
           </Text>
         </YStack>
       );
@@ -142,21 +140,21 @@ export const MessageList = memo(function MessageList({
           <MessageSquare size="$6" color="$color10" />
         </YStack>
         <Text fontSize="$5" color="$color11" fontWeight="600" mt="$6">
-          まだメッセージがありません
+          まだメモがありません
         </Text>
         <YStack items="center" px="$6" mt="$3">
           <Text fontSize="$3" color="$color10">
-            最初のメッセージを送信して
+            最初のメモを追加して
           </Text>
           <Text fontSize="$3" color="$color10">
-            会話を始めましょう
+            グループを活用しましょう
           </Text>
         </YStack>
       </YStack>
     );
   }, [isLoading]);
 
-  // 新しいメッセージが追加されたら最下部へスクロール
+  // 新しいメモが追加されたら最下部へスクロール
   useEffect(() => {
     if (listItems.length > 0) {
       setTimeout(() => {

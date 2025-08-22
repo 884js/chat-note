@@ -4,10 +4,10 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { ArrowLeft, MoreVertical } from '@tamagui/lucide-icons';
 import { Alert, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MessageList } from '@/features/message/components/MessageList';
-import { MessageInput } from '@/features/message/components/MessageInput';
-import { useMessages } from '@/features/message/hooks/useMessages';
-import type { Message } from '@/features/message/types';
+import { MemoList } from '@/features/memo/components/MemoList';
+import { MemoInput } from '@/features/memo/components/MemoInput';
+import { useMemos } from '@/features/memo/hooks/useMemos';
+import type { Memo } from '@/features/memo/types';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 export default function ChatScreen() {
@@ -15,71 +15,61 @@ export default function ChatScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const roomName = 'アイデアメモ'; // 仮のルーム名
+  const groupName = 'アイデアメモ'; // 仮のグループ名
 
-  const {
-    messageGroups,
-    isLoading,
-    hasMore,
-    sendMessage,
-    deleteMessage,
-    loadMore,
-  } = useMessages(id || '1');
-  // メッセージ送信
+  const { memoGroups, isLoading, hasMore, sendMemo, deleteMemo, loadMore } =
+    useMemos(id || '1');
+  // メモ送信
   const handleSend = useCallback(
     async (content: string) => {
       try {
-        await sendMessage({
+        await sendMemo({
           roomId: id || '1',
           content,
         });
       } catch (error) {
-        Alert.alert('エラー', 'メッセージの送信に失敗しました');
+        Alert.alert('エラー', 'メモの送信に失敗しました');
       }
     },
-    [id, sendMessage],
+    [id, sendMemo],
   );
 
-  // メッセージ長押し
-  const handleMessageLongPress = useCallback(
-    (message: Message) => {
-      Alert.alert(
-        'メッセージ操作',
-        message.content?.substring(0, 50) || '画像',
-        [
-          {
-            text: 'コピー',
-            onPress: () => {
-              // TODO: クリップボードにコピー
-              console.log('Copy message:', message.id);
-            },
+  // メモ長押し
+  const handleMemoLongPress = useCallback(
+    (memo: Memo) => {
+      Alert.alert('メモ操作', memo.content?.substring(0, 50) || '画像', [
+        {
+          text: 'コピー',
+          onPress: () => {
+            // TODO: クリップボードにコピー
+            console.log('Copy memo:', memo.id);
           },
-          {
-            text: '編集',
-            onPress: () => {
-              // TODO: 編集モーダルを表示
-              console.log('Edit message:', message.id);
-            },
+        },
+        {
+          text: '編集',
+          onPress: () => {
+            // TODO: 編集モーダルを表示
+            console.log('Edit memo:', memo.id);
           },
-          {
-            text: '削除',
-            style: 'destructive',
-            onPress: () => {
-              Alert.alert('削除の確認', 'このメッセージを削除しますか？', [
-                { text: 'キャンセル', style: 'cancel' },
-                {
-                  text: '削除',
-                  style: 'destructive',
-                  onPress: () => deleteMessage(message.id),
-                },
-              ]);
-            },
+        },
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert('削除の確認', 'このメモを削除しますか？', [
+              { text: 'キャンセル', style: 'cancel' },
+              {
+                text: '削除',
+                style: 'destructive',
+                onPress: () => deleteMemo(memo.id),
+              },
+            ]);
           },
-          { text: 'キャンセル', style: 'cancel' },
-        ],
-      );
+        },
+        { text: 'キャンセル', style: 'cancel' },
+      ]);
     },
-    [deleteMessage],
+    [deleteMemo],
   );
 
   // 画像タップ
@@ -91,32 +81,32 @@ export default function ChatScreen() {
   // リフレッシュ
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
-    // TODO: メッセージを再取得
+    // TODO: メモを再取得
     setTimeout(() => setIsRefreshing(false), 1000);
   }, []);
 
   // その他メニュー
   const handleMorePress = useCallback(() => {
-    Alert.alert('ルーム設定', undefined, [
+    Alert.alert('グループ設定', undefined, [
       {
-        text: 'ルーム情報を編集',
+        text: 'グループ情報を編集',
         onPress: () => {
           // TODO: 編集画面へ遷移
-          console.log('Edit room');
+          console.log('Edit group');
         },
       },
       {
-        text: 'メッセージを検索',
+        text: 'メモを検索',
         onPress: () => {
           // TODO: 検索画面へ遷移
-          console.log('Search messages');
+          console.log('Search memos');
         },
       },
       {
         text: 'エクスポート',
         onPress: () => {
           // TODO: エクスポート機能
-          console.log('Export messages');
+          console.log('Export memos');
         },
       },
       { text: 'キャンセル', style: 'cancel' },
@@ -161,10 +151,10 @@ export default function ChatScreen() {
 
             <YStack flex={1}>
               <Text fontSize="$5" fontWeight="700" color="$color12">
-                {roomName}
+                {groupName}
               </Text>
               <Text fontSize="$2" color="$color10">
-                Room ID: {id}
+                Group ID: {id}
               </Text>
             </YStack>
 
@@ -177,10 +167,10 @@ export default function ChatScreen() {
             </TouchableOpacity>
           </XStack>
 
-          {/* メッセージリスト */}
-          <MessageList
-            messageGroups={messageGroups}
-            onMessageLongPress={handleMessageLongPress}
+          {/* メモリスト */}
+          <MemoList
+            memoGroups={memoGroups}
+            onMemoLongPress={handleMemoLongPress}
             onImagePress={handleImagePress}
             onLoadMore={loadMore}
             isLoading={isLoading}
@@ -189,12 +179,9 @@ export default function ChatScreen() {
             isRefreshing={isRefreshing}
           />
 
-          {/* メッセージ入力 */}
+          {/* メモ入力 */}
           <KeyboardAvoidingView behavior={'padding'}>
-            <MessageInput
-              onSend={handleSend}
-              placeholder="メッセージを入力..."
-            />
+            <MemoInput onSend={handleSend} placeholder="メモを入力..." />
           </KeyboardAvoidingView>
         </YStack>
       </Theme>

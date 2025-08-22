@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { RoomWithLastMessage, RoomSortOrder } from '../types';
+import type { GroupWithLastMemo, GroupSortOrder } from '../types';
 
 // モックデータ（後でSQLiteに置き換え）
-const MOCK_ROOMS: RoomWithLastMessage[] = [
+const MOCK_GROUPS: GroupWithLastMemo[] = [
   {
     id: '1',
     name: 'アイデアメモ',
     description: 'ひらめいたアイデアをすぐにメモ',
     color: 'blue',
     icon: '💡',
-    lastMessage: '新しいアプリのコンセプト...',
-    lastMessageAt: new Date(Date.now() - 1000 * 60 * 5), // 5分前
+    lastMemo: '新しいアプリのコンセプト...',
+    lastMemoAt: new Date(Date.now() - 1000 * 60 * 5), // 5分前
     unreadCount: 2,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
     updatedAt: new Date(Date.now() - 1000 * 60 * 5),
@@ -21,8 +21,8 @@ const MOCK_ROOMS: RoomWithLastMessage[] = [
     description: '買うものをメモ',
     color: 'green',
     icon: '🛒',
-    lastMessage: '牛乳、パン、卵',
-    lastMessageAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2時間前
+    lastMemo: '牛乳、パン、卵',
+    lastMemoAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2時間前
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3),
     updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
   },
@@ -32,20 +32,20 @@ const MOCK_ROOMS: RoomWithLastMessage[] = [
     description: '今日やることリスト',
     color: 'purple',
     icon: '📋',
-    lastMessage: 'プレゼン資料の作成',
-    lastMessageAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1日前
+    lastMemo: 'プレゼン資料の作成',
+    lastMemoAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1日前
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14),
     updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
   },
 ];
 
-export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
-  const [rooms, setRooms] = useState<RoomWithLastMessage[]>([]);
+export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
+  const [groups, setGroups] = useState<GroupWithLastMemo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // ルーム取得
-  const fetchRooms = useCallback(async () => {
+  // グループ取得
+  const fetchGroups = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -53,28 +53,27 @@ export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
       // 実際の実装では SQLite からデータを取得
       await new Promise((resolve) => setTimeout(resolve, 500)); // 仮の遅延
 
-      let sortedRooms = [...MOCK_ROOMS];
+      let sortedGroups = [...MOCK_GROUPS];
 
       // ソート処理
       switch (sortOrder) {
         case 'lastUpdated':
-          sortedRooms.sort(
+          sortedGroups.sort(
             (a, b) =>
-              (b.lastMessageAt?.getTime() || 0) -
-              (a.lastMessageAt?.getTime() || 0),
+              (b.lastMemoAt?.getTime() || 0) - (a.lastMemoAt?.getTime() || 0),
           );
           break;
         case 'alphabetical':
-          sortedRooms.sort((a, b) => a.name.localeCompare(b.name));
+          sortedGroups.sort((a, b) => a.name.localeCompare(b.name));
           break;
         case 'createdAt':
-          sortedRooms.sort(
+          sortedGroups.sort(
             (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
           );
           break;
       }
 
-      setRooms(sortedRooms);
+      setGroups(sortedGroups);
     } catch (err) {
       setError(err as Error);
     } finally {
@@ -82,31 +81,31 @@ export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
     }
   }, [sortOrder]);
 
-  // ルーム作成
-  const createRoom = useCallback(async (room: Partial<RoomWithLastMessage>) => {
+  // グループ作成
+  const createGroup = useCallback(async (group: Partial<GroupWithLastMemo>) => {
     try {
-      const newRoom: RoomWithLastMessage = {
+      const newGroup: GroupWithLastMemo = {
         id: Date.now().toString(),
-        name: room.name || '新しいメモ',
-        description: room.description,
-        color: room.color || 'blue',
-        icon: room.icon,
+        name: group.name || '新しいグループ',
+        description: group.description,
+        color: group.color || 'blue',
+        icon: group.icon,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
-      setRooms((prev) => [newRoom, ...prev]);
-      return newRoom;
+      setGroups((prev) => [newGroup, ...prev]);
+      return newGroup;
     } catch (err) {
       setError(err as Error);
       throw err;
     }
   }, []);
 
-  // ルーム削除
-  const deleteRoom = useCallback(async (roomId: string) => {
+  // グループ削除
+  const deleteGroup = useCallback(async (groupId: string) => {
     try {
-      setRooms((prev) => prev.filter((room) => room.id !== roomId));
+      setGroups((prev) => prev.filter((group) => group.id !== groupId));
     } catch (err) {
       setError(err as Error);
       throw err;
@@ -115,19 +114,19 @@ export function useRooms(sortOrder: RoomSortOrder = 'lastUpdated') {
 
   // リフレッシュ
   const refetch = useCallback(() => {
-    fetchRooms();
-  }, [fetchRooms]);
+    fetchGroups();
+  }, [fetchGroups]);
 
   useEffect(() => {
-    fetchRooms();
-  }, [fetchRooms]);
+    fetchGroups();
+  }, [fetchGroups]);
 
   return {
-    rooms,
+    groups,
     isLoading,
     error,
-    createRoom,
-    deleteRoom,
+    createGroup,
+    deleteGroup,
     refetch,
   };
 }

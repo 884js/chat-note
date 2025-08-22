@@ -11,33 +11,33 @@ import {
 import { MessageCircle, Clock } from '@tamagui/lucide-icons';
 import { TouchableOpacity } from 'react-native';
 
-interface RoomCardProps {
-  room: {
+interface GroupCardProps {
+  group: {
     id: string;
     name: string;
     description?: string;
     color: string;
     icon?: string;
-    lastMessage?: string;
-    lastMessageAt?: Date;
+    lastMemo?: string;
+    lastMemoAt?: Date;
   };
   onPress: () => void;
   onLongPress?: () => void;
 }
 
-export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
-  console.log('RoomCard rendered:', room.id, {
+export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
+  console.log('GroupCard rendered:', group.id, {
     onPress: !!onPress,
     onLongPress: !!onLongPress,
   });
 
   const handlePress = () => {
-    console.log('Card pressed directly:', room.id);
+    console.log('Group card pressed:', group.id);
     onPress();
   };
 
   const handleLongPress = () => {
-    console.log('Card long pressed directly:', room.id);
+    console.log('Group card long pressed:', group.id);
     onLongPress?.();
   };
 
@@ -71,12 +71,12 @@ export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
       onPress={handlePress}
       onLongPress={handleLongPress}
     >
-      <Theme name={room.color as ThemeName}>
+      <Theme name={group.color as ThemeName}>
         <Card bordered animation="quick" mb="$3" p="$4" cursor="pointer">
           <XStack gap="$3" items="center">
             <Avatar circular size="$5" bg="$color5" opacity={0.2}>
-              {room.icon ? (
-                <Text fontSize="$6">{room.icon}</Text>
+              {group.icon ? (
+                <Text fontSize="$6">{group.icon}</Text>
               ) : (
                 <MessageCircle size={24} color="$color" />
               )}
@@ -85,27 +85,27 @@ export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
             <YStack flex={1} gap="$1">
               <XStack justify="space-between" items="center">
                 <Paragraph fontWeight="600" fontSize="$5">
-                  {room.name}
+                  {group.name}
                 </Paragraph>
-                {room.lastMessageAt && (
+                {group.lastMemoAt && (
                   <XStack gap="$1" items="center">
                     <Clock size={12} opacity={0.5} />
                     <Text fontSize="$2" opacity={0.5}>
-                      {formatTime(room.lastMessageAt)}
+                      {formatTime(group.lastMemoAt)}
                     </Text>
                   </XStack>
                 )}
               </XStack>
 
-              {room.description && (
+              {group.description && (
                 <Paragraph fontSize="$2" opacity={0.6} numberOfLines={1}>
-                  {room.description}
+                  {group.description}
                 </Paragraph>
               )}
 
-              {room.lastMessage && (
+              {group.lastMemo && (
                 <Paragraph fontSize="$3" opacity={0.8} numberOfLines={1}>
-                  {room.lastMessage}
+                  {group.lastMemo}
                 </Paragraph>
               )}
             </YStack>

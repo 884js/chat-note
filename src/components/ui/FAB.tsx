@@ -1,6 +1,6 @@
 import { Button, type ButtonProps, Theme } from 'tamagui';
 
-interface FABProps extends Omit<ButtonProps, "position" | "circular" | "size"> {
+interface FABProps extends Omit<ButtonProps, 'position' | 'circular' | 'size'> {
   icon: ButtonProps['icon'];
   bottom?: number;
   right?: number;
