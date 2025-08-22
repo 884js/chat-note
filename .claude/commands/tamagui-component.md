@@ -233,6 +233,107 @@ Tamagui v4では、Tailwind風のshorthandが採用されています：
 - v4では `jc` や `ai` などの短縮形は廃止され、より明確な `justify` と `items` になりました
 - Tailwindと同じ命名規則を採用しているため、Tailwindに慣れている開発者にも使いやすくなっています
 
+## リスト表示（FlashList）
+
+高速なリスト表示には `@shopify/flash-list` を使用します。
+
+### 基本的な使い方
+- **公式ドキュメント**: https://shopify.github.io/flash-list/docs/usage
+- FlatListからの移行が簡単
+- 自動的なアイテムリサイクリングによる高速レンダリング
+
+### 必須プロパティ
+```typescript
+import { FlashList } from '@shopify/flash-list';
+
+<FlashList
+  data={items}                    // 必須: データ配列
+  renderItem={({ item }) => ...}  // 必須: レンダリング関数
+  estimatedItemSize={100}          // 推奨: アイテムの推定サイズ
+/>
+```
+
+### 重要なプロパティ
+- `keyExtractor`: アイテムの一意なキーを生成
+- `getItemType`: 異なるアイテムタイプを区別（異種リスト用）
+- `onEndReached`: リスト終端到達時のコールバック
+- `onEndReachedThreshold`: 終端判定のしきい値
+- `ListEmptyComponent`: データが空の時の表示
+- `ListHeaderComponent`: リストヘッダー
+- `ListFooterComponent`: リストフッター
+
+### ベストプラクティス
+
+#### 1. コンポーネントのメモ化
+```typescript
+const Item = memo(({ item }) => {
+  return <View>...</View>;
+});
+```
+
+#### 2. keyExtractorの使用
+```typescript
+const keyExtractor = useCallback((item) => item.id, []);
+```
+
+#### 3. 異種リストでのgetItemType
+```typescript
+const getItemType = useCallback((item) => {
+  return item.type; // 'header', 'item', 'footer' など
+}, []);
+```
+
+#### 4. estimatedItemSizeの適切な設定
+```typescript
+// 実際のアイテムサイズに近い値を設定
+estimatedItemSize={120} // RoomCardなら120px程度
+estimatedItemSize={80}  // MessageBubbleなら80px程度
+```
+
+### パフォーマンス最適化のTips
+1. **開発モードでパフォーマンステストをしない**
+   - JS Dev Modeはパフォーマンスに大きく影響
+   
+2. **renderItemをメモ化**
+   ```typescript
+   const renderItem = useCallback(({ item }) => {
+     return <Item item={item} />;
+   }, []);
+   ```
+
+3. **不要な再レンダリングを防ぐ**
+   - propsをメモ化
+   - 状態更新を最小限に
+
+### 使用例（チャットリスト）
+```typescript
+import { FlashList } from '@shopify/flash-list';
+import { memo, useCallback } from 'react';
+
+export const MessageList = memo(function MessageList({ messages }) {
+  const renderItem = useCallback(({ item }) => (
+    <MessageBubble message={item} />
+  ), []);
+
+  const keyExtractor = useCallback((item) => item.id, []);
+
+  return (
+    <FlashList
+      data={messages}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      estimatedItemSize={80}
+      showsVerticalScrollIndicator={false}
+    />
+  );
+});
+```
+
+### 注意事項
+- `estimatedItemSize` はTypeScriptで型エラーになることがあるが、実際には有効なプロパティ
+- 必要に応じて `// @ts-ignore` を使用するか、型定義を拡張
+- FlashListのバージョンによってAPIが変わることがあるので、公式ドキュメントを確認
+
 ## アクセシビリティ
 
 - `accessible`: アクセシブル要素として認識

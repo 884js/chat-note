@@ -15,12 +15,16 @@ export default function HomeScreen() {
   // ルームタップ時の処理
   const handleRoomPress = useCallback(
     (roomId: string) => {
+      console.log('Room pressed:', roomId);
       // チャット画面へ遷移
-      // TODO: チャット画面のルートを作成後、パスを修正
-      console.log(`Navigate to room ${roomId}`);
-      // router.push(`/room/${roomId}`);
+      try {
+        router.push(`/room/${roomId}`);
+        console.log('Navigation triggered to:', `/room/${roomId}`);
+      } catch (error) {
+        console.error('Navigation error:', error);
+      }
     },
-    []
+    [router]
   );
 
   // ルーム長押し時の処理
@@ -98,7 +102,6 @@ export default function HomeScreen() {
           isRefreshing={isRefreshing}
           onRefresh={handleRefresh}
         />
-        
         <FAB
           icon={<Plus size={24} color="white" />}
           onPress={handleCreateRoom}

@@ -1,17 +1,12 @@
-import { defaultConfig } from '@tamagui/config/v4';
-import { createTamagui } from 'tamagui';
+import { defaultConfig } from '@tamagui/config/v4'
+import { createTamagui } from 'tamagui'
+import { createThemes, defaultComponentThemes } from '@tamagui/config/v4'
 
-export const tamaguiConfig = createTamagui({
-  ...defaultConfig,
-  settings: {
-    ...defaultConfig.settings,
-    styleCompat: 'react-native',
-  },
-});
+export const tamaguiConfig = createTamagui(defaultConfig)
 
-export default tamaguiConfig;
+export default tamaguiConfig
 
-export type Conf = typeof tamaguiConfig;
+export type Conf = typeof tamaguiConfig
 
 declare module 'tamagui' {
   interface TamaguiCustomConfig extends Conf {}

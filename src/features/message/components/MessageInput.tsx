@@ -1,0 +1,65 @@
+import { useState, useCallback } from 'react';
+import { XStack, Input, Button } from 'tamagui';
+import { Send } from '@tamagui/lucide-icons';
+import { KeyboardAvoidingView, Platform } from 'react-native';
+
+interface MessageInputProps {
+  onSend: (content: string) => void;
+  placeholder?: string;
+  isLoading?: boolean;
+}
+
+export function MessageInput({
+  onSend,
+  placeholder = 'メッセージを入力...',
+  isLoading = false,
+}: MessageInputProps) {
+  const [message, setMessage] = useState('');
+
+  const handleSend = useCallback(() => {
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) return;
+
+    onSend(trimmedMessage);
+    setMessage('');
+  }, [message, onSend]);
+
+  const canSend = message.trim().length > 0 && !isLoading;
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={90}
+    >
+      <XStack
+        p="$3"
+        gap="$2"
+        bg="$background"
+        borderTopWidth={1}
+        borderTopColor="$borderColor"
+        items="center"
+      >
+        <Input
+          flex={1}
+          value={message}
+          onChangeText={setMessage}
+          placeholder={placeholder}
+          disabled={isLoading}
+          onSubmitEditing={handleSend}
+          returnKeyType="send"
+          size="$4"
+          borderWidth={1}
+          borderColor="$borderColor"
+        />
+        
+        <Button
+          size="$4"
+          icon={Send}
+          onPress={handleSend}
+          disabled={!canSend}
+          circular
+        />
+      </XStack>
+    </KeyboardAvoidingView>
+  );
+}

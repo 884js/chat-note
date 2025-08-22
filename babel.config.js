@@ -3,24 +3,24 @@ module.exports = (api) => {
 
   const plugins = [
     [
-      '@tamagui/babel-plugin',
+      "@tamagui/babel-plugin",
       {
-        components: ['tamagui'],
-        config: './tamagui.config.ts',
+        components: ["tamagui"],
+        config: "./tamagui.config.ts",
         logTimings: true,
-        disableExtraction: process.env.NODE_ENV === 'development',
+        disableExtraction: process.env.NODE_ENV === "development",
       },
     ],
     [
-      'module-resolver',
+      "module-resolver",
       {
         alias: {
-          '@': './src',
+          "@": "./src",
         },
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     ],
-    'react-native-reanimated/plugin',
+    "react-native-reanimated/plugin",
   ];
 
   return {

@@ -1,4 +1,4 @@
-import { Card, XStack, YStack, Paragraph, Avatar, Text, Theme } from 'tamagui';
+import { Card, XStack, YStack, Paragraph, Avatar, Text, Theme, type ThemeName } from 'tamagui';
 import { MessageCircle, Clock } from '@tamagui/lucide-icons';
 import { TouchableOpacity } from 'react-native';
 
@@ -17,6 +17,18 @@ interface RoomCardProps {
 }
 
 export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
+  console.log('RoomCard rendered:', room.id, { onPress: !!onPress, onLongPress: !!onLongPress });
+
+  const handlePress = () => {
+    console.log('Card pressed directly:', room.id);
+    onPress();
+  };
+
+  const handleLongPress = () => {
+    console.log('Card long pressed directly:', room.id);
+    onLongPress?.();
+  };
+
   const formatTime = (date?: Date) => {
     if (!date) return '';
     const now = new Date();
@@ -28,29 +40,27 @@ export function RoomCard({ room, onPress, onLongPress }: RoomCardProps) {
         hour: '2-digit',
         minute: '2-digit',
       });
-    } else if (days === 1) {
-      return '昨日';
-    } else if (days < 7) {
-      return `${days}日前`;
-    } else {
-      return date.toLocaleDateString('ja-JP', {
-        month: 'short',
-        day: 'numeric',
-      });
     }
+    if (days === 1) {
+      return '昨日';
+    }
+    if (days < 7) {
+      return `${days}日前`;
+    }
+    return date.toLocaleDateString('ja-JP', {
+      month: 'short',
+      day: 'numeric',
+    });
   };
 
   return (
-    <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
-      <Theme name={room.color as any}>
-        <Card
-          bordered
-          animation="quick"
-          hoverStyle={{ scale: 0.98 }}
-          pressStyle={{ scale: 0.95 }}
-          mb="$3"
-          p="$4"
-        >
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+    >
+      <Theme name={room.color as ThemeName}>
+        <Card bordered animation="quick" mb="$3" p="$4" cursor="pointer">
           <XStack gap="$3" items="center">
             <Avatar circular size="$5" bg="$color5" opacity={0.2}>
               {room.icon ? (

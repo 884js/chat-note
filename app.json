@@ -19,13 +19,11 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.chatnote",
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "package": "com.anonymous.chatnote"
     },
     "web": {
       "bundler": "metro",
@@ -34,12 +32,14 @@
     },
     "plugins": [
       "expo-router",
+      "react-native-edge-to-edge",
       [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
