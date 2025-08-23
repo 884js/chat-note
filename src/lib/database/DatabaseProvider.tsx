@@ -1,16 +1,15 @@
 import {
+  type ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-  type ReactNode,
 } from 'react';
-import { openDatabase, closeDatabase } from './database';
-import { runMigrations, seedDatabase } from './migrations';
-import type * as SQLite from 'expo-sqlite';
+import { closeDatabase, getDatabase, openDatabase } from './db';
+import { runMigrations, seedDatabase } from './migrate';
 
 interface DatabaseContextType {
-  database: SQLite.SQLiteDatabase | null;
+  database: ReturnType<typeof getDatabase> | null;
   isReady: boolean;
   error: Error | null;
 }
@@ -30,7 +29,9 @@ export function DatabaseProvider({
   children,
   seedData = false,
 }: DatabaseProviderProps) {
-  const [database, setDatabase] = useState<SQLiteDatabase | null>(null);
+  const [database, setDatabase] = useState<ReturnType<
+    typeof getDatabase
+  > | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -42,7 +43,7 @@ export function DatabaseProvider({
         console.log('Initializing database...');
 
         // データベースを開く
-        const db = await openDatabase();
+        await openDatabase();
 
         if (!isMounted) {
           await closeDatabase();
@@ -55,15 +56,17 @@ export function DatabaseProvider({
         // 開発時のみ: 初期データ投入
         if (seedData && __DEV__) {
           // データが空の場合のみシードを実行
-          const groupCount = await db.getFirstAsync<{ count: number }>(
-            'SELECT COUNT(*) as count FROM groups;',
+          const { getGroupCount } = await import(
+            './repositories/groupRepository'
           );
+          const count = await getGroupCount();
 
-          if (groupCount?.count === 0) {
+          if (count === 0) {
             await seedDatabase();
           }
         }
 
+        const db = getDatabase();
         if (isMounted) {
           setDatabase(db);
           setIsReady(true);

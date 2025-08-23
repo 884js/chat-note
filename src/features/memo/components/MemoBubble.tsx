@@ -1,8 +1,8 @@
-import { memo } from 'react';
-import { YStack, XStack, Text, Paragraph, Image } from 'tamagui';
-import { TouchableOpacity } from 'react-native';
-import { Clock, Edit3, Trash2 } from '@tamagui/lucide-icons';
 import { formatTime } from '@/lib/dateUtils';
+import { Clock, Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { memo } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Image, Paragraph, Text, XStack, YStack } from 'tamagui';
 import type { Memo } from '../types';
 
 interface MemoBubbleProps {

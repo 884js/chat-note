@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
-import { XStack, Input, Button } from 'tamagui';
 import { Send } from '@tamagui/lucide-icons';
+import { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
+import { Button, Input, XStack } from 'tamagui';
 
 interface MemoInputProps {
   onSend: (content: string) => void;

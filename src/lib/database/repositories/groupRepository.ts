@@ -1,40 +1,25 @@
-import {
-  runAsync,
-  getAllAsync,
-  getFirstAsync,
-  withTransaction,
-} from '../database';
 import type {
+  CreateGroupInput,
   Group,
   GroupWithLastMemo,
-  CreateGroupInput,
   UpdateGroupInput,
 } from '@/features/group/types';
+import { and, desc, eq, ne, sql } from 'drizzle-orm';
+import { openDatabase } from '../db';
+import { groups, memos } from '../schema';
 
 /**
  * グループをデータベースレコードからエンティティに変換
  */
-function mapRowToGroup(row: any): Group {
+function mapRowToGroup(row: typeof groups.$inferSelect): Group {
   return {
     id: row.id,
     name: row.name,
     description: row.description || undefined,
     color: row.color,
     icon: row.icon || undefined,
-    createdAt: new Date(row.createdAt),
-    updatedAt: new Date(row.updatedAt),
-  };
-}
-
-/**
- * グループと最新メモ情報をマップ
- */
-function mapRowToGroupWithLastMemo(row: any): GroupWithLastMemo {
-  return {
-    ...mapRowToGroup(row),
-    lastMemo: row.lastMemo || undefined,
-    lastMemoAt: row.lastMemoAt ? new Date(row.lastMemoAt) : undefined,
-    unreadCount: row.unreadCount || 0,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
   };
 }
 
@@ -42,66 +27,76 @@ function mapRowToGroupWithLastMemo(row: any): GroupWithLastMemo {
  * すべてのグループを取得（最新メモ情報付き）
  */
 export async function getAllGroups(): Promise<GroupWithLastMemo[]> {
-  const query = `
-    SELECT 
-      g.*,
-      m.content as lastMemo,
-      m.createdAt as lastMemoAt,
-      0 as unreadCount
-    FROM groups g
-    LEFT JOIN (
-      SELECT groupId, content, createdAt
-      FROM memos
-      WHERE isDeleted = 0
-      AND (groupId, createdAt) IN (
-        SELECT groupId, MAX(createdAt)
-        FROM memos
-        WHERE isDeleted = 0
-        GROUP BY groupId
-      )
-    ) m ON g.id = m.groupId
-    ORDER BY COALESCE(m.createdAt, g.updatedAt) DESC;
-  `;
+  const db = await openDatabase();
 
-  const rows = await getAllAsync(query);
-  return rows.map(mapRowToGroupWithLastMemo);
+  // サブクエリで各グループの最新メモを取得
+  const latestMemos = db
+    .select({
+      groupId: memos.groupId,
+      content: memos.content,
+      createdAt: sql<number>`MAX(${memos.createdAt})`.as('lastMemoAt'),
+    })
+    .from(memos)
+    .where(eq(memos.isDeleted, false))
+    .groupBy(memos.groupId)
+    .as('latestMemos');
+
+  const result = await db
+    .select({
+      group: groups,
+      lastMemo: latestMemos.content,
+      lastMemoAt: latestMemos.createdAt,
+    })
+    .from(groups)
+    .leftJoin(latestMemos, eq(groups.id, latestMemos.groupId))
+    .orderBy(
+      desc(sql`COALESCE(${latestMemos.createdAt}, ${groups.updatedAt})`),
+    );
+
+  return result.map((row) => ({
+    ...mapRowToGroup(row.group),
+    lastMemo: row.lastMemo || undefined,
+    lastMemoAt: row.lastMemoAt ? new Date(row.lastMemoAt) : undefined,
+    unreadCount: 0,
+  }));
 }
 
 /**
  * 特定のグループを取得
  */
 export async function getGroupById(id: string): Promise<Group | null> {
-  const query = `SELECT * FROM groups WHERE id = ?;`;
-  const row = await getFirstAsync(query, [id]);
+  const db = await openDatabase();
 
-  if (!row) {
+  const result = await db
+    .select()
+    .from(groups)
+    .where(eq(groups.id, id))
+    .limit(1);
+
+  if (result.length === 0) {
     return null;
   }
 
-  return mapRowToGroup(row);
+  return mapRowToGroup(result[0]);
 }
 
 /**
  * グループを作成
  */
 export async function createGroup(input: CreateGroupInput): Promise<Group> {
-  const id = `group-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  const now = Date.now();
+  const db = await openDatabase();
+  const id = `group-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  const now = new Date();
 
-  const query = `
-    INSERT INTO groups (id, name, description, color, icon, createdAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?);
-  `;
-
-  await runAsync(query, [
+  await db.insert(groups).values({
     id,
-    input.name,
-    input.description || null,
-    input.color,
-    input.icon || null,
-    now,
-    now,
-  ]);
+    name: input.name,
+    description: input.description || null,
+    color: input.color,
+    icon: input.icon || null,
+    createdAt: now,
+    updatedAt: now,
+  });
 
   const created = await getGroupById(id);
   if (!created) {
@@ -115,44 +110,28 @@ export async function createGroup(input: CreateGroupInput): Promise<Group> {
  * グループを更新
  */
 export async function updateGroup(input: UpdateGroupInput): Promise<Group> {
-  // 更新するフィールドを動的に構築
-  const fields: string[] = [];
-  const values: any[] = [];
+  const db = await openDatabase();
+  const updateData: Partial<typeof groups.$inferInsert> = {
+    updatedAt: new Date(),
+  };
 
   if (input.name !== undefined) {
-    fields.push('name = ?');
-    values.push(input.name);
+    updateData.name = input.name;
   }
 
   if (input.description !== undefined) {
-    fields.push('description = ?');
-    values.push(input.description || null);
+    updateData.description = input.description || null;
   }
 
   if (input.color !== undefined) {
-    fields.push('color = ?');
-    values.push(input.color);
+    updateData.color = input.color;
   }
 
   if (input.icon !== undefined) {
-    fields.push('icon = ?');
-    values.push(input.icon || null);
+    updateData.icon = input.icon || null;
   }
 
-  // 更新日時を追加
-  fields.push('updatedAt = ?');
-  values.push(Date.now());
-
-  // IDを最後に追加
-  values.push(input.id);
-
-  const query = `
-    UPDATE groups
-    SET ${fields.join(', ')}
-    WHERE id = ?;
-  `;
-
-  await runAsync(query, values);
+  await db.update(groups).set(updateData).where(eq(groups.id, input.id));
 
   const updated = await getGroupById(input.id);
   if (!updated) {
@@ -166,11 +145,10 @@ export async function updateGroup(input: UpdateGroupInput): Promise<Group> {
  * グループを削除（関連するメモも削除）
  */
 export async function deleteGroup(id: string): Promise<void> {
-  await withTransaction(async () => {
-    // 外部キー制約により、関連するメモも自動的に削除される
-    const query = `DELETE FROM groups WHERE id = ?;`;
-    await runAsync(query, [id]);
-  });
+  const db = await openDatabase();
+
+  // 外部キー制約により、関連するメモも自動的に削除される
+  await db.delete(groups).where(eq(groups.id, id));
 }
 
 /**
@@ -180,24 +158,28 @@ export async function isGroupNameDuplicate(
   name: string,
   excludeId?: string,
 ): Promise<boolean> {
-  let query = `SELECT COUNT(*) as count FROM groups WHERE name = ?`;
-  const params: any[] = [name];
+  const db = await openDatabase();
 
+  const conditions = [eq(groups.name, name)];
   if (excludeId) {
-    query += ` AND id != ?`;
-    params.push(excludeId);
+    conditions.push(ne(groups.id, excludeId));
   }
 
-  const result = await getFirstAsync<{ count: number }>(query, params);
-  return (result?.count || 0) > 0;
+  const result = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(groups)
+    .where(and(...conditions));
+
+  return (result[0]?.count || 0) > 0;
 }
 
 /**
  * グループ数を取得
  */
 export async function getGroupCount(): Promise<number> {
-  const result = await getFirstAsync<{ count: number }>(
-    `SELECT COUNT(*) as count FROM groups;`,
-  );
-  return result?.count || 0;
+  const db = await openDatabase();
+
+  const result = await db.select({ count: sql<number>`COUNT(*)` }).from(groups);
+
+  return result[0]?.count || 0;
 }

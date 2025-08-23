@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
 import { groupRepository } from '@/lib/database';
 import { useDatabase } from '@/lib/database';
+import { useCallback, useEffect, useState } from 'react';
 import type { Group } from '../types';
 
 type Props = {

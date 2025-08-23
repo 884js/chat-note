@@ -1,10 +1,10 @@
-import { YStack, ScrollView } from 'tamagui';
-import { Stack } from 'expo-router';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { useCreateGroupForm } from '@/features/group/hooks/useCreateGroupForm';
+import { GroupDescriptionInput } from '@/features/group/components/GroupDescriptionInput';
 import { GroupFormHeader } from '@/features/group/components/GroupFormHeader';
 import { GroupNameInput } from '@/features/group/components/GroupNameInput';
-import { GroupDescriptionInput } from '@/features/group/components/GroupDescriptionInput';
+import { useCreateGroupForm } from '@/features/group/hooks/useCreateGroupForm';
+import { Stack } from 'expo-router';
+import { KeyboardAvoidingView, Platform } from 'react-native';
+import { ScrollView, YStack } from 'tamagui';
 
 export default function CreateGroupScreen() {
   const {

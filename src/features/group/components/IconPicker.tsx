@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { XStack, YStack, Text, ScrollView } from 'tamagui';
 import { TouchableOpacity } from 'react-native';
+import { ScrollView, Text, XStack, YStack } from 'tamagui';
 
 interface IconPickerProps {
   value: string;

@@ -15,7 +15,9 @@
     "build:android:preview": "eas build --profile preview --platform android",
     "build:android:development": "eas build --profile development --platform android",
     "deploy:web": "expo export -p web && eas deploy",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "jest": {
     "preset": "jest-expo"
@@ -23,6 +25,7 @@
   "dependencies": {
     "@expo/vector-icons": "14.1.0",
     "@gorhom/bottom-sheet": "5.2.3",
+    "@op-engineering/op-sqlite": "14.1.4",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/native": "7.1.6",
@@ -35,6 +38,7 @@
     "babel-plugin-module-resolver": "5.0.2",
     "date-fns": "4.1.0",
     "date-fns-tz": "3.2.0",
+    "drizzle-orm": "0.44.4",
     "expo": "53.0.20",
     "expo-constants": "~17.1.7",
     "expo-dev-client": "5.2.4",
@@ -71,6 +75,7 @@
     "@biomejs/biome": "1.9.4",
     "@tamagui/babel-plugin": "1.132.20",
     "@types/react": "19.0.10",
+    "drizzle-kit": "0.31.4",
     "jest": "29.7.0",
     "jest-expo": "53.0.9",
     "react-test-renderer": "19.0.0",

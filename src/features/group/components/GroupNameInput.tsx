@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { YStack, Text, Input } from 'tamagui';
+import { Input, Text, YStack } from 'tamagui';
 
 interface GroupNameInputProps {
   value: string;

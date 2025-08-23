@@ -1,6 +1,6 @@
-import { memo } from 'react';
-import { XStack, Input, Button } from 'tamagui';
 import { Search, X } from '@tamagui/lucide-icons';
+import { memo } from 'react';
+import { Button, Input, XStack } from 'tamagui';
 
 interface SearchBoxProps {
   value: string;

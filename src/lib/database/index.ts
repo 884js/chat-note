@@ -1,6 +1,7 @@
 // Database core
-export * from './database';
-export * from './migrations';
+export * from './db';
+export * from './migrate';
+export * from './schema';
 export { DatabaseProvider, useDatabase } from './DatabaseProvider';
 
 // Repositories

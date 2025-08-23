@@ -1,11 +1,11 @@
-import { memo, useCallback } from 'react';
-import { FlashList } from '@shopify/flash-list';
-import { YStack, Spinner, Text } from 'tamagui';
-import { RefreshControl } from 'react-native';
-import { GroupCard } from './GroupCard';
 import { EmptyState } from '@/components/ui/EmptyState';
-import type { GroupWithLastMemo } from '../types';
+import { FlashList } from '@shopify/flash-list';
 import { FileText } from '@tamagui/lucide-icons';
+import { memo, useCallback } from 'react';
+import { RefreshControl } from 'react-native';
+import { Spinner, Text, YStack } from 'tamagui';
+import type { GroupWithLastMemo } from '../types';
+import { GroupCard } from './GroupCard';
 
 interface GroupListProps {
   groups: GroupWithLastMemo[];
@@ -85,6 +85,7 @@ export const GroupList = memo(function GroupList({
         data={groups}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        estimatedItemSize={100}
         ListEmptyComponent={ListEmptyComponent}
         ListHeaderComponent={groups.length > 0 ? ListHeaderComponent : null}
         contentContainerStyle={{

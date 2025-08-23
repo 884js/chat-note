@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { type GetThemeValueForKey, XStack, YStack } from 'tamagui';
-import { TouchableOpacity } from 'react-native';
 import { Check } from '@tamagui/lucide-icons';
+import { memo } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { type GetThemeValueForKey, XStack, YStack } from 'tamagui';
 import type { GroupColor } from '../types';
 
 interface ColorPickerProps {

@@ -1,5 +1,5 @@
-import { YStack, Text, Button, Paragraph } from 'tamagui';
 import { Plus } from '@tamagui/lucide-icons';
+import { Button, Paragraph, Text, YStack } from 'tamagui';
 
 interface EmptyStateProps {
   title: string;

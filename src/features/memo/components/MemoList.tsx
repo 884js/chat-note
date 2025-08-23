@@ -1,11 +1,11 @@
-import { memo, useCallback, useRef, useEffect } from 'react';
 import { FlashList } from '@shopify/flash-list';
-import { YStack, Spinner, Text } from 'tamagui';
-import { RefreshControl } from 'react-native';
 import { MessageSquare } from '@tamagui/lucide-icons';
-import { MemoBubble } from './MemoBubble';
-import { DateDivider } from './DateDivider';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import { RefreshControl } from 'react-native';
+import { Spinner, Text, YStack } from 'tamagui';
 import type { Memo, MemoGroup } from '../types';
+import { DateDivider } from './DateDivider';
+import { MemoBubble } from './MemoBubble';
 
 interface MemoListProps {
   memoGroups: MemoGroup[];
@@ -30,7 +30,7 @@ export const MemoList = memo(function MemoList({
   onRefresh,
   isRefreshing = false,
 }: MemoListProps) {
-  const listRef = useRef<any>(null);
+  const listRef = useRef<FlashList<ListItem>>(null);
 
   // フラットなリストアイテムに変換
   const listItems: ListItem[] = memoGroups.flatMap((group) => [

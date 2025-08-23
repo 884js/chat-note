@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { XStack, Text, Separator, YStack } from 'tamagui';
-import { Calendar } from '@tamagui/lucide-icons';
 import { formatDateForDivider } from '@/lib/dateUtils';
+import { Calendar } from '@tamagui/lucide-icons';
+import { memo } from 'react';
+import { Separator, Text, XStack, YStack } from 'tamagui';
 
 interface DateDividerProps {
   date: string;

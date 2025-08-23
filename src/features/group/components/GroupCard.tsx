@@ -1,15 +1,15 @@
+import { Clock, MessageCircle } from '@tamagui/lucide-icons';
+import { TouchableOpacity } from 'react-native';
 import {
-  Card,
-  XStack,
-  YStack,
-  Paragraph,
   Avatar,
+  Card,
+  Paragraph,
   Text,
   Theme,
   type ThemeName,
+  XStack,
+  YStack,
 } from 'tamagui';
-import { MessageCircle, Clock } from '@tamagui/lucide-icons';
-import { TouchableOpacity } from 'react-native';
 
 interface GroupCardProps {
   group: {

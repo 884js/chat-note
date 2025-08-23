@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import type {
-  GroupWithLastMemo,
-  GroupSortOrder,
-  CreateGroupInput,
-} from '../types';
 import { groupRepository } from '@/lib/database';
 import { useDatabase } from '@/lib/database';
+import { useCallback, useEffect, useState } from 'react';
+import type {
+  CreateGroupInput,
+  GroupSortOrder,
+  GroupWithLastMemo,
+} from '../types';
 
 export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
   const [groups, setGroups] = useState<GroupWithLastMemo[]>([]);

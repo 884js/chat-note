@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { XStack, Text, Button } from 'tamagui';
 import { X } from '@tamagui/lucide-icons';
+import { memo } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button, Text, XStack } from 'tamagui';
 
 interface GroupFormHeaderProps {
   onCancel: () => void;

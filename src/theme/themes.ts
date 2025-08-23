@@ -152,7 +152,7 @@ export const darkTheme = {
 
 // ルームテーマの生成
 export const createRoomThemes = () => {
-  const roomThemes: Record<string, any> = {};
+  const roomThemes: Record<string, unknown> = {};
 
   for (const [colorName, colorValues] of Object.entries(colors.roomColors)) {
     // ライトテーマ版

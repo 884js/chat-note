@@ -1,17 +1,17 @@
-import { Button, type ButtonProps, Theme } from 'tamagui';
+import { Button, type ButtonProps, Theme, type ThemeName } from 'tamagui';
 
 interface FABProps extends Omit<ButtonProps, 'position' | 'circular' | 'size'> {
   icon: ButtonProps['icon'];
   bottom?: number;
   right?: number;
-  themeName?: string;
+  themeName?: ThemeName;
 }
 
 export function FAB({
   icon,
   bottom = 24,
   right = 24,
-  themeName = 'blue',
+  themeName = 'dark',
   ...props
 }: FABProps) {
   const FabButton = (
@@ -46,7 +46,7 @@ export function FAB({
   );
 
   if (themeName) {
-    return <Theme name={themeName as any}>{FabButton}</Theme>;
+    return <Theme name={themeName}>{FabButton}</Theme>;
   }
 
   return FabButton;

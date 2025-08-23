@@ -1,27 +1,24 @@
-import {
-  runAsync,
-  getAllAsync,
-  getFirstAsync,
-  withTransaction,
-} from '../database';
 import type {
   Memo,
   SendMemoInput,
   UpdateMemoInput,
 } from '@/features/memo/types';
+import { and, asc, desc, eq, gte, like, lte, sql } from 'drizzle-orm';
+import { getSQLiteDatabase, openDatabase } from '../db';
+import { groups, memos } from '../schema';
 
 /**
  * メモをデータベースレコードからエンティティに変換
  */
-function mapRowToMemo(row: any): Memo {
+function mapRowToMemo(row: typeof memos.$inferSelect): Memo {
   return {
     id: row.id,
     groupId: row.groupId,
     content: row.content || undefined,
     imageUri: row.imageUri || undefined,
-    createdAt: new Date(row.createdAt),
-    updatedAt: new Date(row.updatedAt),
-    isDeleted: Boolean(row.isDeleted),
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    isDeleted: row.isDeleted,
   };
 }
 
@@ -33,60 +30,69 @@ export async function getMemosByGroupId(
   limit = 50,
   offset = 0,
 ): Promise<Memo[]> {
-  const query = `
-    SELECT * FROM memos
-    WHERE groupId = ? AND isDeleted = 0
-    ORDER BY createdAt ASC
-    LIMIT ? OFFSET ?;
-  `;
+  const db = await openDatabase();
 
-  const rows = await getAllAsync(query, [groupId, limit, offset]);
-  return rows.map(mapRowToMemo);
+  const result = await db
+    .select()
+    .from(memos)
+    .where(and(eq(memos.groupId, groupId), eq(memos.isDeleted, false)))
+    .orderBy(asc(memos.createdAt))
+    .limit(limit)
+    .offset(offset);
+
+  return result.map(mapRowToMemo);
 }
 
 /**
  * 特定のメモを取得
  */
 export async function getMemoById(id: string): Promise<Memo | null> {
-  const query = `SELECT * FROM memos WHERE id = ? AND isDeleted = 0;`;
-  const row = await getFirstAsync(query, [id]);
+  const db = await openDatabase();
 
-  if (!row) {
+  const result = await db
+    .select()
+    .from(memos)
+    .where(and(eq(memos.id, id), eq(memos.isDeleted, false)))
+    .limit(1);
+
+  if (result.length === 0) {
     return null;
   }
 
-  return mapRowToMemo(row);
+  return mapRowToMemo(result[0]);
 }
 
 /**
  * メモを作成
  */
 export async function createMemo(input: SendMemoInput): Promise<Memo> {
-  const id = `memo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  const now = Date.now();
+  const db = await openDatabase();
+  const sqliteDb = getSQLiteDatabase();
+  const id = `memo-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  const now = new Date();
 
-  const query = `
-    INSERT INTO memos (id, groupId, content, imageUri, createdAt, updatedAt, isDeleted)
-    VALUES (?, ?, ?, ?, ?, ?, ?);
-  `;
+  if (!sqliteDb) {
+    throw new Error('Database not initialized');
+  }
 
-  await withTransaction(async () => {
+  // トランザクションでメモの挿入とグループの更新を実行
+  await db.transaction(async (tx) => {
     // メモを挿入
-    await runAsync(query, [
+    await tx.insert(memos).values({
       id,
-      input.groupId,
-      input.content || null,
-      input.imageUri || null,
-      now,
-      now,
-      0,
-    ]);
+      groupId: input.groupId,
+      content: input.content || null,
+      imageUri: input.imageUri || null,
+      createdAt: now,
+      updatedAt: now,
+      isDeleted: false,
+    });
 
     // グループの更新日時を更新
-    await runAsync(`UPDATE groups SET updatedAt = ? WHERE id = ?;`, [
-      now,
-      input.groupId,
-    ]);
+    await tx
+      .update(groups)
+      .set({ updatedAt: now })
+      .where(eq(groups.id, input.groupId));
   });
 
   const created = await getMemoById(id);
@@ -101,15 +107,16 @@ export async function createMemo(input: SendMemoInput): Promise<Memo> {
  * メモを更新
  */
 export async function updateMemo(input: UpdateMemoInput): Promise<Memo> {
-  const now = Date.now();
+  const db = await openDatabase();
+  const now = new Date();
 
-  const query = `
-    UPDATE memos
-    SET content = ?, updatedAt = ?
-    WHERE id = ? AND isDeleted = 0;
-  `;
-
-  await runAsync(query, [input.content || null, now, input.id]);
+  await db
+    .update(memos)
+    .set({
+      content: input.content || null,
+      updatedAt: now,
+    })
+    .where(and(eq(memos.id, input.id), eq(memos.isDeleted, false)));
 
   const updated = await getMemoById(input.id);
   if (!updated) {
@@ -123,23 +130,25 @@ export async function updateMemo(input: UpdateMemoInput): Promise<Memo> {
  * メモを削除（論理削除）
  */
 export async function deleteMemo(id: string): Promise<void> {
-  const now = Date.now();
+  const db = await openDatabase();
+  const now = new Date();
 
-  const query = `
-    UPDATE memos
-    SET isDeleted = 1, updatedAt = ?
-    WHERE id = ?;
-  `;
-
-  await runAsync(query, [now, id]);
+  await db
+    .update(memos)
+    .set({
+      isDeleted: true,
+      updatedAt: now,
+    })
+    .where(eq(memos.id, id));
 }
 
 /**
  * メモを物理削除（完全削除）
  */
 export async function hardDeleteMemo(id: string): Promise<void> {
-  const query = `DELETE FROM memos WHERE id = ?;`;
-  await runAsync(query, [id]);
+  const db = await openDatabase();
+
+  await db.delete(memos).where(eq(memos.id, id));
 }
 
 /**
@@ -148,31 +157,34 @@ export async function hardDeleteMemo(id: string): Promise<void> {
 export async function getLatestMemoByGroupId(
   groupId: string,
 ): Promise<Memo | null> {
-  const query = `
-    SELECT * FROM memos
-    WHERE groupId = ? AND isDeleted = 0
-    ORDER BY createdAt DESC
-    LIMIT 1;
-  `;
+  const db = await openDatabase();
 
-  const row = await getFirstAsync(query, [groupId]);
+  const result = await db
+    .select()
+    .from(memos)
+    .where(and(eq(memos.groupId, groupId), eq(memos.isDeleted, false)))
+    .orderBy(desc(memos.createdAt))
+    .limit(1);
 
-  if (!row) {
+  if (result.length === 0) {
     return null;
   }
 
-  return mapRowToMemo(row);
+  return mapRowToMemo(result[0]);
 }
 
 /**
  * グループのメモ数を取得
  */
 export async function getMemoCountByGroupId(groupId: string): Promise<number> {
-  const result = await getFirstAsync<{ count: number }>(
-    `SELECT COUNT(*) as count FROM memos WHERE groupId = ? AND isDeleted = 0;`,
-    [groupId],
-  );
-  return result?.count || 0;
+  const db = await openDatabase();
+
+  const result = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(memos)
+    .where(and(eq(memos.groupId, groupId), eq(memos.isDeleted, false)));
+
+  return result[0]?.count || 0;
 }
 
 /**
@@ -183,22 +195,22 @@ export async function searchMemosByDateRange(
   startDate: Date,
   endDate: Date,
 ): Promise<Memo[]> {
-  const query = `
-    SELECT * FROM memos
-    WHERE groupId = ? 
-      AND isDeleted = 0
-      AND createdAt >= ?
-      AND createdAt <= ?
-    ORDER BY createdAt ASC;
-  `;
+  const db = await openDatabase();
 
-  const rows = await getAllAsync(query, [
-    groupId,
-    startDate.getTime(),
-    endDate.getTime(),
-  ]);
+  const result = await db
+    .select()
+    .from(memos)
+    .where(
+      and(
+        eq(memos.groupId, groupId),
+        eq(memos.isDeleted, false),
+        gte(memos.createdAt, startDate),
+        lte(memos.createdAt, endDate),
+      ),
+    )
+    .orderBy(asc(memos.createdAt));
 
-  return rows.map(mapRowToMemo);
+  return result.map(mapRowToMemo);
 }
 
 /**
@@ -208,15 +220,19 @@ export async function searchMemosByText(
   groupId: string,
   searchText: string,
 ): Promise<Memo[]> {
-  const query = `
-    SELECT * FROM memos
-    WHERE groupId = ? 
-      AND isDeleted = 0
-      AND content LIKE ?
-    ORDER BY createdAt ASC;
-  `;
+  const db = await openDatabase();
 
-  const rows = await getAllAsync(query, [groupId, `%${searchText}%`]);
+  const result = await db
+    .select()
+    .from(memos)
+    .where(
+      and(
+        eq(memos.groupId, groupId),
+        eq(memos.isDeleted, false),
+        like(memos.content, `%${searchText}%`),
+      ),
+    )
+    .orderBy(asc(memos.createdAt));
 
-  return rows.map(mapRowToMemo);
+  return result.map(mapRowToMemo);
 }

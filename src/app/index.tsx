@@ -1,13 +1,13 @@
-import { useCallback, useState, useMemo } from 'react';
-import { YStack, Text, Theme } from 'tamagui';
-import { useRouter, Stack } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { GroupList } from '@/features/group/components/GroupList';
 import { FAB } from '@/components/ui/FAB';
 import { SearchBox } from '@/components/ui/SearchBox';
+import { GroupList } from '@/features/group/components/GroupList';
 import { useGroups } from '@/features/group/hooks/useGroups';
 import { Plus } from '@tamagui/lucide-icons';
+import { Stack, useRouter } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text, Theme, YStack } from 'tamagui';
 
 export default function HomeScreen() {
   const router = useRouter();
