@@ -37,8 +37,8 @@ export default function HomeScreen() {
       console.log('Group pressed:', groupId);
       // メモ画面へ遷移
       try {
-        router.push(`/room/${groupId}`);
-        console.log('Navigation triggered to:', `/room/${groupId}`);
+        router.push(`/group/${groupId}`);
+        console.log('Navigation triggered to:', `/group/${groupId}`);
       } catch (error) {
         console.error('Navigation error:', error);
       }

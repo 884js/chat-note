@@ -12,22 +12,70 @@ const iconGroups = [
   {
     category: 'よく使う',
     icons: [
-      '📝', '📔', '💡', '📚', '💼', '🏠', '✨', '🌟', '❤️', '✅',
-      '📌', '🔖', '📎', '🗂️', '📊', '🎯', '⚡', '🔥',
+      '📝',
+      '📔',
+      '💡',
+      '📚',
+      '💼',
+      '🏠',
+      '✨',
+      '🌟',
+      '❤️',
+      '✅',
+      '📌',
+      '🔖',
+      '📎',
+      '🗂️',
+      '📊',
+      '🎯',
+      '⚡',
+      '🔥',
     ],
   },
   {
     category: '仕事・学習',
     icons: [
-      '📈', '📉', '📋', '🗓️', '📖', '✏️', '🖊️', '🔍', '🎓', '🏆',
-      '💭', '🗯️', '💫', '🚀', '⏰', '📅', '📂', '💻',
+      '📈',
+      '📉',
+      '📋',
+      '🗓️',
+      '📖',
+      '✏️',
+      '🖊️',
+      '🔍',
+      '🎓',
+      '🏆',
+      '💭',
+      '🗯️',
+      '💫',
+      '🚀',
+      '⏰',
+      '📅',
+      '📂',
+      '💻',
     ],
   },
   {
     category: '生活・趣味',
     icons: [
-      '🛒', '🍳', '🌱', '🌿', '🌸', '☕', '🍎', '🎨', '🎭', '🎸',
-      '🎮', '🎲', '🏃', '⚽', '🧺', '🧹', '🎪', '♟️',
+      '🛒',
+      '🍳',
+      '🌱',
+      '🌿',
+      '🌸',
+      '☕',
+      '🍎',
+      '🎨',
+      '🎭',
+      '🎸',
+      '🎮',
+      '🎲',
+      '🏃',
+      '⚽',
+      '🧺',
+      '🧹',
+      '🎪',
+      '♟️',
     ],
   },
 ];
@@ -38,10 +86,7 @@ export const IconPicker = memo(function IconPicker({
   disabled = false,
 }: IconPickerProps) {
   return (
-    <ScrollView
-      height={300}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView height={300} showsVerticalScrollIndicator={false}>
       <YStack gap="$3">
         {iconGroups.map((group) => (
           <YStack key={group.category} gap="$1.5">

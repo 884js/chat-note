@@ -1,44 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Memo, SendMemoInput, MemoGroup } from '../types';
+import {
+  getMemosByGroupId,
+  createMemo,
+  updateMemo as updateMemoInDb,
+  deleteMemo as deleteMemoFromDb,
+} from '@/lib/database/repositories/memoRepository';
 
-// モックデータ（後でSQLiteに置き換え）
-const MOCK_MEMOS: Memo[] = [
-  {
-    id: '1',
-    roomId: '1',
-    content: 'プロジェクトの進捗はどうですか？',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2日前
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
-    isDeleted: false,
-  },
-  {
-    id: '2',
-    roomId: '1',
-    content: '順調に進んでいます！明日までには完成予定です。',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1日前
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    isDeleted: false,
-  },
-  {
-    id: '3',
-    roomId: '1',
-    content:
-      '今日の会議のメモ:\n・デザインレビュー完了\n・実装開始\n・来週テスト予定',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3時間前
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 3),
-    isDeleted: false,
-  },
-  {
-    id: '4',
-    roomId: '1',
-    content: 'いいですね！頑張りましょう💪',
-    createdAt: new Date(Date.now() - 1000 * 60 * 30), // 30分前
-    updatedAt: new Date(Date.now() - 1000 * 60 * 30),
-    isDeleted: false,
-  },
-];
+type Props = {
+  groupId: string;
+};
 
-export function useMemos(roomId: string) {
+export function useMemos({ groupId }: Props) {
   const [memos, setMemos] = useState<Memo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -51,37 +24,25 @@ export function useMemos(roomId: string) {
     loadingRef.current = true;
 
     try {
-      // 実際の実装では SQLite からデータを取得
-      await new Promise((resolve) => setTimeout(resolve, 300)); // 仮の遅延
-
-      const roomMemos = MOCK_MEMOS.filter((m) => m.roomId === roomId);
-      const sortedMemos = roomMemos.sort(
-        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
-      );
-
+      // データベースからメモを取得
+      const sortedMemos = await getMemosByGroupId(groupId);
       setMemos(sortedMemos);
-      setHasMore(false); // モックなので追加読み込みなし
+      setHasMore(false); // 今のところページネーションなし
     } catch (err) {
       setError(err as Error);
     } finally {
       setIsLoading(false);
       loadingRef.current = false;
     }
-  }, [roomId]);
+  }, [groupId]);
 
   // メモ送信
   const sendMemo = useCallback(async (input: SendMemoInput) => {
     try {
-      const newMemo: Memo = {
-        id: Date.now().toString(),
-        roomId: input.roomId,
-        content: input.content,
-        imageUri: input.imageUri,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isDeleted: false,
-      };
+      // データベースに保存
+      const newMemo = await createMemo(input);
 
+      // stateを更新
       setMemos((prev) => [...prev, newMemo]);
       return newMemo;
     } catch (err) {
@@ -93,12 +54,12 @@ export function useMemos(roomId: string) {
   // メモ編集
   const updateMemo = useCallback(async (memoId: string, content: string) => {
     try {
+      // データベースを更新
+      const updatedMemo = await updateMemoInDb({ id: memoId, content });
+
+      // stateを更新
       setMemos((prev) =>
-        prev.map((memo) =>
-          memo.id === memoId
-            ? { ...memo, content, updatedAt: new Date() }
-            : memo,
-        ),
+        prev.map((memo) => (memo.id === memoId ? updatedMemo : memo)),
       );
     } catch (err) {
       setError(err as Error);
@@ -109,13 +70,11 @@ export function useMemos(roomId: string) {
   // メモ削除（論理削除）
   const deleteMemo = useCallback(async (memoId: string) => {
     try {
-      setMemos((prev) =>
-        prev.map((memo) =>
-          memo.id === memoId
-            ? { ...memo, isDeleted: true, updatedAt: new Date() }
-            : memo,
-        ),
-      );
+      // データベースから削除（論理削除）
+      await deleteMemoFromDb(memoId);
+
+      // stateから削除（表示から消す）
+      setMemos((prev) => prev.filter((memo) => memo.id !== memoId));
     } catch (err) {
       setError(err as Error);
       throw err;

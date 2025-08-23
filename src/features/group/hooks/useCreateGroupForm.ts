@@ -62,11 +62,31 @@ export function useCreateGroupForm() {
 
     try {
       // ランダムなカラーとアイコンを選択
-      const colors = ['blue', 'purple', 'green', 'orange', 'pink', 'red', 'yellow', 'gray'] as const;
-      const icons = ['📝', '📔', '💡', '📚', '💼', '🏠', '✨', '🌟', '📌', '🎯'];
+      const colors = [
+        'blue',
+        'purple',
+        'green',
+        'orange',
+        'pink',
+        'red',
+        'yellow',
+        'gray',
+      ] as const;
+      const icons = [
+        '📝',
+        '📔',
+        '💡',
+        '📚',
+        '💼',
+        '🏠',
+        '✨',
+        '🌟',
+        '📌',
+        '🎯',
+      ];
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
       const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-      
+
       await createGroup({
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,

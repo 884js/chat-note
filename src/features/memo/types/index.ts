@@ -2,7 +2,7 @@
 
 export interface Memo {
   id: string;
-  roomId: string;
+  groupId: string;
   content?: string;
   imageUri?: string;
   createdAt: Date;
@@ -11,7 +11,7 @@ export interface Memo {
 }
 
 export interface SendMemoInput {
-  roomId: string;
+  groupId: string;
   content?: string;
   imageUri?: string;
 }

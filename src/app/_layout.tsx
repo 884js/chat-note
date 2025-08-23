@@ -13,8 +13,19 @@ import { useFonts } from 'expo-font';
 import tamaguiConfig from '../../tamagui.config';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { DatabaseProvider } from '@/lib/database';
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 1000 * 60 * 5, // 5分
+    },
+  },
+});
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -42,24 +53,28 @@ export default function RootLayout() {
   }
 
   return (
-    <KeyboardProvider>
-      <TamaguiProvider config={tamaguiConfig}>
-        <ThemeProvider
-          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-        >
-          <StatusBar style="auto" />
-          <Stack>
-            <Stack.Screen name="index" options={{ title: 'メモ一覧' }} />
-            <Stack.Screen
-              name="room/[id]"
-              options={{
-                headerShown: false,
-                presentation: 'card',
-              }}
-            />
-          </Stack>
-        </ThemeProvider>
-      </TamaguiProvider>
-    </KeyboardProvider>
+    <QueryClientProvider client={queryClient}>
+      <DatabaseProvider seedData={__DEV__}>
+        <KeyboardProvider>
+          <TamaguiProvider config={tamaguiConfig}>
+            <ThemeProvider
+              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+            >
+              <StatusBar style="auto" />
+              <Stack>
+                <Stack.Screen name="index" options={{ title: 'メモ一覧' }} />
+                <Stack.Screen
+                  name="group/[id]"
+                  options={{
+                    headerShown: false,
+                    presentation: 'card',
+                  }}
+                />
+              </Stack>
+            </ThemeProvider>
+          </TamaguiProvider>
+        </KeyboardProvider>
+      </DatabaseProvider>
+    </QueryClientProvider>
   );
 }

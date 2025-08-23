@@ -9,22 +9,25 @@ import { MemoInput } from '@/features/memo/components/MemoInput';
 import { useMemos } from '@/features/memo/hooks/useMemos';
 import type { Memo } from '@/features/memo/types';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+import { useGroup } from '@/features/group/hooks/useGroup';
 
-export default function ChatScreen() {
+export default function GroupDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const groupName = 'アイデアメモ'; // 仮のグループ名
+
+  const { group } = useGroup({ groupId: id || '' });
 
   const { memoGroups, isLoading, hasMore, sendMemo, deleteMemo, loadMore } =
-    useMemos(id || '1');
+    useMemos({ groupId: id || '' });
+
   // メモ送信
   const handleSend = useCallback(
     async (content: string) => {
       try {
         await sendMemo({
-          roomId: id || '1',
+          groupId: id || '1',
           content,
         });
       } catch (error) {
@@ -150,10 +153,7 @@ export default function ChatScreen() {
 
             <YStack flex={1}>
               <Text fontSize="$5" fontWeight="700" color="$color12">
-                {groupName}
-              </Text>
-              <Text fontSize="$2" color="$color10">
-                Group ID: {id}
+                {group?.name}
               </Text>
             </YStack>
 
