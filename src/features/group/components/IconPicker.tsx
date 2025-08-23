@@ -110,7 +110,7 @@ export const IconPicker = memo(function IconPicker({
                     justify="center"
                     opacity={disabled ? 0.5 : 1}
                     borderWidth={value === icon ? 2 : 1}
-                    borderColor={value === icon ? '$primary' : '$color4'}
+                    borderColor={value === icon ? '$primary' : '$color6'}
                     animation="quick"
                     scale={value === icon ? 1.05 : 1}
                   >

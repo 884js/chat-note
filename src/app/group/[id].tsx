@@ -132,7 +132,7 @@ export default function GroupDetailScreen() {
             pb="$3"
             px="$4"
             borderBottomWidth={1}
-            borderBottomColor="$color4"
+            borderBottomColor="$color6"
             items="center"
             gap="$3"
             animation="quick"

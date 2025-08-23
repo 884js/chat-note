@@ -1,5 +1,6 @@
 import { FAB } from '@/components/ui/FAB';
 import { SearchBox } from '@/components/ui/SearchBox';
+import { GroupActionSheet } from '@/features/group/components/GroupActionSheet';
 import { GroupList } from '@/features/group/components/GroupList';
 import { useGroups } from '@/features/group/hooks/useGroups';
 import { Plus } from '@tamagui/lucide-icons';
@@ -15,6 +16,8 @@ export default function HomeScreen() {
   const { groups, isLoading, refetch, deleteGroup } = useGroups('lastUpdated');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGroup, setSelectedGroup] = useState<typeof groups[0] | null>(null);
+  const [showActionSheet, setShowActionSheet] = useState(false);
 
   // 検索フィルタリング
   const filteredGroups = useMemo(() => {
@@ -51,45 +54,30 @@ export default function HomeScreen() {
     (groupId: string) => {
       const group = groups.find((g) => g.id === groupId);
       if (!group) return;
-
-      Alert.alert(group.name, 'アクションを選択', [
-        {
-          text: '編集',
-          onPress: () => {
-            console.log(`Edit group ${groupId}`);
-            // TODO: 編集画面のルートを作成後、パスを修正
-            // router.push(`/room/${groupId}/edit`);
-          },
-        },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: () => {
-            Alert.alert(
-              '削除の確認',
-              `グループ「${group.name}」を削除しますか？\nこの操作は取り消せません。`,
-              [
-                { text: 'キャンセル', style: 'cancel' },
-                {
-                  text: '削除',
-                  style: 'destructive',
-                  onPress: async () => {
-                    try {
-                      await deleteGroup(groupId);
-                    } catch (error) {
-                      Alert.alert('エラー', 'グループの削除に失敗しました');
-                    }
-                  },
-                },
-              ],
-            );
-          },
-        },
-        { text: 'キャンセル', style: 'cancel' },
-      ]);
+      
+      setSelectedGroup(group);
+      setShowActionSheet(true);
     },
-    [groups, deleteGroup],
+    [groups],
   );
+
+  // グループ編集処理
+  const handleEditGroup = useCallback(() => {
+    if (!selectedGroup) return;
+    console.log(`Edit group ${selectedGroup.id}`);
+    // TODO: 編集画面のルートを作成後、パスを修正
+    // router.push(`/room/${selectedGroup.id}/edit`);
+  }, [selectedGroup]);
+
+  // グループ削除処理
+  const handleDeleteGroup = useCallback(async () => {
+    if (!selectedGroup) return;
+    try {
+      await deleteGroup(selectedGroup.id);
+    } catch (error) {
+      Alert.alert('エラー', 'グループの削除に失敗しました');
+    }
+  }, [selectedGroup, deleteGroup]);
 
   // 新規グループ作成
   const handleCreateGroup = useCallback(() => {
@@ -119,7 +107,7 @@ export default function HomeScreen() {
             pb="$3"
             px="$4"
             borderBottomWidth={1}
-            borderBottomColor="$color4"
+            borderBottomColor="$color6"
             gap="$2"
           >
             {/* 検索ボックス */}
@@ -152,6 +140,15 @@ export default function HomeScreen() {
           <FAB
             icon={<Plus size={24} color="white" />}
             onPress={handleCreateGroup}
+          />
+
+          {/* アクションシート */}
+          <GroupActionSheet
+            isOpen={showActionSheet}
+            onOpenChange={setShowActionSheet}
+            group={selectedGroup}
+            onEdit={handleEditGroup}
+            onDelete={handleDeleteGroup}
           />
         </YStack>
       </Theme>

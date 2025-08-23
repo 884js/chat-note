@@ -27,7 +27,7 @@ export const GroupNameInput = memo(function GroupNameInput({
         autoFocus
         maxLength={50}
         disabled={disabled}
-        borderColor={error ? '#ef4444' : '$borderColor'}
+        borderColor={error ? '#ef4444' : '$color6'}
       />
       {error && (
         <Text fontSize="$2" color="#ef4444">

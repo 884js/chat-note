@@ -37,7 +37,7 @@ export const MemoBubble = memo(function MemoBubble({
           p="$3"
           maxW="80%"
           borderWidth={1}
-          borderColor="$color4"
+          borderColor="$color6"
           borderStyle="dashed"
           opacity={0.7}
         >
@@ -61,7 +61,7 @@ export const MemoBubble = memo(function MemoBubble({
           rounded="$4"
           overflow="hidden"
           borderWidth={1}
-          borderColor="$color4"
+          borderColor="$color6"
         >
           {/* 画像セクション */}
           {memo.imageUri && (

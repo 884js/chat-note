@@ -29,10 +29,10 @@ export const SearchBox = memo(function SearchBox({
       items="center"
       gap="$2"
       borderWidth={1}
-      borderColor="$color4"
+      borderColor="$color6"
       animation="quick"
       hoverStyle={{
-        borderColor: '$color6',
+        borderColor: '$color7',
         bg: '$color3',
       }}
       focusStyle={{

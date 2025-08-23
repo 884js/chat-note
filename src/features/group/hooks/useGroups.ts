@@ -31,7 +31,8 @@ export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
         case 'lastUpdated':
           sortedGroups.sort(
             (a, b) =>
-              (b.lastMemoAt?.getTime() || 0) - (a.lastMemoAt?.getTime() || 0),
+              (b.lastMemoAt?.getTime() || b.updatedAt.getTime()) - 
+              (a.lastMemoAt?.getTime() || a.updatedAt.getTime()),
           );
           break;
         case 'alphabetical':

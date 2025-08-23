@@ -72,7 +72,14 @@ export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
       onLongPress={handleLongPress}
     >
       <Theme name={group.color as ThemeName}>
-        <Card bordered animation="quick" mb="$3" p="$4" cursor="pointer">
+        <Card 
+          bordered 
+          borderColor="$color6" 
+          animation="quick" 
+          mb="$3" 
+          p="$4" 
+          cursor="pointer"
+        >
           <XStack gap="$3" items="center">
             <Avatar circular size="$5" bg="$color5" opacity={0.2}>
               {group.icon ? (

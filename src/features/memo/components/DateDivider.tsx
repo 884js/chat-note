@@ -12,14 +12,14 @@ export const DateDivider = memo(function DateDivider({
 }: DateDividerProps) {
   return (
     <XStack items="center" py="$4" px="$4" gap="$3">
-      <Separator flex={1} borderColor="$color5" />
+      <Separator flex={1} borderColor="$color6" />
       <YStack
         bg="$color2"
         rounded="$10"
         px="$3"
         py="$1.5"
         borderWidth={1}
-        borderColor="$color5"
+        borderColor="$color6"
       >
         <XStack items="center" gap="$1.5">
           <Calendar size="$0.75" color="$color10" />
@@ -28,7 +28,7 @@ export const DateDivider = memo(function DateDivider({
           </Text>
         </XStack>
       </YStack>
-      <Separator flex={1} borderColor="$color5" />
+      <Separator flex={1} borderColor="$color6" />
     </XStack>
   );
 });

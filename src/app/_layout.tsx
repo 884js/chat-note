@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { TamaguiProvider } from 'tamagui';
+import { PortalProvider } from "@tamagui/portal";
 import tamaguiConfig from '../../tamagui.config';
 
 SplashScreen.preventAutoHideAsync();
@@ -57,24 +58,32 @@ export default function RootLayout() {
       <DatabaseProvider seedData={__DEV__}>
         <KeyboardProvider>
           <TamaguiProvider config={tamaguiConfig}>
-            <ThemeProvider
-              value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-            >
-              <StatusBar style="auto" />
-              <Stack>
-                <Stack.Screen name="index" options={{ title: 'メモ一覧' }} />
-                <Stack.Screen
-                  name="group/[id]"
-                  options={{
-                    headerShown: false,
-                    presentation: 'card',
-                  }}
-                />
-              </Stack>
-            </ThemeProvider>
+            <PortalProvider>
+              <ThemeProvider
+                value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+              >
+                <StatusBar style="auto" />
+                <StackList />
+              </ThemeProvider>
+            </PortalProvider>
           </TamaguiProvider>
         </KeyboardProvider>
       </DatabaseProvider>
     </QueryClientProvider>
   );
 }
+
+const StackList = () => {
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ title: "メモ一覧" }} />
+      <Stack.Screen
+        name="group/[id]"
+        options={{
+          headerShown: false,
+          presentation: "card",
+        }}
+      />
+    </Stack>
+  );
+};

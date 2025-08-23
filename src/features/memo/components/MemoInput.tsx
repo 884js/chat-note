@@ -36,7 +36,7 @@ export function MemoInput({
         gap="$2"
         bg="$background"
         borderTopWidth={1}
-        borderTopColor="$borderColor"
+        borderTopColor="$color6"
         items="center"
       >
         <Input
@@ -49,7 +49,7 @@ export function MemoInput({
           returnKeyType="send"
           size="$4"
           borderWidth={1}
-          borderColor="$borderColor"
+          borderColor="$color6"
         />
 
         <Button

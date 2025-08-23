@@ -94,12 +94,8 @@ export function useCreateGroupForm() {
         icon: randomIcon,
       });
 
-      Alert.alert('作成完了', 'グループを作成しました', [
-        {
-          text: 'OK',
-          onPress: () => router.push('/'),
-        },
-      ]);
+      router.push('/');
+
     } catch (error) {
       Alert.alert('エラー', 'グループの作成に失敗しました');
     } finally {
