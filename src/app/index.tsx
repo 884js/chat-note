@@ -93,10 +93,8 @@ export default function HomeScreen() {
 
   // 新規グループ作成
   const handleCreateGroup = useCallback(() => {
-    console.log('Create new group');
-    // TODO: 作成画面のルートを作成後、パスを修正
-    // router.push('/room/create');
-  }, []);
+    router.push('/group/create');
+  }, [router]);
 
   // リフレッシュ処理
   const handleRefresh = useCallback(() => {

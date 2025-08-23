@@ -32,12 +32,12 @@ export const MemoBubble = memo(function MemoBubble({
     return (
       <XStack py="$1.5" px="$4" opacity={0.5}>
         <YStack
-          bg="$color1"
-          rounded="$5"
+          bg="$color2"
+          rounded="$4"
           p="$3"
           maxW="80%"
           borderWidth={1}
-          borderColor="$color3"
+          borderColor="$color4"
           borderStyle="dashed"
           opacity={0.7}
         >
@@ -57,17 +57,11 @@ export const MemoBubble = memo(function MemoBubble({
       <XStack px="$4" py="$1.5">
         <YStack
           maxW="80%"
-          bg="$color1"
+          bg="$color2"
           rounded="$4"
           overflow="hidden"
-          // 柔らかい影
-          shadowColor="$shadowColor"
-          shadowOpacity={0.06}
-          shadowRadius={12}
-          shadowOffset={{ width: 0, height: 3 }}
-          elevationAndroid={1}
-          borderWidth={0.5}
-          borderColor="$color3"
+          borderWidth={1}
+          borderColor="$color4"
         >
           {/* 画像セクション */}
           {memo.imageUri && (

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { YStack, XStack, Text, Theme, Button } from 'tamagui';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
-import { ArrowLeft, MoreVertical } from '@tamagui/lucide-icons';
+import { X, MoreVertical } from '@tamagui/lucide-icons';
 import { Alert, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MemoList } from '@/features/memo/components/MemoList';
@@ -139,15 +139,14 @@ export default function ChatScreen() {
           >
             <Button
               size="$4"
-              icon={ArrowLeft}
+              icon={X}
               onPress={() => router.push('/')}
               chromeless
               pressStyle={{ scale: 0.95, opacity: 0.6 }}
               animation="quick"
-              color="$primary"
-            >
-              戻る
-            </Button>
+              color="$color11"
+              circular
+            />
 
             <YStack flex={1}>
               <Text fontSize="$5" fontWeight="700" color="$color12">
