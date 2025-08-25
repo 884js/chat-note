@@ -38,9 +38,7 @@ export async function getAllGroups(): Promise<GroupWithLastMemo[]> {
       const latestMemo = await db
         .select()
         .from(memos)
-        .where(
-          and(eq(memos.groupId, group.id), eq(memos.isDeleted, false))
-        )
+        .where(and(eq(memos.groupId, group.id), eq(memos.isDeleted, false)))
         .orderBy(desc(memos.createdAt))
         .limit(1);
 
@@ -50,7 +48,7 @@ export async function getAllGroups(): Promise<GroupWithLastMemo[]> {
         lastMemoAt: latestMemo[0]?.createdAt || undefined,
         unreadCount: 0,
       };
-    })
+    }),
   );
 
   // 最終メモ日時または更新日時でソート

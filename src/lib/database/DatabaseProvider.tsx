@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { closeDatabase, getDatabase, openDatabase } from './db';
+import { getDatabase, openDatabase } from './db';
 import { runMigrations, seedDatabase } from './migrate';
 
 interface DatabaseContextType {
@@ -35,8 +35,11 @@ export function DatabaseProvider({
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     let isMounted = true;
+    // seedDataの初期値を保存（再レンダリング時の変更を無視）
+    const shouldSeed = seedData;
 
     async function initializeDatabase() {
       try {
@@ -46,7 +49,6 @@ export function DatabaseProvider({
         await openDatabase();
 
         if (!isMounted) {
-          await closeDatabase();
           return;
         }
 
@@ -54,7 +56,7 @@ export function DatabaseProvider({
         await runMigrations();
 
         // 開発時のみ: 初期データ投入
-        if (seedData && __DEV__) {
+        if (shouldSeed && __DEV__) {
           // データが空の場合のみシードを実行
           const { getGroupCount } = await import(
             './repositories/groupRepository'
@@ -85,10 +87,9 @@ export function DatabaseProvider({
 
     return () => {
       isMounted = false;
-      // クリーンアップ: データベースを閉じる
-      closeDatabase().catch(console.error);
+      // データベース接続は維持（アプリのライフサイクル全体で使用）
     };
-  }, [seedData]);
+  }, []); // 空の依存配列で初回のみ実行
 
   return (
     <DatabaseContext.Provider value={{ database, isReady, error }}>

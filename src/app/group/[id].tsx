@@ -121,6 +121,7 @@ export default function GroupDetailScreen() {
       <Stack.Screen
         options={{
           headerShown: false,
+          contentStyle: { backgroundColor: '#f5f5f5' },
         }}
       />
       <Theme name="light">

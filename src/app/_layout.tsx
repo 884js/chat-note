@@ -76,7 +76,10 @@ export default function RootLayout() {
 const StackList = () => {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ title: 'メモ一覧' }} />
+      <Stack.Screen
+        name="index"
+        options={{ headerShown: false, title: 'メモ一覧' }}
+      />
       <Stack.Screen
         name="group/[id]"
         options={{

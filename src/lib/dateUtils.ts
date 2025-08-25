@@ -102,7 +102,7 @@ export const formatDateTime = (date: Date): string => {
  */
 export const formatRelativeTime = (date: Date): string => {
   try {
-    if (!isValid(date)) {
+    if (!date || !isValid(date)) {
       return '';
     }
 

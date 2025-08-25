@@ -103,11 +103,12 @@ export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
     fetchGroups();
   }, [fetchGroups]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isReady && database) {
       fetchGroups();
     }
-  }, [fetchGroups, isReady, database]);
+  }, [isReady]); // databaseとfetchGroupsを依存配列から除外して不要な再実行を防ぐ
 
   return {
     groups,
