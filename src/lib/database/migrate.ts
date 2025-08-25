@@ -21,17 +21,17 @@ export async function runMigrations(): Promise<void> {
     // マイグレーションファイルを手動で管理する必要がある場合があります
 
     // 既存のテーブルが存在するか確認
-    const tableExists = await sqliteDb.execute(
+    const tableExists = await sqliteDb.getAllAsync<{ count: number }>(
       `SELECT COUNT(*) as count FROM sqlite_master
       WHERE type='table' AND name='groups';`,
     );
 
-    if (tableExists.rows?.[0]?.count === 0) {
+    if ((tableExists[0])?.count === 0) {
       // 初回マイグレーション
       console.log('Creating initial tables...');
 
       // Groups テーブル作成
-      sqliteDb.execute(`
+      await sqliteDb.execAsync(`
         CREATE TABLE IF NOT EXISTS groups (
           id TEXT PRIMARY KEY,
           name TEXT NOT NULL,
@@ -44,7 +44,7 @@ export async function runMigrations(): Promise<void> {
       `);
 
       // Memos テーブル作成
-      sqliteDb.execute(`
+      await sqliteDb.execAsync(`
         CREATE TABLE IF NOT EXISTS memos (
           id TEXT PRIMARY KEY,
           groupId TEXT NOT NULL,
@@ -58,18 +58,18 @@ export async function runMigrations(): Promise<void> {
       `);
 
       // インデックス作成
-      sqliteDb.execute(
+      await sqliteDb.execAsync(
         'CREATE INDEX IF NOT EXISTS idx_memos_groupId ON memos(groupId);',
       );
-      sqliteDb.execute(
+      await sqliteDb.execAsync(
         'CREATE INDEX IF NOT EXISTS idx_memos_createdAt ON memos(createdAt);',
       );
-      sqliteDb.execute(
+      await sqliteDb.execAsync(
         'CREATE INDEX IF NOT EXISTS idx_groups_updatedAt ON groups(updatedAt);',
       );
 
       // マイグレーション管理テーブル
-      sqliteDb.execute(`
+      await sqliteDb.execAsync(`
         CREATE TABLE IF NOT EXISTS migrations (
           version INTEGER PRIMARY KEY,
           appliedAt INTEGER NOT NULL
@@ -77,7 +77,7 @@ export async function runMigrations(): Promise<void> {
       `);
 
       // バージョン記録
-      sqliteDb.execute(`
+      await sqliteDb.execAsync(`
         INSERT INTO migrations (version, appliedAt) VALUES (1, ${Date.now()});
       `);
     }
@@ -102,9 +102,9 @@ export async function resetDatabase(): Promise<void> {
   }
 
   // すべてのテーブルを削除
-  sqliteDb.execute('DROP TABLE IF EXISTS memos;');
-  sqliteDb.execute('DROP TABLE IF EXISTS groups;');
-  sqliteDb.execute('DROP TABLE IF EXISTS migrations;');
+  await sqliteDb.execAsync('DROP TABLE IF EXISTS memos;');
+  await sqliteDb.execAsync('DROP TABLE IF EXISTS groups;');
+  await sqliteDb.execAsync('DROP TABLE IF EXISTS migrations;');
 
   console.log('Database reset complete');
 

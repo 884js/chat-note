@@ -1,5 +1,5 @@
-import { open } from '@op-engineering/op-sqlite';
-import { drizzle } from 'drizzle-orm/op-sqlite';
+import * as SQLite from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
 import * as schema from './schema';
 
 // データベース名
@@ -7,7 +7,7 @@ const DATABASE_NAME = 'chat-note.db';
 
 // データベースインスタンス
 let db: ReturnType<typeof drizzle> | null = null;
-let sqliteDb: ReturnType<typeof open> | null = null;
+let sqliteDb: SQLite.SQLiteDatabase | null = null;
 
 /**
  * データベースを開く
@@ -15,15 +15,13 @@ let sqliteDb: ReturnType<typeof open> | null = null;
 export async function openDatabase() {
   if (!db) {
     // SQLiteデータベースを開く
-    sqliteDb = open({
-      name: DATABASE_NAME,
-    });
+    sqliteDb = await SQLite.openDatabaseAsync(DATABASE_NAME);
 
     // WALモード有効化（パフォーマンス向上）
-    sqliteDb.execute('PRAGMA journal_mode = WAL;');
+    await sqliteDb.execAsync('PRAGMA journal_mode = WAL;');
 
     // 外部キー制約有効化
-    sqliteDb.execute('PRAGMA foreign_keys = ON;');
+    await sqliteDb.execAsync('PRAGMA foreign_keys = ON;');
 
     // Drizzle ORMインスタンスを作成
     db = drizzle(sqliteDb, { schema });
@@ -37,7 +35,7 @@ export async function openDatabase() {
  */
 export async function closeDatabase(): Promise<void> {
   if (sqliteDb) {
-    sqliteDb.close();
+    await sqliteDb.closeAsync();
     sqliteDb = null;
     db = null;
   }
