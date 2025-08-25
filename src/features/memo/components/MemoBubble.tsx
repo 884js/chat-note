@@ -1,5 +1,5 @@
 import { formatTime } from '@/lib/dateUtils';
-import { Clock, Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { Edit3, Trash2 } from '@tamagui/lucide-icons';
 import { memo } from 'react';
 import { Alert, Linking, TouchableOpacity } from 'react-native';
 import ParsedText from 'react-native-parsed-text';
@@ -112,14 +112,11 @@ export const MemoBubble = memo(function MemoBubble({
               </ParsedText>
             )}
 
-            {/* メタ情報セクション */}
-            <XStack items="center" gap="$2" mt="$2">
-              <XStack items="center" gap="$1">
-                <Clock size="$0.5" color="$color8" />
-                <Text fontSize="$2" color="$color8" fontWeight="400">
-                  {formatTime(memo.createdAt)}
-                </Text>
-              </XStack>
+            {/* メタ情報セクション - 右下配置 */}
+            <XStack items="center" gap="$1.5" mt="$1" justify="flex-end">
+              <Text fontSize="$2" color="$color8" fontWeight="400">
+                {formatTime(memo.createdAt)}
+              </Text>
 
               {memo.updatedAt > memo.createdAt && (
                 <>

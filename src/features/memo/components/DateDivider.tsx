@@ -22,7 +22,7 @@ export const DateDivider = memo(function DateDivider({
         borderColor="$color6"
       >
         <XStack items="center" gap="$1.5">
-          <Calendar size="$0.75" color="$color10" />
+          <Calendar size={12} color="$color10" />
           <Text fontSize="$2" color="$color11" fontWeight="600">
             {formatDateForDivider(date)}
           </Text>
