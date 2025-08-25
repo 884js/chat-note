@@ -5,12 +5,15 @@ import { memo, useCallback } from 'react';
 import { RefreshControl } from 'react-native';
 import { Spinner, Text, YStack } from 'tamagui';
 import type { GroupWithLastMemo } from '../types';
-import { GroupCard } from './GroupCard';
+import { SwipeableGroupCard } from './SwipeableGroupCard';
 
 interface GroupListProps {
   groups: GroupWithLastMemo[];
   onGroupPress: (groupId: string) => void;
   onGroupLongPress?: (groupId: string) => void;
+  onGroupArchive?: (groupId: string) => void;
+  onGroupDelete?: (groupId: string) => void;
+  onGroupEdit?: (group: GroupWithLastMemo) => void;
   onCreateGroup?: () => void;
   isLoading?: boolean;
   isRefreshing?: boolean;
@@ -21,6 +24,9 @@ export const GroupList = memo(function GroupList({
   groups,
   onGroupPress,
   onGroupLongPress,
+  onGroupArchive,
+  onGroupDelete,
+  onGroupEdit,
   onCreateGroup,
   isLoading = false,
   isRefreshing = false,
@@ -28,15 +34,24 @@ export const GroupList = memo(function GroupList({
 }: GroupListProps) {
   const renderItem = useCallback(
     ({ item }: { item: GroupWithLastMemo }) => (
-      <GroupCard
+      <SwipeableGroupCard
         group={item}
         onPress={() => onGroupPress(item.id)}
         onLongPress={
           onGroupLongPress ? () => onGroupLongPress(item.id) : undefined
         }
+        onArchive={onGroupArchive}
+        onDelete={onGroupDelete}
+        onEdit={onGroupEdit}
       />
     ),
-    [onGroupPress, onGroupLongPress],
+    [
+      onGroupPress,
+      onGroupLongPress,
+      onGroupArchive,
+      onGroupDelete,
+      onGroupEdit,
+    ],
   );
 
   const keyExtractor = useCallback((item: GroupWithLastMemo) => item.id, []);

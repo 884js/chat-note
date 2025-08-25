@@ -71,7 +71,7 @@ export default function HomeScreen() {
     // router.push(`/room/${selectedGroup.id}/edit`);
   }, [selectedGroup]);
 
-  // グループ削除処理
+  // グループ削除処理（長押しメニューから）
   const handleDeleteGroup = useCallback(async () => {
     if (!selectedGroup) return;
     try {
@@ -80,6 +80,42 @@ export default function HomeScreen() {
       Alert.alert('エラー', 'グループの削除に失敗しました');
     }
   }, [selectedGroup, deleteGroup]);
+
+  // スワイプでアーカイブ（論理削除として扱う）
+  const handleGroupArchive = useCallback(
+    async (groupId: string) => {
+      try {
+        // グループのアーカイブ処理（今はdeleteGroupを使用）
+        await deleteGroup(groupId);
+      } catch (error) {
+        Alert.alert('エラー', 'アーカイブに失敗しました');
+      }
+    },
+    [deleteGroup],
+  );
+
+  // スワイプで完全削除
+  const handleGroupDelete = useCallback(
+    async (groupId: string) => {
+      try {
+        // グループの完全削除処理
+        await deleteGroup(groupId);
+      } catch (error) {
+        Alert.alert('エラー', '削除に失敗しました');
+      }
+    },
+    [deleteGroup],
+  );
+
+  // スワイプで編集
+  const handleGroupEdit = useCallback((group: (typeof groups)[0]) => {
+    // 編集画面へ遷移
+    console.log(`Edit group ${group.id}`);
+    // TODO: 編集画面実装後に遷移
+    Alert.alert('編集', `「${group.name}」を編集します`, [
+      { text: 'キャンセル', style: 'cancel' },
+    ]);
+  }, []);
 
   // 新規グループ作成
   const handleCreateGroup = useCallback(() => {
@@ -132,6 +168,9 @@ export default function HomeScreen() {
             groups={filteredGroups}
             onGroupPress={handleGroupPress}
             onGroupLongPress={handleGroupLongPress}
+            onGroupArchive={handleGroupArchive}
+            onGroupDelete={handleGroupDelete}
+            onGroupEdit={handleGroupEdit}
             onCreateGroup={handleCreateGroup}
             isLoading={isLoading}
             isRefreshing={isRefreshing}
