@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm';
 import { getSQLiteDatabase, openDatabase } from './db';
 import * as schema from './schema';
 
@@ -26,7 +25,7 @@ export async function runMigrations(): Promise<void> {
       WHERE type='table' AND name='groups';`,
     );
 
-    if ((tableExists[0])?.count === 0) {
+    if (tableExists[0]?.count === 0) {
       // 初回マイグレーション
       console.log('Creating initial tables...');
 
@@ -113,102 +112,119 @@ export async function resetDatabase(): Promise<void> {
 }
 
 /**
- * 初期データの投入（開発用）
+ * 初期データの投入（初回起動時のみ）
  */
 export async function seedDatabase(): Promise<void> {
-  console.log('Seeding database...');
-
   const db = await openDatabase();
+  const sqliteDb = getSQLiteDatabase();
+
+  if (!sqliteDb) {
+    throw new Error('Database not initialized');
+  }
+
+  // 既存のデータがあるかチェック（意図的に削除した場合は再生成しない）
+  const existingGroups = await sqliteDb.getAllAsync<{ count: number }>(
+    'SELECT COUNT(*) as count FROM groups;',
+  );
+
+  if (existingGroups[0]?.count > 0) {
+    console.log('Data already exists, skipping seed');
+    return;
+  }
+
+  // migrationsテーブルで初回起動かチェック
+  const migrationCount = await sqliteDb.getAllAsync<{ count: number }>(
+    'SELECT COUNT(*) as count FROM migrations WHERE version > 1;',
+  );
+
+  if (migrationCount[0]?.count > 0) {
+    // 初回以降のマイグレーションが実行されている = ユーザーが意図的にデータを削除
+    console.log('User has cleared data, skipping seed');
+    return;
+  }
+
+  console.log('Seeding initial data...');
   const now = Date.now();
 
-  // サンプルグループの作成
-  const groupsData = [
-    {
-      id: 'group-1',
-      name: 'アイデアメモ',
-      description: 'ひらめいたアイデアをすぐにメモ',
-      color: 'blue',
-      icon: '💡',
-      createdAt: new Date(now - 1000 * 60 * 60 * 24 * 7), // 7日前
-      updatedAt: new Date(now - 1000 * 60 * 5), // 5分前
-    },
-    {
-      id: 'group-2',
-      name: '買い物リスト',
-      description: '買うものをメモ',
-      color: 'green',
-      icon: '🛒',
-      createdAt: new Date(now - 1000 * 60 * 60 * 24 * 3), // 3日前
-      updatedAt: new Date(now - 1000 * 60 * 60 * 2), // 2時間前
-    },
-    {
-      id: 'group-3',
-      name: '仕事のタスク',
-      description: '今日やることリスト',
-      color: 'purple',
-      icon: '📋',
-      createdAt: new Date(now - 1000 * 60 * 60 * 24 * 14), // 14日前
-      updatedAt: new Date(now - 1000 * 60 * 60 * 24), // 1日前
-    },
-  ];
+  // ウェルカムグループを1つだけ作成
+  const welcomeGroup = {
+    id: 'welcome-group',
+    name: 'はじめてのメモ',
+    description: 'Chat Noteへようこそ！',
+    color: 'blue',
+    icon: '👋',
+    createdAt: new Date(now - 1000 * 60 * 60 * 24 * 2), // 2日前
+    updatedAt: new Date(now - 1000 * 60 * 5), // 5分前
+  };
 
-  // グループを挿入
-  await db
-    .insert(schema.groups)
-    .values(groupsData)
-    .onConflictDoUpdate({
-      target: schema.groups.id,
-      set: {
-        name: sql`excluded.name`,
-        description: sql`excluded.description`,
-        color: sql`excluded.color`,
-        icon: sql`excluded.icon`,
-        updatedAt: sql`excluded.updatedAt`,
-      },
-    });
+  await db.insert(schema.groups).values(welcomeGroup);
 
-  // サンプルメモの作成
-  const memosData = [
+  // 使い方を説明するサンプルメモ
+  const sampleMemos = [
     {
-      id: 'memo-1',
-      groupId: 'group-1',
-      content: '新しいアプリのコンセプト: チャット形式のメモアプリ',
+      id: 'welcome-1',
+      groupId: 'welcome-group',
+      content: 'Chat Noteへようこそ！🎉\nここはあなた専用のメモ空間です',
       imageUri: null,
-      createdAt: new Date(now - 1000 * 60 * 5),
-      updatedAt: new Date(now - 1000 * 60 * 5),
+      createdAt: new Date(now - 1000 * 60 * 60 * 24 * 2), // 2日前
+      updatedAt: new Date(now - 1000 * 60 * 60 * 24 * 2),
       isDeleted: false,
     },
     {
-      id: 'memo-2',
-      groupId: 'group-2',
-      content: '牛乳、パン、卵',
+      id: 'welcome-2',
+      groupId: 'welcome-group',
+      content:
+        'グループを作って、メモを整理できます\n例：仕事、プライベート、アイデアなど',
       imageUri: null,
-      createdAt: new Date(now - 1000 * 60 * 60 * 2),
-      updatedAt: new Date(now - 1000 * 60 * 60 * 2),
+      createdAt: new Date(now - 1000 * 60 * 60 * 24 * 2 + 1000 * 60), // 2日前+1分
+      updatedAt: new Date(now - 1000 * 60 * 60 * 24 * 2 + 1000 * 60),
       isDeleted: false,
     },
     {
-      id: 'memo-3',
-      groupId: 'group-3',
-      content: 'プレゼン資料の作成',
+      id: 'welcome-3',
+      groupId: 'welcome-group',
+      content: '画像も添付できます📸',
       imageUri: null,
-      createdAt: new Date(now - 1000 * 60 * 60 * 24),
+      createdAt: new Date(now - 1000 * 60 * 60 * 24), // 1日前
       updatedAt: new Date(now - 1000 * 60 * 60 * 24),
       isDeleted: false,
     },
+    {
+      id: 'welcome-4',
+      groupId: 'welcome-group',
+      content: 'URLも自動でリンクになります\nhttps://example.com',
+      imageUri: null,
+      createdAt: new Date(now - 1000 * 60 * 60 * 12), // 12時間前
+      updatedAt: new Date(now - 1000 * 60 * 60 * 12),
+      isDeleted: false,
+    },
+    {
+      id: 'welcome-5',
+      groupId: 'welcome-group',
+      content: 'メモを長押しすると編集・削除できます✏️',
+      imageUri: null,
+      createdAt: new Date(now - 1000 * 60 * 30), // 30分前
+      updatedAt: new Date(now - 1000 * 60 * 30),
+      isDeleted: false,
+    },
+    {
+      id: 'welcome-6',
+      groupId: 'welcome-group',
+      content: '右上の+ボタンから新しいグループを作成してみましょう！',
+      imageUri: null,
+      createdAt: new Date(now - 1000 * 60 * 5), // 5分前
+      updatedAt: new Date(now - 1000 * 60 * 5),
+      isDeleted: false,
+    },
   ];
 
-  // メモを挿入
-  await db
-    .insert(schema.memos)
-    .values(memosData)
-    .onConflictDoUpdate({
-      target: schema.memos.id,
-      set: {
-        content: sql`excluded.content`,
-        updatedAt: sql`excluded.updatedAt`,
-      },
-    });
+  await db.insert(schema.memos).values(sampleMemos);
 
-  console.log('Database seeded successfully');
+  // 初回セットアップ完了を記録
+  await sqliteDb.execAsync(`
+    INSERT OR IGNORE INTO migrations (version, appliedAt) 
+    VALUES (2, ${Date.now()});
+  `);
+
+  console.log('Initial data seeded successfully');
 }

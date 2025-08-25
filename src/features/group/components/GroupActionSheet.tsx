@@ -167,7 +167,7 @@ export function GroupActionSheet({
                     キャンセル
                   </Button>
                 </AlertDialog.Cancel>
-                
+
                 <Button
                   size="$3"
                   bg="#dc2626"

@@ -95,7 +95,6 @@ export function useCreateGroupForm() {
       });
 
       router.push('/');
-
     } catch (error) {
       Alert.alert('エラー', 'グループの作成に失敗しました');
     } finally {

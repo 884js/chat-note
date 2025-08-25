@@ -6,6 +6,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
+import { PortalProvider } from '@tamagui/portal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -14,7 +15,6 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { TamaguiProvider } from 'tamagui';
-import { PortalProvider } from "@tamagui/portal";
 import tamaguiConfig from '../../tamagui.config';
 
 SplashScreen.preventAutoHideAsync();
@@ -76,12 +76,12 @@ export default function RootLayout() {
 const StackList = () => {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ title: "メモ一覧" }} />
+      <Stack.Screen name="index" options={{ title: 'メモ一覧' }} />
       <Stack.Screen
         name="group/[id]"
         options={{
           headerShown: false,
-          presentation: "card",
+          presentation: 'card',
         }}
       />
     </Stack>

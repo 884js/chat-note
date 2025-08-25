@@ -16,7 +16,9 @@ export default function HomeScreen() {
   const { groups, isLoading, refetch, deleteGroup } = useGroups('lastUpdated');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGroup, setSelectedGroup] = useState<typeof groups[0] | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<(typeof groups)[0] | null>(
+    null,
+  );
   const [showActionSheet, setShowActionSheet] = useState(false);
 
   // 検索フィルタリング
@@ -54,7 +56,7 @@ export default function HomeScreen() {
     (groupId: string) => {
       const group = groups.find((g) => g.id === groupId);
       if (!group) return;
-      
+
       setSelectedGroup(group);
       setShowActionSheet(true);
     },

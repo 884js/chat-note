@@ -102,7 +102,10 @@ export const MemoBubble = memo(function MemoBubble({
                 parse={[
                   {
                     type: 'url',
-                    style: { color: '#007AFF', textDecorationLine: 'underline' },
+                    style: {
+                      color: '#007AFF',
+                      textDecorationLine: 'underline',
+                    },
                     onPress: handleUrlPress,
                   },
                 ]}
