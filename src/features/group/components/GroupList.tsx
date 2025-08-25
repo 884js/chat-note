@@ -59,13 +59,14 @@ export const GroupList = memo(function GroupList({
   const ListEmptyComponent = useCallback(
     () => (
       <EmptyState
-        title="メモがまだありません"
-        description="新しいメモグループを作成して、思いついたことを記録しましょう"
+        title="グループを作って始めよう"
+        description="買い物リスト、アイデアメモ、日記など
+用途別にグループを作って整理できます"
         icon={<FileText size={48} opacity={0.5} />}
         action={
           onCreateGroup
             ? {
-                label: '最初のグループを作成',
+                label: '最初のグループを作る',
                 onPress: onCreateGroup,
               }
             : undefined

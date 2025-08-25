@@ -10,6 +10,7 @@ import {
   XStack,
   YStack,
 } from 'tamagui';
+import { formatRelativeTime } from '../../../lib/dateUtils';
 
 interface GroupCardProps {
   group: {
@@ -39,30 +40,6 @@ export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
   const handleLongPress = () => {
     console.log('Group card long pressed:', group.id);
     onLongPress?.();
-  };
-
-  const formatTime = (date?: Date) => {
-    if (!date) return '';
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-    if (days === 0) {
-      return date.toLocaleTimeString('ja-JP', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    }
-    if (days === 1) {
-      return '昨日';
-    }
-    if (days < 7) {
-      return `${days}日前`;
-    }
-    return date.toLocaleDateString('ja-JP', {
-      month: 'short',
-      day: 'numeric',
-    });
   };
 
   return (
@@ -98,7 +75,7 @@ export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
                   <XStack gap="$1" items="center">
                     <Clock size={12} opacity={0.5} />
                     <Text fontSize="$2" opacity={0.5}>
-                      {formatTime(group.lastMemoAt)}
+                      {formatRelativeTime(group.lastMemoAt)}
                     </Text>
                   </XStack>
                 )}

@@ -140,14 +140,14 @@ export const MemoList = memo(function MemoList({
           <MessageSquare size="$6" color="$color10" />
         </YStack>
         <Text fontSize="$5" color="$color11" fontWeight="600" mt="$6">
-          まだメモがありません
+          最初のメモを書いてみよう
         </Text>
         <YStack items="center" px="$6" mt="$3">
           <Text fontSize="$3" color="$color10">
-            最初のメモを追加して
+            思いついたこと、忘れたくないこと
           </Text>
           <Text fontSize="$3" color="$color10">
-            グループを活用しましょう
+            なんでも気軽にメモしてください
           </Text>
         </YStack>
       </YStack>

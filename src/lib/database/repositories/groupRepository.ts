@@ -29,36 +29,36 @@ function mapRowToGroup(row: typeof groups.$inferSelect): Group {
 export async function getAllGroups(): Promise<GroupWithLastMemo[]> {
   const db = await openDatabase();
 
-  // サブクエリで各グループの最新メモを取得
-  const latestMemos = db
-    .select({
-      groupId: memos.groupId,
-      content: memos.content,
-      createdAt: sql<number>`MAX(${memos.createdAt})`.as('lastMemoAt'),
-    })
-    .from(memos)
-    .where(eq(memos.isDeleted, false))
-    .groupBy(memos.groupId)
-    .as('latestMemos');
+  // すべてのグループを取得
+  const allGroups = await db.select().from(groups);
 
-  const result = await db
-    .select({
-      group: groups,
-      lastMemo: latestMemos.content,
-      lastMemoAt: latestMemos.createdAt,
-    })
-    .from(groups)
-    .leftJoin(latestMemos, eq(groups.id, latestMemos.groupId))
-    .orderBy(
-      desc(sql`COALESCE(${latestMemos.createdAt}, ${groups.updatedAt})`),
-    );
+  // 各グループの最新メモを取得
+  const groupsWithLastMemo = await Promise.all(
+    allGroups.map(async (group) => {
+      const latestMemo = await db
+        .select()
+        .from(memos)
+        .where(
+          and(eq(memos.groupId, group.id), eq(memos.isDeleted, false))
+        )
+        .orderBy(desc(memos.createdAt))
+        .limit(1);
 
-  return result.map((row) => ({
-    ...mapRowToGroup(row.group),
-    lastMemo: row.lastMemo || undefined,
-    lastMemoAt: row.lastMemoAt ? new Date(row.lastMemoAt) : undefined,
-    unreadCount: 0,
-  }));
+      return {
+        ...mapRowToGroup(group),
+        lastMemo: latestMemo[0]?.content || undefined,
+        lastMemoAt: latestMemo[0]?.createdAt || undefined,
+        unreadCount: 0,
+      };
+    })
+  );
+
+  // 最終メモ日時または更新日時でソート
+  return groupsWithLastMemo.sort((a, b) => {
+    const aTime = (a.lastMemoAt || a.updatedAt).getTime();
+    const bTime = (b.lastMemoAt || b.updatedAt).getTime();
+    return bTime - aTime;
+  });
 }
 
 /**
