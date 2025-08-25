@@ -1,8 +1,9 @@
 import { formatTime } from '@/lib/dateUtils';
 import { Clock, Edit3, Trash2 } from '@tamagui/lucide-icons';
 import { memo } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Image, Paragraph, Text, XStack, YStack } from 'tamagui';
+import { Alert, Linking, TouchableOpacity } from 'react-native';
+import ParsedText from 'react-native-parsed-text';
+import { Image, Text, XStack, YStack } from 'tamagui';
 import type { Memo } from '../types';
 
 interface MemoBubbleProps {
@@ -25,6 +26,19 @@ export const MemoBubble = memo(function MemoBubble({
   const handleImagePress = () => {
     if (onImagePress && memo.imageUri) {
       onImagePress(memo.imageUri);
+    }
+  };
+
+  const handleUrlPress = async (url: string) => {
+    try {
+      const canOpen = await Linking.canOpenURL(url);
+      if (canOpen) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert('エラー', 'このURLを開けません');
+      }
+    } catch (error) {
+      Alert.alert('エラー', 'URLを開く際にエラーが発生しました');
     }
   };
 
@@ -78,15 +92,24 @@ export const MemoBubble = memo(function MemoBubble({
           {/* コンテンツセクション */}
           <YStack p="$3" gap="$2">
             {memo.content && (
-              <Paragraph
-                fontSize="$4"
-                color="$color12"
-                lineHeight="$5"
-                fontWeight="400"
-                letterSpacing={0.2}
+              <ParsedText
+                style={{
+                  fontSize: 16,
+                  lineHeight: 24,
+                  color: '#000',
+                  letterSpacing: 0.2,
+                }}
+                parse={[
+                  {
+                    type: 'url',
+                    style: { color: '#007AFF', textDecorationLine: 'underline' },
+                    onPress: handleUrlPress,
+                  },
+                ]}
+                childrenProps={{ allowFontScaling: false }}
               >
                 {memo.content}
-              </Paragraph>
+              </ParsedText>
             )}
 
             {/* メタ情報セクション */}
