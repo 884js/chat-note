@@ -1,6 +1,6 @@
 import { Archive, Edit3, Trash2 } from '@tamagui/lucide-icons';
 import { memo, useCallback } from 'react';
-import { Dimensions } from 'react-native';
+import { Alert, Dimensions } from 'react-native';
 import {
   Gesture,
   GestureDetector,
@@ -18,15 +18,7 @@ import type { GroupWithLastMemo } from '../types';
 import { GroupCard } from './GroupCard';
 
 interface SwipeableGroupCardProps {
-  group: {
-    id: string;
-    name: string;
-    description?: string;
-    color: string;
-    icon?: string;
-    lastMemo?: string;
-    lastMemoAt?: Date;
-  };
+  group: GroupWithLastMemo;
   onPress: () => void;
   onLongPress?: () => void;
   onArchive?: (groupId: string) => void;
@@ -59,12 +51,33 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
     }
   }, [group.id, onArchive]);
 
+  const confirmAndDelete = useCallback(() => {
+    Alert.alert(
+      'グループを削除',
+      `「${group.name}」を削除しますか？\nこの操作は取り消せません。`,
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: () => {
+            if (onDelete) {
+              onDelete(group.id);
+            }
+          },
+        },
+      ],
+      { cancelable: true },
+    );
+  }, [group.id, group.name, onDelete]);
+
   const executeDelete = useCallback(() => {
     'worklet';
-    if (onDelete) {
-      runOnJS(onDelete)(group.id);
-    }
-  }, [group.id, onDelete]);
+    runOnJS(confirmAndDelete)();
+  }, [confirmAndDelete]);
 
   const executeEdit = useCallback(() => {
     'worklet';
@@ -74,6 +87,8 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
   }, [group, onEdit]);
 
   const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10]) // 横方向の移動が10px以上でジェスチャーを開始
+    .failOffsetY([-5, 5]) // 縦方向の移動が5px以上でジェスチャーを失敗させる
     .onUpdate((e) => {
       translateX.value = e.translationX;
     })
@@ -84,10 +99,8 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
       const shouldEdit = e.translationX > SWIPE_THRESHOLD_EDIT;
 
       if (shouldDelete) {
-        // 削除アニメーション
-        translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 });
-        itemHeight.value = withTiming(0, { duration: 300 });
-        opacity.value = withTiming(0, { duration: 300 }, () => {
+        // 削除確認後、元に戻してから削除処理
+        translateX.value = withTiming(0, { duration: 200 }, () => {
           executeDelete();
         });
       } else if (shouldArchive) {

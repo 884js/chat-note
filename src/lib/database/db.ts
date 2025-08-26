@@ -32,7 +32,7 @@ export async function openDatabase(): Promise<DrizzleDB> {
   initializationPromise = (async () => {
     try {
       console.log('[DB] Opening database...');
-      
+
       // SQLiteデータベースを開く
       sqliteDb = await SQLite.openDatabaseAsync(DATABASE_NAME);
 
@@ -45,7 +45,7 @@ export async function openDatabase(): Promise<DrizzleDB> {
 
       // Drizzle ORMインスタンスを作成
       db = drizzle(sqliteDb, { schema });
-      
+
       console.log('[DB] Database opened successfully');
       return db;
     } catch (error) {
@@ -54,7 +54,9 @@ export async function openDatabase(): Promise<DrizzleDB> {
       initializationPromise = null;
       db = null;
       sqliteDb = null;
-      throw new Error(`Database initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Database initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
     }
   })();
 

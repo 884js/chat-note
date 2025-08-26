@@ -1,4 +1,5 @@
 import { useGroup } from '@/features/group/hooks/useGroup';
+import { ImageViewer } from '@/features/memo/components/ImageViewer';
 import { MemoInput } from '@/features/memo/components/MemoInput';
 import { MemoList } from '@/features/memo/components/MemoList';
 import { useMemos } from '@/features/memo/hooks/useMemos';
@@ -16,6 +17,7 @@ export default function GroupDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
 
   const { group } = useGroup({ groupId: id || '' });
 
@@ -24,11 +26,12 @@ export default function GroupDetailScreen() {
 
   // メモ送信
   const handleSend = useCallback(
-    async (content: string) => {
+    async (content?: string, imageUri?: string) => {
       try {
         await sendMemo({
           groupId: id || '1',
           content,
+          imageUri,
         });
       } catch (error) {
         Alert.alert('エラー', 'メモの送信に失敗しました');
@@ -77,8 +80,12 @@ export default function GroupDetailScreen() {
 
   // 画像タップ
   const handleImagePress = useCallback((imageUri: string) => {
-    // TODO: 画像プレビュー画面を表示
-    console.log('Preview image:', imageUri);
+    setSelectedImageUri(imageUri);
+  }, []);
+
+  // 画像ビューアーを閉じる
+  const handleCloseImageViewer = useCallback(() => {
+    setSelectedImageUri(null);
   }, []);
 
   // リフレッシュ
@@ -185,6 +192,13 @@ export default function GroupDetailScreen() {
           </KeyboardAvoidingView>
         </YStack>
       </Theme>
+
+      {/* 画像ビューアー */}
+      <ImageViewer
+        imageUri={selectedImageUri}
+        isVisible={selectedImageUri !== null}
+        onClose={handleCloseImageViewer}
+      />
     </>
   );
 }

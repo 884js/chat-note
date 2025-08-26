@@ -1,10 +1,12 @@
 import { Send } from '@tamagui/lucide-icons';
 import { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { Button, Input, XStack } from 'tamagui';
+import { Button, Input, ScrollView, XStack, YStack } from 'tamagui';
+import { ImagePickerButton } from './ImagePickerButton';
+import { ImagePreview } from './ImagePreview';
 
 interface MemoInputProps {
-  onSend: (content: string) => void;
+  onSend: (content?: string, imageUri?: string) => void;
   placeholder?: string;
   isLoading?: boolean;
 }
@@ -15,51 +17,84 @@ export function MemoInput({
   isLoading = false,
 }: MemoInputProps) {
   const [message, setMessage] = useState('');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleSend = useCallback(() => {
     const trimmedMessage = message.trim();
-    if (!trimmedMessage) return;
 
-    onSend(trimmedMessage);
+    // テキストか画像のどちらかがあれば送信可能
+    if (!trimmedMessage && !selectedImage) return;
+
+    onSend(trimmedMessage || undefined, selectedImage || undefined);
     setMessage('');
-  }, [message, onSend]);
+    setSelectedImage(null);
+  }, [message, selectedImage, onSend]);
 
-  const canSend = message.trim().length > 0 && !isLoading;
+  const handleImageSelected = useCallback((imageUri: string) => {
+    setSelectedImage(imageUri);
+  }, []);
+
+  const handleRemoveImage = useCallback(() => {
+    setSelectedImage(null);
+  }, []);
+
+  const canSend =
+    (message.trim().length > 0 || selectedImage !== null) && !isLoading;
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={90}
     >
-      <XStack
-        p="$3"
-        gap="$2"
-        bg="$background"
-        borderTopWidth={1}
-        borderTopColor="$color6"
-        items="center"
-      >
-        <Input
-          flex={1}
-          value={message}
-          onChangeText={setMessage}
-          placeholder={placeholder}
-          disabled={isLoading}
-          onSubmitEditing={handleSend}
-          returnKeyType="send"
-          size="$4"
-          borderWidth={1}
-          borderColor="$color6"
-        />
+      <YStack bg="$background" borderTopWidth={1} borderTopColor="$color6">
+        {/* 選択された画像のプレビュー */}
+        {selectedImage && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            p="$3"
+            pb="$0"
+          >
+            <ImagePreview
+              imageUri={selectedImage}
+              onRemove={handleRemoveImage}
+            />
+          </ScrollView>
+        )}
 
-        <Button
-          size="$4"
-          icon={Send}
-          onPress={handleSend}
-          disabled={!canSend}
-          circular
-        />
-      </XStack>
+        {/* 入力エリア */}
+        <XStack p="$3" gap="$2" items="center">
+          {/* 画像選択ボタン */}
+          <ImagePickerButton
+            onImageSelected={handleImageSelected}
+            disabled={isLoading}
+            size="$4"
+          />
+
+          {/* テキスト入力 */}
+          <Input
+            flex={1}
+            value={message}
+            onChangeText={setMessage}
+            placeholder={placeholder}
+            disabled={isLoading}
+            onSubmitEditing={handleSend}
+            returnKeyType="send"
+            size="$4"
+            borderWidth={1}
+            borderColor="$color6"
+          />
+
+          {/* 送信ボタン */}
+          <Button
+            size="$4"
+            icon={Send}
+            onPress={handleSend}
+            disabled={!canSend}
+            circular
+          />
+        </XStack>
+      </YStack>
     </KeyboardAvoidingView>
   );
 }
