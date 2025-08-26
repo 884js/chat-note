@@ -1,14 +1,15 @@
+import { DrawerMenu } from '@/components/navigation/DrawerMenu';
 import { FAB } from '@/components/ui/FAB';
 import { SearchBox } from '@/components/ui/SearchBox';
 import { GroupActionSheet } from '@/features/group/components/GroupActionSheet';
 import { GroupList } from '@/features/group/components/GroupList';
 import { useGroups } from '@/features/group/hooks/useGroups';
-import { Plus } from '@tamagui/lucide-icons';
+import { Menu, Plus } from '@tamagui/lucide-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, Theme, YStack } from 'tamagui';
+import { Button, Text, Theme, XStack, YStack } from 'tamagui';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function HomeScreen() {
     null,
   );
   const [showActionSheet, setShowActionSheet] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   // 検索フィルタリング
   const filteredGroups = useMemo(() => {
@@ -148,12 +150,28 @@ export default function HomeScreen() {
             borderBottomColor="$color6"
             gap="$2"
           >
-            {/* 検索ボックス */}
-            <SearchBox
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="グループを検索..."
-            />
+            {/* メニューと検索ボックス */}
+            <XStack gap="$2" items="center">
+              {/* ハンバーガーメニューボタン */}
+              <Button
+                size="$4"
+                circular
+                chromeless
+                icon={<Menu size={24} />}
+                onPress={() => setShowMenu(true)}
+                pressStyle={{ opacity: 0.5 }}
+                animation="quick"
+              />
+
+              {/* 検索ボックス */}
+              <YStack flex={1}>
+                <SearchBox
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="グループを検索..."
+                />
+              </YStack>
+            </XStack>
 
             {/* 検索結果数 */}
             {searchQuery && (
@@ -191,6 +209,9 @@ export default function HomeScreen() {
             onEdit={handleEditGroup}
             onDelete={handleDeleteGroup}
           />
+
+          {/* ドロワーメニュー */}
+          <DrawerMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />
         </YStack>
       </Theme>
     </>
