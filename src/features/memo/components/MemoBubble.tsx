@@ -1,9 +1,10 @@
 import { formatTime } from '@/lib/dateUtils';
 import { Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { Image as ExpoImage } from 'expo-image';
 import { memo } from 'react';
 import { Alert, Linking, TouchableOpacity } from 'react-native';
 import ParsedText from 'react-native-parsed-text';
-import { Image, Text, XStack, YStack } from 'tamagui';
+import { Text, XStack, YStack } from 'tamagui';
 import type { Memo } from '../types';
 
 interface MemoBubbleProps {
@@ -80,11 +81,14 @@ export const MemoBubble = memo(function MemoBubble({
           {/* 画像セクション */}
           {memo.imageUri && (
             <TouchableOpacity onPress={handleImagePress} activeOpacity={0.95}>
-              <Image
+              <ExpoImage
                 source={{ uri: memo.imageUri }}
-                width="100%"
-                height={200}
-                objectFit="cover"
+                style={{
+                  width: '100%',
+                  aspectRatio: 4 / 3, // デフォルトのアスペクト比
+                  maxHeight: 300, // 最大高さ制限
+                }}
+                contentFit="cover"
               />
             </TouchableOpacity>
           )}

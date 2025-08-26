@@ -39,10 +39,9 @@ export const ImagePickerButton = memo(function ImagePickerButton({
 
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.8,
+        mediaTypes: ['images'],
+        allowsEditing: false, // 編集を無効にして自由な切り抜きを可能に
+        quality: 1, // 元の品質を維持
       });
 
       if (!result.canceled && result.assets[0]) {
@@ -66,10 +65,8 @@ export const ImagePickerButton = memo(function ImagePickerButton({
 
     try {
       const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.8,
+        allowsEditing: false, // 編集を無効にして自由な切り抜きを可能に
+        quality: 1, // 元の品質を維持
       });
 
       if (!result.canceled && result.assets[0]) {
