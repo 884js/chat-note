@@ -4,7 +4,7 @@ import { MemoInput } from '@/features/memo/components/MemoInput';
 import { MemoList } from '@/features/memo/components/MemoList';
 import { useMemos } from '@/features/memo/hooks/useMemos';
 import type { Memo } from '@/features/memo/types';
-import { MoreVertical, X } from '@tamagui/lucide-icons';
+import { Image as ImageIcon, MoreVertical, X } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, TouchableOpacity } from 'react-native';
@@ -99,6 +99,12 @@ export default function GroupDetailScreen() {
   const handleMorePress = useCallback(() => {
     Alert.alert('グループ設定', undefined, [
       {
+        text: '画像一覧',
+        onPress: () => {
+          router.push(`/group/${id}/gallery`);
+        },
+      },
+      {
         text: 'グループ情報を編集',
         onPress: () => {
           // TODO: 編集画面へ遷移
@@ -121,7 +127,7 @@ export default function GroupDetailScreen() {
       },
       { text: 'キャンセル', style: 'cancel' },
     ]);
-  }, []);
+  }, [id, router]);
 
   return (
     <>
@@ -164,6 +170,14 @@ export default function GroupDetailScreen() {
                 {group?.name}
               </Text>
             </YStack>
+
+            <TouchableOpacity
+              onPress={() => router.push(`/group/${id}/gallery`)}
+              activeOpacity={0.7}
+              style={{ padding: 8 }}
+            >
+              <ImageIcon size="$1.5" color="$color11" />
+            </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleMorePress}

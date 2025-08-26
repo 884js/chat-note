@@ -236,3 +236,50 @@ export async function searchMemosByText(
 
   return result.map(mapRowToMemo);
 }
+
+/**
+ * グループ内の画像付きメモを取得
+ */
+export async function getImageMemosByGroupId(
+  groupId: string,
+  limit = 100,
+  offset = 0,
+): Promise<Memo[]> {
+  const db = await openDatabase();
+
+  const result = await db
+    .select()
+    .from(memos)
+    .where(
+      and(
+        eq(memos.groupId, groupId),
+        eq(memos.isDeleted, false),
+        sql`${memos.imageUri} IS NOT NULL`,
+      ),
+    )
+    .orderBy(desc(memos.createdAt))
+    .limit(limit)
+    .offset(offset);
+
+  return result.map(mapRowToMemo);
+}
+
+/**
+ * グループ内の画像数を取得
+ */
+export async function getImageCountByGroupId(groupId: string): Promise<number> {
+  const db = await openDatabase();
+
+  const result = await db
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(memos)
+    .where(
+      and(
+        eq(memos.groupId, groupId),
+        eq(memos.isDeleted, false),
+        sql`${memos.imageUri} IS NOT NULL`,
+      ),
+    );
+
+  return result[0]?.count || 0;
+}
