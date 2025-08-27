@@ -53,7 +53,6 @@ export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
           bordered
           borderColor="$color6"
           animation="quick"
-          mb="$3"
           p="$4"
           cursor="pointer"
         >

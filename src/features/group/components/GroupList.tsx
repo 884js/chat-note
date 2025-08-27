@@ -3,7 +3,7 @@ import { FlashList } from '@shopify/flash-list';
 import { FileText } from '@tamagui/lucide-icons';
 import { memo, useCallback } from 'react';
 import { RefreshControl } from 'react-native';
-import { Spinner, Text, YStack } from 'tamagui';
+import { Spinner, YStack } from 'tamagui';
 import type { GroupWithLastMemo } from '../types';
 import { SwipeableGroupCard } from './SwipeableGroupCard';
 
@@ -12,7 +12,6 @@ interface GroupListProps {
   onGroupPress: (groupId: string) => void;
   onGroupLongPress?: (groupId: string) => void;
   onGroupArchive?: (groupId: string) => void;
-  onGroupDelete?: (groupId: string) => void;
   onGroupEdit?: (group: GroupWithLastMemo) => void;
   onCreateGroup?: () => void;
   isLoading?: boolean;
@@ -25,7 +24,6 @@ export const GroupList = memo(function GroupList({
   onGroupPress,
   onGroupLongPress,
   onGroupArchive,
-  onGroupDelete,
   onGroupEdit,
   onCreateGroup,
   isLoading = false,
@@ -41,17 +39,10 @@ export const GroupList = memo(function GroupList({
           onGroupLongPress ? () => onGroupLongPress(item.id) : undefined
         }
         onArchive={onGroupArchive}
-        onDelete={onGroupDelete}
         onEdit={onGroupEdit}
       />
     ),
-    [
-      onGroupPress,
-      onGroupLongPress,
-      onGroupArchive,
-      onGroupDelete,
-      onGroupEdit,
-    ],
+    [onGroupPress, onGroupLongPress, onGroupArchive, onGroupEdit],
   );
 
   const keyExtractor = useCallback((item: GroupWithLastMemo) => item.id, []);
@@ -74,17 +65,6 @@ export const GroupList = memo(function GroupList({
       />
     ),
     [onCreateGroup],
-  );
-
-  const ListHeaderComponent = useCallback(
-    () => (
-      <YStack p="$4" gap="$2">
-        <Text fontSize="$2" opacity={0.6}>
-          {groups.length} 個のグループ
-        </Text>
-      </YStack>
-    ),
-    [groups.length],
   );
 
   if (isLoading && groups.length === 0) {

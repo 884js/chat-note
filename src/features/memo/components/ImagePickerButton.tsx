@@ -98,7 +98,7 @@ export const ImagePickerButton = memo(function ImagePickerButton({
   return (
     <Button
       size={size}
-      icon={ImageIcon}
+      icon={<ImageIcon size={24} />}
       onPress={handlePress}
       disabled={disabled}
       circular

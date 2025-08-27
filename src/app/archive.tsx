@@ -1,8 +1,8 @@
 import { EmptyState } from '@/components/ui/EmptyState';
-import { GroupCard } from '@/features/group/components/GroupCard';
+import { SwipeableArchivedCard } from '@/features/group/components/SwipeableArchivedCard';
 import { groupRepository } from '@/lib/database';
 import type { GroupWithLastMemo } from '@/features/group/types';
-import { Archive, ArrowLeft, RotateCcw, Trash2 } from '@tamagui/lucide-icons';
+import { Archive, ArrowLeft } from '@tamagui/lucide-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, FlatList, RefreshControl } from 'react-native';
@@ -52,26 +52,15 @@ export default function ArchiveScreen() {
   // グループの復元
   const handleUnarchive = useCallback(
     async (group: GroupWithLastMemo) => {
-      Alert.alert(
-        'グループを復元',
-        `「${group.name}」を復元しますか？`,
-        [
-          { text: 'キャンセル', style: 'cancel' },
-          {
-            text: '復元',
-            onPress: async () => {
-              try {
-                await groupRepository.unarchiveGroup(group.id);
-                await fetchArchivedGroups();
-                Alert.alert('完了', 'グループを復元しました');
-              } catch (error) {
-                console.error('Failed to unarchive group:', error);
-                Alert.alert('エラー', '復元に失敗しました');
-              }
-            },
-          },
-        ],
-      );
+      console.log('Unarchiving group:', group.id);
+      try {
+        await groupRepository.unarchiveGroup(group.id);
+        await fetchArchivedGroups();
+        // Alert.alertを削除（SwipeableArchivedGroupCard内で既に確認済み）
+      } catch (error) {
+        console.error('Failed to unarchive group:', error);
+        Alert.alert('エラー', '復元に失敗しました');
+      }
     },
     [fetchArchivedGroups],
   );
@@ -79,56 +68,27 @@ export default function ArchiveScreen() {
   // グループの完全削除
   const handleDelete = useCallback(
     async (group: GroupWithLastMemo) => {
-      Alert.alert(
-        '警告',
-        `「${group.name}」を完全に削除しますか？\n\nこの操作は取り消せません。グループ内のすべてのメモも削除されます。`,
-        [
-          { text: 'キャンセル', style: 'cancel' },
-          {
-            text: '削除',
-            style: 'destructive',
-            onPress: async () => {
-              try {
-                await groupRepository.deleteGroup(group.id);
-                await fetchArchivedGroups();
-                Alert.alert('完了', 'グループを削除しました');
-              } catch (error) {
-                console.error('Failed to delete group:', error);
-                Alert.alert('エラー', '削除に失敗しました');
-              }
-            },
-          },
-        ],
-      );
+      console.log('Deleting group:', group.id);
+      try {
+        await groupRepository.deleteGroup(group.id);
+        await fetchArchivedGroups();
+        // Alert.alertを削除（SwipeableArchivedGroupCard内で既に確認済み）
+      } catch (error) {
+        console.error('Failed to delete group:', error);
+        Alert.alert('エラー', '削除に失敗しました');
+      }
     },
     [fetchArchivedGroups],
   );
 
   // グループカードのレンダリング
   const renderGroup = ({ item }: { item: GroupWithLastMemo }) => (
-    <YStack px="$4" mb="$3">
-      <GroupCard group={item} onPress={() => handleGroupPress(item.id)} />
-      <XStack gap="$2" mt="$2">
-        <Button
-          flex={1}
-          size="$3"
-          icon={<RotateCcw size={18} />}
-          onPress={() => handleUnarchive(item)}
-          theme="blue"
-        >
-          復元
-        </Button>
-        <Button
-          flex={1}
-          size="$3"
-          icon={<Trash2 size={18} />}
-          onPress={() => handleDelete(item)}
-          theme="red"
-        >
-          削除
-        </Button>
-      </XStack>
-    </YStack>
+    <SwipeableArchivedCard
+      group={item}
+      onPress={() => handleGroupPress(item.id)}
+      onUnarchive={handleUnarchive}
+      onDelete={handleDelete}
+    />
   );
 
   return (
@@ -195,6 +155,7 @@ export default function ArchiveScreen() {
                 paddingTop: 16,
                 paddingBottom: insets.bottom + 16,
               }}
+              showsVerticalScrollIndicator={false}
             />
           )}
         </YStack>

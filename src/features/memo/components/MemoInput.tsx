@@ -88,7 +88,7 @@ export function MemoInput({
           {/* 送信ボタン */}
           <Button
             size="$4"
-            icon={Send}
+            icon={<Send size={24} />}
             onPress={handleSend}
             disabled={!canSend}
             circular
