@@ -103,10 +103,10 @@ export const GroupList = memo(function GroupList({
         keyExtractor={keyExtractor}
         estimatedItemSize={100}
         ListEmptyComponent={ListEmptyComponent}
-        ListHeaderComponent={groups.length > 0 ? ListHeaderComponent : null}
         contentContainerStyle={{
           paddingHorizontal: 16,
           paddingBottom: 100, // FABのスペース
+          paddingTop: 16,
         }}
         refreshControl={
           onRefresh ? (

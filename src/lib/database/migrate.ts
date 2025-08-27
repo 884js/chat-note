@@ -37,6 +37,7 @@ export async function runMigrations(): Promise<void> {
           description TEXT,
           color TEXT NOT NULL,
           icon TEXT,
+          isArchived INTEGER DEFAULT 0 NOT NULL,
           createdAt INTEGER NOT NULL,
           updatedAt INTEGER NOT NULL
         );
@@ -66,6 +67,9 @@ export async function runMigrations(): Promise<void> {
       await sqliteDb.execAsync(
         'CREATE INDEX IF NOT EXISTS idx_groups_updatedAt ON groups(updatedAt);',
       );
+      await sqliteDb.execAsync(
+        'CREATE INDEX IF NOT EXISTS idx_groups_isArchived ON groups(isArchived);',
+      );
 
       // マイグレーション管理テーブル
       await sqliteDb.execAsync(`
@@ -79,6 +83,27 @@ export async function runMigrations(): Promise<void> {
       await sqliteDb.execAsync(`
         INSERT INTO migrations (version, appliedAt) VALUES (1, ${Date.now()});
       `);
+    } else {
+      // 既存のテーブルがある場合、isArchivedカラムが存在するか確認
+      const columnExists = await sqliteDb.getAllAsync<{ count: number }>(
+        `SELECT COUNT(*) as count FROM pragma_table_info('groups') WHERE name='isArchived';`,
+      );
+
+      if (columnExists[0]?.count === 0) {
+        console.log('Adding isArchived column to groups table...');
+        // isArchivedカラムを追加
+        await sqliteDb.execAsync(
+          'ALTER TABLE groups ADD COLUMN isArchived INTEGER DEFAULT 0 NOT NULL;',
+        );
+        // インデックスを作成
+        await sqliteDb.execAsync(
+          'CREATE INDEX IF NOT EXISTS idx_groups_isArchived ON groups(isArchived);',
+        );
+        // マイグレーション記録
+        await sqliteDb.execAsync(`
+          INSERT OR IGNORE INTO migrations (version, appliedAt) VALUES (3, ${Date.now()});
+        `);
+      }
     }
 
     console.log('Migrations completed successfully');
@@ -153,6 +178,7 @@ export async function seedDatabase(): Promise<void> {
     description: 'Chat Noteへようこそ！',
     color: 'blue',
     icon: '👋',
+    isArchived: false,
     createdAt: new Date(now - 1000 * 60 * 60 * 24 * 2), // 2日前
     updatedAt: new Date(now - 1000 * 60 * 5), // 5分前
   };

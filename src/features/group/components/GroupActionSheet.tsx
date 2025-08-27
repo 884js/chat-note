@@ -1,4 +1,4 @@
-import { Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { Archive, Edit3 } from '@tamagui/lucide-icons';
 import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -22,7 +22,7 @@ interface GroupActionSheetProps {
     icon?: string;
   } | null;
   onEdit: () => void;
-  onDelete: () => void;
+  onArchive: () => void;
 }
 
 export function GroupActionSheet({
@@ -30,10 +30,10 @@ export function GroupActionSheet({
   onOpenChange,
   group,
   onEdit,
-  onDelete,
+  onArchive,
 }: GroupActionSheetProps) {
   const insets = useSafeAreaInsets();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showArchiveDialog, setShowArchiveDialog] = useState(false);
 
   if (!group) return null;
 
@@ -42,14 +42,14 @@ export function GroupActionSheet({
     setTimeout(onEdit, 200);
   };
 
-  const handleDeletePress = () => {
+  const handleArchivePress = () => {
     onOpenChange(false);
-    setTimeout(() => setShowDeleteDialog(true), 200);
+    setTimeout(() => setShowArchiveDialog(true), 200);
   };
 
-  const handleDeleteConfirm = () => {
-    setShowDeleteDialog(false);
-    onDelete();
+  const handleArchiveConfirm = () => {
+    setShowArchiveDialog(false);
+    onArchive();
   };
 
   return (
@@ -97,21 +97,21 @@ export function GroupActionSheet({
 
             <Separator mx="$5" />
 
-            {/* 削除ボタン */}
+            {/* アーカイブボタン */}
             <Button
               size="$5"
               bg="transparent"
-              hoverStyle={{ bg: '#fff5f5' }}
-              pressStyle={{ bg: '#fee' }}
-              onPress={handleDeletePress}
+              hoverStyle={{ bg: '$color2' }}
+              pressStyle={{ bg: '$color3' }}
+              onPress={handleArchivePress}
               justify="space-between"
               px="$5"
               py="$4"
             >
               <XStack gap="$3">
-                <Trash2 size={22} color="#dc2626" />
-                <Text fontSize="$5" color="#dc2626">
-                  削除
+                <Archive size={22} color="$color11" />
+                <Text fontSize="$5" color="$color12">
+                  アーカイブ
                 </Text>
               </XStack>
             </Button>
@@ -119,8 +119,8 @@ export function GroupActionSheet({
         </Sheet.Frame>
       </Sheet>
 
-      {/* 削除確認ダイアログ */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      {/* アーカイブ確認ダイアログ */}
+      <AlertDialog open={showArchiveDialog} onOpenChange={setShowArchiveDialog}>
         <AlertDialog.Portal>
           <AlertDialog.Overlay
             key="overlay"
@@ -149,10 +149,10 @@ export function GroupActionSheet({
             <YStack gap="$4">
               <YStack gap="$2">
                 <AlertDialog.Title fontSize="$6" fontWeight="600">
-                  削除の確認
+                  アーカイブの確認
                 </AlertDialog.Title>
                 <AlertDialog.Description fontSize="$3" color="$color11">
-                  「{group.name}」を削除しますか？
+                  「{group.name}」をアーカイブしますか？
                 </AlertDialog.Description>
               </YStack>
 
@@ -170,14 +170,14 @@ export function GroupActionSheet({
 
                 <Button
                   size="$3"
-                  bg="#dc2626"
+                  bg="$blue9"
                   color="white"
                   hoverStyle={{ opacity: 0.9 }}
                   pressStyle={{ opacity: 0.8 }}
-                  onPress={handleDeleteConfirm}
+                  onPress={handleArchiveConfirm}
                   flex={1}
                 >
-                  削除
+                  アーカイブ
                 </Button>
               </XStack>
             </YStack>

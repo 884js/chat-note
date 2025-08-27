@@ -6,6 +6,7 @@ export interface Group {
   description?: string;
   color: string;
   icon?: string;
+  isArchived?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

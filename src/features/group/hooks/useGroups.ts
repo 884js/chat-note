@@ -98,6 +98,27 @@ export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
     [database, fetchGroups],
   );
 
+  // グループアーカイブ
+  const archiveGroup = useCallback(
+    async (groupId: string) => {
+      if (!database) {
+        throw new Error('Database not ready');
+      }
+
+      try {
+        await groupRepository.archiveGroup(groupId);
+
+        // グループリストを再取得
+        await fetchGroups();
+      } catch (err) {
+        console.error('Failed to archive group:', err);
+        setError(err as Error);
+        throw err;
+      }
+    },
+    [database, fetchGroups],
+  );
+
   // リフレッシュ
   const refetch = useCallback(() => {
     fetchGroups();
@@ -116,6 +137,7 @@ export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
     error,
     createGroup,
     deleteGroup,
+    archiveGroup,
     refetch,
   };
 }

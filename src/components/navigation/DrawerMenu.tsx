@@ -1,4 +1,5 @@
-import { Archive, ArrowUpDown, Settings, Trash2 } from '@tamagui/lucide-icons';
+import { Archive, ArrowUpDown, Settings } from '@tamagui/lucide-icons';
+import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,6 +14,7 @@ export const DrawerMenu = memo(function DrawerMenu({
   isOpen,
   onClose,
 }: DrawerMenuProps) {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
 
   const handleSettingsPress = () => {
@@ -22,20 +24,12 @@ export const DrawerMenu = memo(function DrawerMenu({
 
   const handleArchivePress = () => {
     onClose();
-    Alert.alert('アーカイブ', 'アーカイブ済みのグループを表示');
+    router.push('/archive');
   };
 
   const handleSortPress = () => {
     onClose();
     Alert.alert('並び替え', '並び替え設定');
-  };
-
-  const handleDeleteAllPress = () => {
-    onClose();
-    Alert.alert('確認', 'すべてのグループを削除しますか？', [
-      { text: 'キャンセル', style: 'cancel' },
-      { text: '削除', style: 'destructive' },
-    ]);
   };
 
   return (
@@ -116,10 +110,7 @@ export const DrawerMenu = memo(function DrawerMenu({
                 justify="flex-start"
                 chromeless
                 icon={<Archive size={20} />}
-                onPress={() => {
-                  onClose();
-                  Alert.alert('アーカイブ', 'アーカイブ済みのグループを表示');
-                }}
+                onPress={handleArchivePress}
               >
                 アーカイブ
               </Button>
@@ -137,24 +128,6 @@ export const DrawerMenu = memo(function DrawerMenu({
                 並び替え
               </Button>
 
-              <YStack flex={1} />
-
-              {/* 下部のアクション */}
-              <Button
-                size="$4"
-                justify="flex-start"
-                chromeless
-                icon={<Trash2 size={20} />}
-                onPress={() => {
-                  onClose();
-                  Alert.alert('確認', 'すべてのグループを削除しますか？', [
-                    { text: 'キャンセル', style: 'cancel' },
-                    { text: '削除', style: 'destructive' },
-                  ]);
-                }}
-              >
-                すべて削除
-              </Button>
             </YStack>
           </YStack>
         </>

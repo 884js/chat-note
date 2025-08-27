@@ -14,7 +14,7 @@ import { Button, Text, Theme, XStack, YStack } from 'tamagui';
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { groups, isLoading, refetch, deleteGroup } = useGroups('lastUpdated');
+  const { groups, isLoading, refetch, archiveGroup } = useGroups('lastUpdated');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroup, setSelectedGroup] = useState<(typeof groups)[0] | null>(
@@ -73,40 +73,37 @@ export default function HomeScreen() {
     // router.push(`/room/${selectedGroup.id}/edit`);
   }, [selectedGroup]);
 
-  // グループ削除処理（長押しメニューから）
-  const handleDeleteGroup = useCallback(async () => {
+  // グループアーカイブ処理（長押しメニューから）
+  const handleArchiveGroup = useCallback(async () => {
     if (!selectedGroup) return;
     try {
-      await deleteGroup(selectedGroup.id);
+      await archiveGroup(selectedGroup.id);
     } catch (error) {
-      Alert.alert('エラー', 'グループの削除に失敗しました');
+      Alert.alert('エラー', 'グループのアーカイブに失敗しました');
     }
-  }, [selectedGroup, deleteGroup]);
+  }, [selectedGroup, archiveGroup]);
 
-  // スワイプでアーカイブ（論理削除として扱う）
+  // スワイプでアーカイブ
   const handleGroupArchive = useCallback(
     async (groupId: string) => {
       try {
-        // グループのアーカイブ処理（今はdeleteGroupを使用）
-        await deleteGroup(groupId);
+        await archiveGroup(groupId);
       } catch (error) {
         Alert.alert('エラー', 'アーカイブに失敗しました');
       }
     },
-    [deleteGroup],
+    [archiveGroup],
   );
 
-  // スワイプで完全削除
+  // スワイプで削除（無効化 - アーカイブ画面でのみ削除可能）
   const handleGroupDelete = useCallback(
-    async (groupId: string) => {
-      try {
-        // グループの完全削除処理
-        await deleteGroup(groupId);
-      } catch (error) {
-        Alert.alert('エラー', '削除に失敗しました');
-      }
+    async () => {
+      Alert.alert(
+        '削除できません',
+        'グループの削除はアーカイブ画面からのみ可能です。\nまずグループをアーカイブしてください。'
+      );
     },
-    [deleteGroup],
+    [],
   );
 
   // スワイプで編集
@@ -173,11 +170,19 @@ export default function HomeScreen() {
               </YStack>
             </XStack>
 
-            {/* 検索結果数 */}
-            {searchQuery && (
-              <Text fontSize="$2" color="$color10" px="$2">
-                {filteredGroups.length}件の検索結果
-              </Text>
+            {/* グループ数表示 */}
+            {searchQuery ? (
+              filteredGroups.length > 0 && (
+                <Text fontSize="$2" color="$color10" px="$2">
+                  {filteredGroups.length}件の検索結果
+                </Text>
+              )
+            ) : (
+              groups.length > 0 && (
+                <Text fontSize="$2" color="$color10" px="$2">
+                  {groups.length}件のグループ
+                </Text>
+              )
             )}
           </YStack>
 
@@ -207,7 +212,7 @@ export default function HomeScreen() {
             onOpenChange={setShowActionSheet}
             group={selectedGroup}
             onEdit={handleEditGroup}
-            onDelete={handleDeleteGroup}
+            onArchive={handleArchiveGroup}
           />
 
           {/* ドロワーメニュー */}

@@ -1,4 +1,4 @@
-import { Archive, Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { Archive, Edit3 } from '@tamagui/lucide-icons';
 import { memo, useCallback } from 'react';
 import { Alert, Dimensions } from 'react-native';
 import {
@@ -27,8 +27,8 @@ interface SwipeableGroupCardProps {
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SWIPE_THRESHOLD_ARCHIVE = SCREEN_WIDTH * 0.25;
-const SWIPE_THRESHOLD_DELETE = SCREEN_WIDTH * 0.5;
+const SWIPE_THRESHOLD_ARCHIVE = SCREEN_WIDTH * 0.35;
+const SWIPE_THRESHOLD_DELETE = SCREEN_WIDTH * 0.9; // 削除を実質無効化（90%スワイプが必要）
 const SWIPE_THRESHOLD_EDIT = SCREEN_WIDTH * 0.25;
 
 export const SwipeableGroupCard = memo(function SwipeableGroupCard({
@@ -51,33 +51,6 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
     }
   }, [group.id, onArchive]);
 
-  const confirmAndDelete = useCallback(() => {
-    Alert.alert(
-      'グループを削除',
-      `「${group.name}」を削除しますか？\nこの操作は取り消せません。`,
-      [
-        {
-          text: 'キャンセル',
-          style: 'cancel',
-        },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: () => {
-            if (onDelete) {
-              onDelete(group.id);
-            }
-          },
-        },
-      ],
-      { cancelable: true },
-    );
-  }, [group.id, group.name, onDelete]);
-
-  const executeDelete = useCallback(() => {
-    'worklet';
-    runOnJS(confirmAndDelete)();
-  }, [confirmAndDelete]);
 
   const executeEdit = useCallback(() => {
     'worklet';
@@ -93,17 +66,10 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
       translateX.value = e.translationX;
     })
     .onEnd((e) => {
-      const shouldDelete = e.translationX < -SWIPE_THRESHOLD_DELETE;
-      const shouldArchive =
-        e.translationX < -SWIPE_THRESHOLD_ARCHIVE && !shouldDelete;
+      const shouldArchive = e.translationX < -SWIPE_THRESHOLD_ARCHIVE;
       const shouldEdit = e.translationX > SWIPE_THRESHOLD_EDIT;
 
-      if (shouldDelete) {
-        // 削除確認後、元に戻してから削除処理
-        translateX.value = withTiming(0, { duration: 200 }, () => {
-          executeDelete();
-        });
-      } else if (shouldArchive) {
+      if (shouldArchive) {
         // アーカイブアニメーション
         translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 });
         opacity.value = withTiming(0, { duration: 300 }, () => {
@@ -132,8 +98,8 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
   const leftBackgroundStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       translateX.value,
-      [-SWIPE_THRESHOLD_DELETE, -SWIPE_THRESHOLD_ARCHIVE, 0],
-      ['#ff4444', '#ff9500', '#cccccc'],
+      [-SWIPE_THRESHOLD_ARCHIVE, 0],
+      ['#ff9500', '#cccccc'],
     );
 
     return {
@@ -169,22 +135,10 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
     };
   });
 
-  // 削除とアーカイブの表示切り替え
-  const deleteIconStyle = useAnimatedStyle(() => {
-    return {
-      opacity: translateX.value < -SWIPE_THRESHOLD_DELETE ? 1 : 0,
-      position: 'absolute' as const,
-    };
-  });
-
+  // アーカイブアイコンの表示
   const archiveIconStyle = useAnimatedStyle(() => {
     return {
-      opacity:
-        translateX.value < -SWIPE_THRESHOLD_DELETE
-          ? 0
-          : translateX.value < 0
-            ? 1
-            : 0,
+      opacity: translateX.value < 0 ? 1 : 0,
     };
   });
 
@@ -209,24 +163,14 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
           ]}
         >
           <Animated.View style={leftIconStyle}>
-            <XStack items="center" gap="$2" position="relative">
-              <Animated.View style={deleteIconStyle}>
-                <XStack items="center" gap="$2">
-                  <Trash2 size="$2" color="white" />
-                  <Text color="white" fontSize="$4" fontWeight="600">
-                    削除
-                  </Text>
-                </XStack>
-              </Animated.View>
-              <Animated.View style={archiveIconStyle}>
-                <XStack items="center" gap="$2">
-                  <Archive size="$2" color="white" />
-                  <Text color="white" fontSize="$4" fontWeight="600">
-                    アーカイブ
-                  </Text>
-                </XStack>
-              </Animated.View>
-            </XStack>
+            <Animated.View style={archiveIconStyle}>
+              <XStack items="center" gap="$2">
+                <Archive size="$2" color="white" />
+                <Text color="white" fontSize="$4" fontWeight="600">
+                  アーカイブ
+                </Text>
+              </XStack>
+            </Animated.View>
           </Animated.View>
         </Animated.View>
 

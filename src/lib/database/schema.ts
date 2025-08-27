@@ -9,11 +9,15 @@ export const groups = sqliteTable(
     description: text('description'),
     color: text('color').notNull(),
     icon: text('icon'),
+    isArchived: integer('isArchived', { mode: 'boolean' })
+      .default(false)
+      .notNull(),
     createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
     updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
   },
   (table) => ({
     updatedAtIdx: index('idx_groups_updatedAt').on(table.updatedAt),
+    archivedIdx: index('idx_groups_isArchived').on(table.isArchived),
   }),
 );
 
