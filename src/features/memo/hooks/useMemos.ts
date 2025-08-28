@@ -42,8 +42,8 @@ export function useMemos({ groupId }: Props) {
       // データベースに保存
       const newMemo = await createMemo(input);
 
-      // stateを更新
-      setMemos((prev) => [...prev, newMemo]);
+      // stateを更新（新しいメモを先頭に追加）
+      setMemos((prev) => [newMemo, ...prev]);
       return newMemo;
     } catch (err) {
       setError(err as Error);
@@ -85,7 +85,7 @@ export function useMemos({ groupId }: Props) {
   const loadMore = useCallback(async () => {
     if (!hasMore || loadingRef.current) return;
 
-    const oldestMemo = memos[0];
+    const oldestMemo = memos[memos.length - 1];
     if (oldestMemo) {
       await fetchMemos();
     }

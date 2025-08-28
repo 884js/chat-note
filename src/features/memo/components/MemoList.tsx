@@ -1,6 +1,6 @@
 import { FlashList } from '@shopify/flash-list';
 import { MessageSquare } from '@tamagui/lucide-icons';
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import { RefreshControl } from 'react-native';
 import { Spinner, Text, YStack } from 'tamagui';
 import type { Memo, MemoGroup } from '../types';
@@ -34,11 +34,11 @@ export const MemoList = memo(function MemoList({
 
   // フラットなリストアイテムに変換
   const listItems: ListItem[] = memoGroups.flatMap((group) => [
-    { type: 'date' as const, date: group.date },
     ...group.memos.map((memo) => ({
       type: 'memo' as const,
       memo: memo,
     })),
+    { type: 'date' as const, date: group.date },
   ]);
 
   const renderItem = useCallback(
@@ -154,14 +154,6 @@ export const MemoList = memo(function MemoList({
     );
   }, [isLoading]);
 
-  // 新しいメモが追加されたら最下部へスクロール
-  useEffect(() => {
-    if (listItems.length > 0) {
-      setTimeout(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-    }
-  }, [listItems.length]);
 
   return (
     <YStack flex={1} bg="$background">
@@ -171,6 +163,7 @@ export const MemoList = memo(function MemoList({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         getItemType={getItemType}
+        inverted={true}
         // @ts-ignore - estimatedItemSize is a valid prop for performance optimization
         estimatedItemSize={80}
         onEndReached={handleEndReached}
@@ -183,7 +176,7 @@ export const MemoList = memo(function MemoList({
               refreshing={isRefreshing}
               onRefresh={onRefresh}
               tintColor="#7c7c8a"
-              colors={['#7c7c8a']}
+              colors={["#7c7c8a"]}
               progressBackgroundColor="transparent"
             />
           ) : undefined
@@ -193,9 +186,11 @@ export const MemoList = memo(function MemoList({
           paddingBottom: 20,
           paddingTop: 8,
         }}
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 0,
-          autoscrollToTopThreshold: 100,
+        overrideProps={{
+          contentContainerStyle: {
+            flexGrow: 1,
+            justifyContent: "flex-end",
+          },
         }}
       />
     </YStack>

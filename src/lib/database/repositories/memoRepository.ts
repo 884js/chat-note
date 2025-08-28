@@ -36,7 +36,7 @@ export async function getMemosByGroupId(
     .select()
     .from(memos)
     .where(and(eq(memos.groupId, groupId), eq(memos.isDeleted, false)))
-    .orderBy(asc(memos.createdAt))
+    .orderBy(desc(memos.createdAt))
     .limit(limit)
     .offset(offset);
 
@@ -208,7 +208,7 @@ export async function searchMemosByDateRange(
         lte(memos.createdAt, endDate),
       ),
     )
-    .orderBy(asc(memos.createdAt));
+    .orderBy(desc(memos.createdAt));
 
   return result.map(mapRowToMemo);
 }
@@ -232,7 +232,7 @@ export async function searchMemosByText(
         like(memos.content, `%${searchText}%`),
       ),
     )
-    .orderBy(asc(memos.createdAt));
+    .orderBy(desc(memos.createdAt));
 
   return result.map(mapRowToMemo);
 }
