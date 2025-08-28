@@ -1,7 +1,7 @@
 import { Send } from '@tamagui/lucide-icons';
 import { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { Button, Input, ScrollView, XStack, YStack } from 'tamagui';
+import { Button, ScrollView, TextArea, XStack, YStack } from 'tamagui';
 import { ImagePickerButton } from './ImagePickerButton';
 import { ImagePreview } from './ImagePreview';
 
@@ -63,7 +63,7 @@ export function MemoInput({
         )}
 
         {/* 入力エリア */}
-        <XStack p="$3" gap="$2" items="center">
+        <XStack p="$3" gap="$2" items="flex-end">
           {/* 画像選択ボタン */}
           <ImagePickerButton
             onImageSelected={handleImageSelected}
@@ -72,17 +72,16 @@ export function MemoInput({
           />
 
           {/* テキスト入力 */}
-          <Input
+          <TextArea
             flex={1}
             value={message}
             onChangeText={setMessage}
             placeholder={placeholder}
             disabled={isLoading}
-            onSubmitEditing={handleSend}
-            returnKeyType="send"
             size="$4"
             borderWidth={1}
             borderColor="$color6"
+            numberOfLines={2}
           />
 
           {/* 送信ボタン */}
