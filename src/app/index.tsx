@@ -5,7 +5,7 @@ import { GroupActionSheet } from '@/features/group/components/GroupActionSheet';
 import { GroupList } from '@/features/group/components/GroupList';
 import { useGroups } from '@/features/group/hooks/useGroups';
 import { Menu, Plus } from '@tamagui/lucide-icons';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -127,6 +127,14 @@ export default function HomeScreen() {
     refetch();
     setTimeout(() => setIsRefreshing(false), 1000);
   }, [refetch]);
+
+  // 画面フォーカス時にグループ一覧を再読み込み
+  // アーカイブ画面から復元後などに自動更新される
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   return (
     <>
