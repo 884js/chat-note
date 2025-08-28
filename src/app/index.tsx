@@ -95,16 +95,6 @@ export default function HomeScreen() {
     [archiveGroup],
   );
 
-  // スワイプで削除（無効化 - アーカイブ画面でのみ削除可能）
-  const handleGroupDelete = useCallback(
-    async () => {
-      Alert.alert(
-        '削除できません',
-        'グループの削除はアーカイブ画面からのみ可能です。\nまずグループをアーカイブしてください。'
-      );
-    },
-    [],
-  );
 
   // スワイプで編集
   const handleGroupEdit = useCallback((group: (typeof groups)[0]) => {
@@ -200,7 +190,6 @@ export default function HomeScreen() {
             onGroupPress={handleGroupPress}
             onGroupLongPress={handleGroupLongPress}
             onGroupArchive={handleGroupArchive}
-            onGroupDelete={handleGroupDelete}
             onGroupEdit={handleGroupEdit}
             onCreateGroup={handleCreateGroup}
             isLoading={isLoading}

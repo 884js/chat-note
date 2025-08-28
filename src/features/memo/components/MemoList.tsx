@@ -122,7 +122,7 @@ export const MemoList = memo(function MemoList({
         items="center"
         py="$10"
         animation="lazy"
-        enterStyle={{ opacity: 0, y: 20 }}
+        enterStyle={{ opacity: 0, y: -20 }}
         opacity={1}
         y={0}
       >
@@ -163,7 +163,7 @@ export const MemoList = memo(function MemoList({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         getItemType={getItemType}
-        inverted={true}
+        inverted={listItems.length > 0} // リストが空の時はinvertedを無効化
         // @ts-ignore - estimatedItemSize is a valid prop for performance optimization
         estimatedItemSize={80}
         onEndReached={handleEndReached}
@@ -187,10 +187,10 @@ export const MemoList = memo(function MemoList({
           paddingTop: 8,
         }}
         overrideProps={{
-          contentContainerStyle: {
+          contentContainerStyle: listItems.length > 0 ? {
             flexGrow: 1,
             justifyContent: "flex-end",
-          },
+          } : undefined,
         }}
       />
     </YStack>
