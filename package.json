@@ -8,6 +8,8 @@
     "ios": "expo run:ios",
     "run:android": "expo run:android",
     "run:ios": "expo run:ios",
+    "prebuild:android": "expo prebuild --platform android",
+    "prebuild:ios": "expo prebuild --platform ios",
     "test": "jest --watchAll",
     "lint": "biome check --write",
     "format": "biome format --write",
