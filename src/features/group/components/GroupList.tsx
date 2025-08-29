@@ -10,7 +10,6 @@ import { SwipeableGroupCard } from './SwipeableGroupCard';
 interface GroupListProps {
   groups: GroupWithLastMemo[];
   onGroupPress: (groupId: string) => void;
-  onGroupLongPress?: (groupId: string) => void;
   onGroupArchive?: (groupId: string) => void;
   onGroupEdit?: (group: GroupWithLastMemo) => void;
   onCreateGroup?: () => void;
@@ -22,7 +21,6 @@ interface GroupListProps {
 export const GroupList = memo(function GroupList({
   groups,
   onGroupPress,
-  onGroupLongPress,
   onGroupArchive,
   onGroupEdit,
   onCreateGroup,
@@ -35,14 +33,11 @@ export const GroupList = memo(function GroupList({
       <SwipeableGroupCard
         group={item}
         onPress={() => onGroupPress(item.id)}
-        onLongPress={
-          onGroupLongPress ? () => onGroupLongPress(item.id) : undefined
-        }
         onArchive={onGroupArchive}
         onEdit={onGroupEdit}
       />
     ),
-    [onGroupPress, onGroupLongPress, onGroupArchive, onGroupEdit],
+    [onGroupPress, onGroupArchive, onGroupEdit],
   );
 
   const keyExtractor = useCallback((item: GroupWithLastMemo) => item.id, []);

@@ -23,13 +23,11 @@ interface GroupCardProps {
     lastMemoAt?: Date;
   };
   onPress: () => void;
-  onLongPress?: () => void;
 }
 
-export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
+export function GroupCard({ group, onPress }: GroupCardProps) {
   console.log('GroupCard rendered:', group.id, {
     onPress: !!onPress,
-    onLongPress: !!onLongPress,
   });
 
   const handlePress = () => {
@@ -37,16 +35,11 @@ export function GroupCard({ group, onPress, onLongPress }: GroupCardProps) {
     onPress();
   };
 
-  const handleLongPress = () => {
-    console.log('Group card long pressed:', group.id);
-    onLongPress?.();
-  };
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={handlePress}
-      onLongPress={handleLongPress}
     >
       <Theme name={group.color as ThemeName}>
         <Card

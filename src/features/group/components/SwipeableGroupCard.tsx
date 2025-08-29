@@ -7,7 +7,6 @@ import { GroupCard } from './GroupCard';
 interface SwipeableGroupCardProps {
   group: GroupWithLastMemo;
   onPress: () => void;
-  onLongPress?: () => void;
   onArchive?: (groupId: string) => void;
   onEdit?: (group: GroupWithLastMemo) => void;
 }
@@ -15,7 +14,6 @@ interface SwipeableGroupCardProps {
 export const SwipeableGroupCard = memo(function SwipeableGroupCard({
   group,
   onPress,
-  onLongPress,
   onArchive,
   onEdit,
 }: SwipeableGroupCardProps) {
@@ -59,7 +57,6 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
       <GroupCard
         group={group}
         onPress={onPress}
-        onLongPress={onLongPress}
       />
     </SwipeableCard>
   );

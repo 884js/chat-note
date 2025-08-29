@@ -1,7 +1,6 @@
 import { DrawerMenu } from '@/components/navigation/DrawerMenu';
 import { FAB } from '@/components/ui/FAB';
 import { SearchBox } from '@/components/ui/SearchBox';
-import { GroupActionSheet } from '@/features/group/components/GroupActionSheet';
 import { GroupList } from '@/features/group/components/GroupList';
 import { useGroups } from '@/features/group/hooks/useGroups';
 import { Menu, Plus } from '@tamagui/lucide-icons';
@@ -17,10 +16,6 @@ export default function HomeScreen() {
   const { groups, isLoading, refetch, archiveGroup } = useGroups('lastUpdated');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGroup, setSelectedGroup] = useState<(typeof groups)[0] | null>(
-    null,
-  );
-  const [showActionSheet, setShowActionSheet] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
   // 検索フィルタリング
@@ -53,35 +48,8 @@ export default function HomeScreen() {
     [router],
   );
 
-  // グループ長押し時の処理
-  const handleGroupLongPress = useCallback(
-    (groupId: string) => {
-      const group = groups.find((g) => g.id === groupId);
-      if (!group) return;
 
-      setSelectedGroup(group);
-      setShowActionSheet(true);
-    },
-    [groups],
-  );
 
-  // グループ編集処理
-  const handleEditGroup = useCallback(() => {
-    if (!selectedGroup) return;
-    console.log(`Edit group ${selectedGroup.id}`);
-    // TODO: 編集画面のルートを作成後、パスを修正
-    // router.push(`/room/${selectedGroup.id}/edit`);
-  }, [selectedGroup]);
-
-  // グループアーカイブ処理（長押しメニューから）
-  const handleArchiveGroup = useCallback(async () => {
-    if (!selectedGroup) return;
-    try {
-      await archiveGroup(selectedGroup.id);
-    } catch (error) {
-      Alert.alert('エラー', 'グループのアーカイブに失敗しました');
-    }
-  }, [selectedGroup, archiveGroup]);
 
   // スワイプでアーカイブ
   const handleGroupArchive = useCallback(
@@ -188,7 +156,6 @@ export default function HomeScreen() {
           <GroupList
             groups={filteredGroups}
             onGroupPress={handleGroupPress}
-            onGroupLongPress={handleGroupLongPress}
             onGroupArchive={handleGroupArchive}
             onGroupEdit={handleGroupEdit}
             onCreateGroup={handleCreateGroup}
@@ -203,14 +170,6 @@ export default function HomeScreen() {
             onPress={handleCreateGroup}
           />
 
-          {/* アクションシート */}
-          <GroupActionSheet
-            isOpen={showActionSheet}
-            onOpenChange={setShowActionSheet}
-            group={selectedGroup}
-            onEdit={handleEditGroup}
-            onArchive={handleArchiveGroup}
-          />
 
           {/* ドロワーメニュー */}
           <DrawerMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />
