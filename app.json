@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "chat-note",
-    "slug": "chat-note",
+    "name": "ChatMemo",
+    "slug": "chat-memo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "chat-note",
+    "scheme": "chat-memo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -15,7 +15,7 @@
     "icon": "./src/assets/images/icon.png",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.chat-note"
+      "bundleIdentifier": "com.anonymous.chatmemo"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.chatnote"
+      "package": "com.anonymous.chatmemo"
     },
     "web": {
       "bundler": "metro",
