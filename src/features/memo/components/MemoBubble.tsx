@@ -102,6 +102,7 @@ export const MemoBubble = memo(function MemoBubble({
                   lineHeight: 24,
                   color: '#000',
                   letterSpacing: 0.2,
+                  fontFamily: 'MPLUSRounded',
                 }}
                 parse={[
                   {

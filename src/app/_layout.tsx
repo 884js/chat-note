@@ -33,6 +33,9 @@ export default function RootLayout() {
   const [fontsLoaded, error] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    MPLUSRounded: require('../../assets/fonts/MPLUSRounded1c-Regular.ttf'),
+    MPLUSRoundedMedium: require('../../assets/fonts/MPLUSRounded1c-Medium.ttf'),
+    MPLUSRoundedBold: require('../../assets/fonts/MPLUSRounded1c-Bold.ttf'),
   });
 
   useEffect(() => {

@@ -43,7 +43,7 @@ export function MemoInput({
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={90}
     >
       <YStack bg="$background" borderTopWidth={1} borderTopColor="$color6">
@@ -78,10 +78,13 @@ export function MemoInput({
             onChangeText={setMessage}
             placeholder={placeholder}
             disabled={isLoading}
-            size="$4"
             borderWidth={1}
             borderColor="$color6"
-            numberOfLines={2}
+            minH={36}
+            maxH={120}
+            fontFamily="$body"
+            multiline
+            verticalAlign="middle"
           />
 
           {/* 送信ボタン */}

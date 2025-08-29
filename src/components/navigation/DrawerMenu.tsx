@@ -1,4 +1,4 @@
-import { Archive, ArrowUpDown, Settings } from '@tamagui/lucide-icons';
+import { Archive, Settings } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { Alert } from 'react-native';
@@ -25,11 +25,6 @@ export const DrawerMenu = memo(function DrawerMenu({
   const handleArchivePress = () => {
     onClose();
     router.push('/archive');
-  };
-
-  const handleSortPress = () => {
-    onClose();
-    Alert.alert('並び替え', '並び替え設定');
   };
 
   return (
@@ -83,7 +78,7 @@ export const DrawerMenu = memo(function DrawerMenu({
               borderBottomColor="$color6"
             >
               <Text fontSize="$8" fontWeight="bold" color="$color12">
-                Chat Note
+                ChatMemo
               </Text>
               <Text fontSize="$3" color="$color10" mt="$1">
                 メニュー
@@ -114,20 +109,6 @@ export const DrawerMenu = memo(function DrawerMenu({
               >
                 アーカイブ
               </Button>
-
-              <Button
-                size="$4"
-                justify="flex-start"
-                chromeless
-                icon={<ArrowUpDown size={20} />}
-                onPress={() => {
-                  onClose();
-                  Alert.alert('並び替え', '並び替え設定');
-                }}
-              >
-                並び替え
-              </Button>
-
             </YStack>
           </YStack>
         </>
