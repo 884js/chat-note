@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ChatMemo",
-    "slug": "chat-memo",
+    "slug": "chat-note",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "chat-memo",
