@@ -1,7 +1,7 @@
+import { SwipeableCard } from '@/components/ui/SwipeableCard';
 import { RotateCcw, Trash2 } from '@tamagui/lucide-icons';
 import { memo, useCallback } from 'react';
 import { Alert } from 'react-native';
-import { SwipeableCard } from '@/components/ui/SwipeableCard';
 import type { GroupWithLastMemo } from '../types';
 import { GroupCard } from './GroupCard';
 
@@ -20,17 +20,13 @@ export const SwipeableArchivedCard = memo(function SwipeableArchivedCard({
 }: SwipeableArchivedCardProps) {
   // 復元の確認と実行
   const handleUnarchive = useCallback(() => {
-    Alert.alert(
-      'グループを復元',
-      `「${group.name}」を復元しますか？`,
-      [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: '復元',
-          onPress: () => onUnarchive(group),
-        },
-      ],
-    );
+    Alert.alert('グループを復元', `「${group.name}」を復元しますか？`, [
+      { text: 'キャンセル', style: 'cancel' },
+      {
+        text: '復元',
+        onPress: () => onUnarchive(group),
+      },
+    ]);
   }, [group, onUnarchive]);
 
   // 削除の確認と実行

@@ -1,7 +1,7 @@
 import { EmptyState } from '@/components/ui/EmptyState';
 import { SwipeableArchivedCard } from '@/features/group/components/SwipeableArchivedCard';
-import { groupRepository } from '@/lib/database';
 import type { GroupWithLastMemo } from '@/features/group/types';
+import { groupRepository } from '@/lib/database';
 import { Archive, ArrowLeft } from '@tamagui/lucide-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -124,7 +124,7 @@ export default function ArchiveScreen() {
                 アーカイブ
               </Text>
             </XStack>
-            
+
             {/* グループ数表示 */}
             {archivedGroups.length > 0 && (
               <Text fontSize="$2" color="$color10" px="$2" mt="$2">

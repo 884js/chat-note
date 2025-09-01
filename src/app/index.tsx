@@ -48,9 +48,6 @@ export default function HomeScreen() {
     [router],
   );
 
-
-
-
   // スワイプでアーカイブ
   const handleGroupArchive = useCallback(
     async (groupId: string) => {
@@ -62,7 +59,6 @@ export default function HomeScreen() {
     },
     [archiveGroup],
   );
-
 
   // スワイプで編集
   const handleGroupEdit = useCallback((group: (typeof groups)[0]) => {
@@ -91,7 +87,7 @@ export default function HomeScreen() {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch])
+    }, [refetch]),
   );
 
   return (
@@ -137,19 +133,17 @@ export default function HomeScreen() {
             </XStack>
 
             {/* グループ数表示 */}
-            {searchQuery ? (
-              filteredGroups.length > 0 && (
-                <Text fontSize="$2" color="$color10" px="$2">
-                  {filteredGroups.length}件の検索結果
-                </Text>
-              )
-            ) : (
-              groups.length > 0 && (
-                <Text fontSize="$2" color="$color10" px="$2">
-                  {groups.length}件のグループ
-                </Text>
-              )
-            )}
+            {searchQuery
+              ? filteredGroups.length > 0 && (
+                  <Text fontSize="$2" color="$color10" px="$2">
+                    {filteredGroups.length}件の検索結果
+                  </Text>
+                )
+              : groups.length > 0 && (
+                  <Text fontSize="$2" color="$color10" px="$2">
+                    {groups.length}件のグループ
+                  </Text>
+                )}
           </YStack>
 
           {/* グループリスト */}
@@ -169,7 +163,6 @@ export default function HomeScreen() {
             icon={<Plus size={24} color="white" />}
             onPress={handleCreateGroup}
           />
-
 
           {/* ドロワーメニュー */}
           <DrawerMenu isOpen={showMenu} onClose={() => setShowMenu(false)} />

@@ -35,12 +35,8 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
     onPress();
   };
 
-
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={handlePress}
-    >
+    <TouchableOpacity activeOpacity={0.7} onPress={handlePress}>
       <Theme name={group.color as ThemeName}>
         <Card
           bordered

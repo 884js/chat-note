@@ -1,7 +1,7 @@
 import { defaultConfig } from '@tamagui/config/v4';
 import { createTamagui } from 'tamagui';
-import { themes } from './src/theme/themes';
 import { fonts } from './src/theme/fonts';
+import { themes } from './src/theme/themes';
 
 export const tamaguiConfig = createTamagui({
   ...defaultConfig,

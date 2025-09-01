@@ -3,7 +3,7 @@ import type {
   SendMemoInput,
   UpdateMemoInput,
 } from '@/features/memo/types';
-import { and, asc, desc, eq, gte, like, lte, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, like, lte, sql } from 'drizzle-orm';
 import { getSQLiteDatabase, openDatabase } from '../db';
 import { groups, memos } from '../schema';
 
@@ -282,4 +282,15 @@ export async function getImageCountByGroupId(groupId: string): Promise<number> {
     );
 
   return result[0]?.count || 0;
+}
+
+/**
+ * エクスポート用：すべてのメモを取得（削除済み含む）
+ */
+export async function getAllMemosForExport(): Promise<Memo[]> {
+  const db = await openDatabase();
+
+  const allMemos = await db.select().from(memos).orderBy(desc(memos.createdAt));
+
+  return allMemos.map(mapRowToMemo);
 }

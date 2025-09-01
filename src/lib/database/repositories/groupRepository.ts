@@ -258,3 +258,17 @@ export async function unarchiveGroup(id: string): Promise<void> {
     })
     .where(eq(groups.id, id));
 }
+
+/**
+ * エクスポート用：すべてのグループを取得（アーカイブ含む）
+ */
+export async function getAllGroupsForExport(): Promise<Group[]> {
+  const db = await openDatabase();
+
+  const allGroups = await db
+    .select()
+    .from(groups)
+    .orderBy(desc(groups.updatedAt));
+
+  return allGroups.map(mapRowToGroup);
+}

@@ -90,6 +90,22 @@ const StackList = () => {
           presentation: 'card',
         }}
       />
+      <Stack.Screen
+        name="settings/index"
+        options={{
+          headerShown: false,
+          title: '設定',
+          presentation: 'card',
+        }}
+      />
+      <Stack.Screen
+        name="settings/backup"
+        options={{
+          headerShown: false,
+          title: 'バックアップ',
+          presentation: 'card',
+        }}
+      />
     </Stack>
   );
 };

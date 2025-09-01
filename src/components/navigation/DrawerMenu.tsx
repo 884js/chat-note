@@ -1,7 +1,6 @@
 import { Archive, Settings } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';
 import { memo } from 'react';
-import { Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AnimatePresence, Button, Text, YStack } from 'tamagui';
 
@@ -19,7 +18,7 @@ export const DrawerMenu = memo(function DrawerMenu({
 
   const handleSettingsPress = () => {
     onClose();
-    Alert.alert('設定', '設定画面は実装中です');
+    router.push('/settings');
   };
 
   const handleArchivePress = () => {
@@ -92,10 +91,7 @@ export const DrawerMenu = memo(function DrawerMenu({
                 justify="flex-start"
                 chromeless
                 icon={<Settings size={20} />}
-                onPress={() => {
-                  onClose();
-                  Alert.alert('設定', '設定画面は実装中です');
-                }}
+                onPress={handleSettingsPress}
               >
                 設定
               </Button>

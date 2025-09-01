@@ -1,4 +1,5 @@
-import { memo, useCallback, type ReactNode } from 'react';
+import type { IconProps } from '@tamagui/helpers-icon';
+import { type ReactNode, memo, useCallback } from 'react';
 import { Dimensions } from 'react-native';
 import {
   Gesture,
@@ -13,7 +14,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { type GetThemeValueForKey, Text, XStack, YStack } from 'tamagui';
-import type { IconProps } from '@tamagui/helpers-icon';
 
 export interface SwipeAction {
   icon: React.FC<IconProps>;
@@ -74,8 +74,10 @@ export const SwipeableCard = memo(function SwipeableCard({
       translateX.value = e.translationX;
     })
     .onEnd((e) => {
-      const shouldLeftAction = leftSwipe && e.translationX < -leftSwipeThreshold;
-      const shouldRightAction = rightSwipe && e.translationX > rightSwipeThreshold;
+      const shouldLeftAction =
+        leftSwipe && e.translationX < -leftSwipeThreshold;
+      const shouldRightAction =
+        rightSwipe && e.translationX > rightSwipeThreshold;
 
       if (shouldLeftAction) {
         if (hideOnLeftSwipe) {
@@ -165,13 +167,13 @@ export const SwipeableCard = memo(function SwipeableCard({
           <Animated.View
             style={[
               {
-                position: "absolute",
+                position: 'absolute',
                 right: 0,
                 top: 0,
                 bottom: 0,
                 left: 0,
-                justifyContent: "center",
-                alignItems: "flex-end",
+                justifyContent: 'center',
+                alignItems: 'flex-end',
                 paddingRight: 20,
                 borderRadius: containerPadding ? 12 : 0,
               },
@@ -180,9 +182,12 @@ export const SwipeableCard = memo(function SwipeableCard({
           >
             <Animated.View style={leftIconStyle}>
               <XStack items="center" gap="$2">
-                {leftSwipe.icon({ size: 24, color: leftSwipe.color as GetThemeValueForKey<"color"> })}
+                {leftSwipe.icon({
+                  size: 24,
+                  color: leftSwipe.color as GetThemeValueForKey<'color'>,
+                })}
                 <Text
-                  color={leftSwipe.color as GetThemeValueForKey<"color">}
+                  color={leftSwipe.color as GetThemeValueForKey<'color'>}
                   fontSize="$4"
                   fontWeight="600"
                 >
@@ -198,13 +203,13 @@ export const SwipeableCard = memo(function SwipeableCard({
           <Animated.View
             style={[
               {
-                position: "absolute",
+                position: 'absolute',
                 left: 0,
                 top: 0,
                 bottom: 0,
                 right: 0,
-                justifyContent: "center",
-                alignItems: "flex-start",
+                justifyContent: 'center',
+                alignItems: 'flex-start',
                 paddingLeft: 20,
                 borderRadius: containerPadding ? 12 : 0,
               },
@@ -215,10 +220,10 @@ export const SwipeableCard = memo(function SwipeableCard({
               <XStack items="center" gap="$2">
                 {rightSwipe.icon({
                   size: 24,
-                  color: rightSwipe.color as GetThemeValueForKey<"color">,
+                  color: rightSwipe.color as GetThemeValueForKey<'color'>,
                 })}
                 <Text
-                  color={rightSwipe.color as GetThemeValueForKey<"color">}
+                  color={rightSwipe.color as GetThemeValueForKey<'color'>}
                   fontSize="$4"
                   fontWeight="600"
                 >

@@ -1,5 +1,5 @@
-import { createInterFont } from '@tamagui/font-inter';
 import { createFont } from '@tamagui/core';
+import { createInterFont } from '@tamagui/font-inter';
 
 // デフォルトのInterフォント
 const interFont = createInterFont();

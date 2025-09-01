@@ -1,6 +1,6 @@
+import { SwipeableCard } from '@/components/ui/SwipeableCard';
 import { Archive, Edit3 } from '@tamagui/lucide-icons';
 import { memo, useCallback } from 'react';
-import { SwipeableCard } from '@/components/ui/SwipeableCard';
 import type { GroupWithLastMemo } from '../types';
 import { GroupCard } from './GroupCard';
 
@@ -54,10 +54,7 @@ export const SwipeableGroupCard = memo(function SwipeableGroupCard({
       hideOnLeftSwipe={true}
       containerMarginBottom={12}
     >
-      <GroupCard
-        group={group}
-        onPress={onPress}
-      />
+      <GroupCard group={group} onPress={onPress} />
     </SwipeableCard>
   );
 });

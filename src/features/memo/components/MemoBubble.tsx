@@ -125,20 +125,6 @@ export const MemoBubble = memo(function MemoBubble({
               <Text fontSize="$2" color="$color8" fontWeight="400">
                 {formatTime(memo.createdAt)}
               </Text>
-
-              {memo.updatedAt > memo.createdAt && (
-                <>
-                  <Text fontSize="$2" color="$color7">
-                    ·
-                  </Text>
-                  <XStack items="center" gap="$0.5">
-                    <Edit3 size="$0.5" color="$color8" />
-                    <Text fontSize="$2" color="$color8" fontWeight="400">
-                      編集済み
-                    </Text>
-                  </XStack>
-                </>
-              )}
             </XStack>
           </YStack>
         </YStack>

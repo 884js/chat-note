@@ -1,3 +1,6 @@
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
+import { openDatabaseSync } from 'expo-sqlite';
 import {
   type ReactNode,
   createContext,
@@ -5,12 +8,9 @@ import {
   useEffect,
   useState,
 } from 'react';
+import migrations from '../../../drizzle/migrations';
 import { DATABASE_NAME, getDatabase, openDatabase } from './db';
 import { seedDatabase } from './migrate';
-import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
-import { openDatabaseSync } from 'expo-sqlite';
-import { drizzle } from 'drizzle-orm/expo-sqlite';
-import migrations from '../../../drizzle/migrations';
 
 interface DatabaseContextType {
   database: ReturnType<typeof getDatabase> | null;
@@ -42,7 +42,10 @@ export function DatabaseProvider({
 
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const { success: migrationsSuccess, error: migrationError } = useMigrations(db, migrations);
+  const { success: migrationsSuccess, error: migrationError } = useMigrations(
+    db,
+    migrations,
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

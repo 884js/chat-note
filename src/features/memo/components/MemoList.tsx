@@ -154,7 +154,6 @@ export const MemoList = memo(function MemoList({
     );
   }, [isLoading]);
 
-
   return (
     <YStack flex={1} bg="$background">
       <FlashList
@@ -176,7 +175,7 @@ export const MemoList = memo(function MemoList({
               refreshing={isRefreshing}
               onRefresh={onRefresh}
               tintColor="#7c7c8a"
-              colors={["#7c7c8a"]}
+              colors={['#7c7c8a']}
               progressBackgroundColor="transparent"
             />
           ) : undefined
@@ -187,10 +186,13 @@ export const MemoList = memo(function MemoList({
           paddingTop: 8,
         }}
         overrideProps={{
-          contentContainerStyle: listItems.length > 0 ? {
-            flexGrow: 1,
-            justifyContent: "flex-end",
-          } : undefined,
+          contentContainerStyle:
+            listItems.length > 0
+              ? {
+                  flexGrow: 1,
+                  justifyContent: 'flex-end',
+                }
+              : undefined,
         }}
       />
     </YStack>
