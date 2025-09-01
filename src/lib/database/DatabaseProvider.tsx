@@ -5,8 +5,12 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { getDatabase, openDatabase } from './db';
-import { runMigrations, seedDatabase } from './migrate';
+import { DATABASE_NAME, getDatabase, openDatabase } from './db';
+import { seedDatabase } from './migrate';
+import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
+import { openDatabaseSync } from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import migrations from '../../../drizzle/migrations';
 
 interface DatabaseContextType {
   database: ReturnType<typeof getDatabase> | null;
@@ -14,7 +18,7 @@ interface DatabaseContextType {
   error: Error | null;
 }
 
-const DatabaseContext = createContext<DatabaseContextType>({
+export const DatabaseContext = createContext<DatabaseContextType>({
   database: null,
   isReady: false,
   error: null,
@@ -25,6 +29,9 @@ interface DatabaseProviderProps {
   seedData?: boolean; // 開発用: 初期データを投入するか
 }
 
+const expoDb = openDatabaseSync(DATABASE_NAME);
+const db = drizzle(expoDb);
+
 export function DatabaseProvider({
   children,
   seedData = false,
@@ -32,8 +39,10 @@ export function DatabaseProvider({
   const [database, setDatabase] = useState<ReturnType<
     typeof getDatabase
   > | null>(null);
+
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const { success: migrationsSuccess, error: migrationError } = useMigrations(db, migrations);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -43,7 +52,7 @@ export function DatabaseProvider({
 
     async function initializeDatabase() {
       try {
-        console.log('Initializing database...');
+        console.log('Initializing database after migrations...');
 
         // データベースを開く
         await openDatabase();
@@ -51,9 +60,6 @@ export function DatabaseProvider({
         if (!isMounted) {
           return;
         }
-
-        // マイグレーションを実行
-        await runMigrations();
 
         // 開発時のみ: 初期データ投入
         if (shouldSeed && __DEV__) {
@@ -89,7 +95,7 @@ export function DatabaseProvider({
       isMounted = false;
       // データベース接続は維持（アプリのライフサイクル全体で使用）
     };
-  }, []); // 空の依存配列で初回のみ実行
+  }, [migrationsSuccess, migrationError]); // マイグレーション状態に依存
 
   return (
     <DatabaseContext.Provider value={{ database, isReady, error }}>

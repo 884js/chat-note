@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a1282da0-4834-4895-b1aa-25792d8dc8d7",
+  "id": "cb556839-7109-4ee4-8c27-bfcfd1308ed2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "groups": {
@@ -42,6 +42,14 @@
           "notNull": false,
           "autoincrement": false
         },
+        "isArchived": {
+          "name": "isArchived",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "integer",
@@ -60,7 +68,16 @@
       "indexes": {
         "idx_groups_updatedAt": {
           "name": "idx_groups_updatedAt",
-          "columns": ["updatedAt"],
+          "columns": [
+            "updatedAt"
+          ],
+          "isUnique": false
+        },
+        "idx_groups_isArchived": {
+          "name": "idx_groups_isArchived",
+          "columns": [
+            "isArchived"
+          ],
           "isUnique": false
         }
       },
@@ -126,12 +143,16 @@
       "indexes": {
         "idx_memos_groupId": {
           "name": "idx_memos_groupId",
-          "columns": ["groupId"],
+          "columns": [
+            "groupId"
+          ],
           "isUnique": false
         },
         "idx_memos_createdAt": {
           "name": "idx_memos_createdAt",
-          "columns": ["createdAt"],
+          "columns": [
+            "createdAt"
+          ],
           "isUnique": false
         }
       },
@@ -140,36 +161,16 @@
           "name": "memos_groupId_groups_id_fk",
           "tableFrom": "memos",
           "tableTo": "groups",
-          "columnsFrom": ["groupId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "groupId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "migrations": {
-      "name": "migrations",
-      "columns": {
-        "version": {
-          "name": "version",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "appliedAt": {
-          "name": "appliedAt",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}

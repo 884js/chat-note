@@ -15,7 +15,10 @@
     "icon": "./src/assets/images/icon.png",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.chatmemo"
+      "bundleIdentifier": "com.anonymous.chatmemo",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "このアプリはFace IDを使用してアプリのロックを解除します。"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -40,7 +43,13 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "このアプリはFace IDを使用してアプリのロックを解除します。"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

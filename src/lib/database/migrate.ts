@@ -1,4 +1,6 @@
-import { getSQLiteDatabase, openDatabase } from './db';
+import { migrate } from 'drizzle-orm/expo-sqlite/migrator';
+import migrations from '../../../drizzle/migrations';
+import { getDatabase, getSQLiteDatabase, openDatabase } from './db';
 import * as schema from './schema';
 
 /**
@@ -7,133 +9,20 @@ import * as schema from './schema';
 export async function runMigrations(): Promise<void> {
   console.log('Running migrations...');
 
-  const db = await openDatabase();
-  const sqliteDb = getSQLiteDatabase();
+  await openDatabase(); // データベース接続を確立
+  const db = getDatabase();
 
-  if (!sqliteDb) {
+  if (!db) {
     throw new Error('Database not initialized');
   }
 
   try {
-    // Drizzle Kitが生成したマイグレーションを実行
-    // 注意: React Native環境では動的importが制限されるため、
-    // マイグレーションファイルを手動で管理する必要がある場合があります
-
-    // 既存のテーブルが存在するか確認
-    const tableExists = await sqliteDb.getAllAsync<{ count: number }>(
-      `SELECT COUNT(*) as count FROM sqlite_master
-      WHERE type='table' AND name='groups';`,
-    );
-
-    if (tableExists[0]?.count === 0) {
-      // 初回マイグレーション
-      console.log('Creating initial tables...');
-
-      // Groups テーブル作成
-      await sqliteDb.execAsync(`
-        CREATE TABLE IF NOT EXISTS groups (
-          id TEXT PRIMARY KEY,
-          name TEXT NOT NULL,
-          description TEXT,
-          color TEXT NOT NULL,
-          icon TEXT,
-          isArchived INTEGER DEFAULT 0 NOT NULL,
-          createdAt INTEGER NOT NULL,
-          updatedAt INTEGER NOT NULL
-        );
-      `);
-
-      // Memos テーブル作成
-      await sqliteDb.execAsync(`
-        CREATE TABLE IF NOT EXISTS memos (
-          id TEXT PRIMARY KEY,
-          groupId TEXT NOT NULL,
-          content TEXT,
-          imageUri TEXT,
-          createdAt INTEGER NOT NULL,
-          updatedAt INTEGER NOT NULL,
-          isDeleted INTEGER DEFAULT 0,
-          FOREIGN KEY (groupId) REFERENCES groups(id) ON DELETE CASCADE
-        );
-      `);
-
-      // インデックス作成
-      await sqliteDb.execAsync(
-        'CREATE INDEX IF NOT EXISTS idx_memos_groupId ON memos(groupId);',
-      );
-      await sqliteDb.execAsync(
-        'CREATE INDEX IF NOT EXISTS idx_memos_createdAt ON memos(createdAt);',
-      );
-      await sqliteDb.execAsync(
-        'CREATE INDEX IF NOT EXISTS idx_groups_updatedAt ON groups(updatedAt);',
-      );
-      await sqliteDb.execAsync(
-        'CREATE INDEX IF NOT EXISTS idx_groups_isArchived ON groups(isArchived);',
-      );
-
-      // マイグレーション管理テーブル
-      await sqliteDb.execAsync(`
-        CREATE TABLE IF NOT EXISTS migrations (
-          version INTEGER PRIMARY KEY,
-          appliedAt INTEGER NOT NULL
-        );
-      `);
-
-      // バージョン記録
-      await sqliteDb.execAsync(`
-        INSERT INTO migrations (version, appliedAt) VALUES (1, ${Date.now()});
-      `);
-    } else {
-      // 既存のテーブルがある場合、isArchivedカラムが存在するか確認
-      const columnExists = await sqliteDb.getAllAsync<{ count: number }>(
-        `SELECT COUNT(*) as count FROM pragma_table_info('groups') WHERE name='isArchived';`,
-      );
-
-      if (columnExists[0]?.count === 0) {
-        console.log('Adding isArchived column to groups table...');
-        // isArchivedカラムを追加
-        await sqliteDb.execAsync(
-          'ALTER TABLE groups ADD COLUMN isArchived INTEGER DEFAULT 0 NOT NULL;',
-        );
-        // インデックスを作成
-        await sqliteDb.execAsync(
-          'CREATE INDEX IF NOT EXISTS idx_groups_isArchived ON groups(isArchived);',
-        );
-        // マイグレーション記録
-        await sqliteDb.execAsync(`
-          INSERT OR IGNORE INTO migrations (version, appliedAt) VALUES (3, ${Date.now()});
-        `);
-      }
-    }
-
+    await migrate(db, migrations);
     console.log('Migrations completed successfully');
   } catch (error) {
     console.error('Migration failed:', error);
     throw error;
   }
-}
-
-/**
- * データベースをリセット（開発用）
- */
-export async function resetDatabase(): Promise<void> {
-  console.log('Resetting database...');
-
-  const sqliteDb = getSQLiteDatabase();
-
-  if (!sqliteDb) {
-    throw new Error('Database not initialized');
-  }
-
-  // すべてのテーブルを削除
-  await sqliteDb.execAsync('DROP TABLE IF EXISTS memos;');
-  await sqliteDb.execAsync('DROP TABLE IF EXISTS groups;');
-  await sqliteDb.execAsync('DROP TABLE IF EXISTS migrations;');
-
-  console.log('Database reset complete');
-
-  // マイグレーションを再実行
-  await runMigrations();
 }
 
 /**
@@ -157,15 +46,20 @@ export async function seedDatabase(): Promise<void> {
     return;
   }
 
-  // migrationsテーブルで初回起動かチェック
-  const migrationCount = await sqliteDb.getAllAsync<{ count: number }>(
-    'SELECT COUNT(*) as count FROM migrations WHERE version > 1;',
-  );
+  // Drizzleのマイグレーション履歴テーブルで初回起動かチェック
+  try {
+    const migrationCount = await sqliteDb.getAllAsync<{ count: number }>(
+      'SELECT COUNT(*) as count FROM __drizzle_migrations;',
+    );
 
-  if (migrationCount[0]?.count > 0) {
-    // 初回以降のマイグレーションが実行されている = ユーザーが意図的にデータを削除
-    console.log('User has cleared data, skipping seed');
-    return;
+    // 2回目以降のマイグレーションが実行されている場合はスキップ
+    if (migrationCount[0]?.count > 1) {
+      console.log('User has cleared data, skipping seed');
+      return;
+    }
+  } catch (error) {
+    // テーブルが存在しない場合は初回起動とみなす
+    console.log('No migration history found, proceeding with seed');
   }
 
   console.log('Seeding initial data...');
@@ -245,12 +139,6 @@ export async function seedDatabase(): Promise<void> {
   ];
 
   await db.insert(schema.memos).values(sampleMemos);
-
-  // 初回セットアップ完了を記録
-  await sqliteDb.execAsync(`
-    INSERT OR IGNORE INTO migrations (version, appliedAt) 
-    VALUES (2, ${Date.now()});
-  `);
 
   console.log('Initial data seeded successfully');
 }

@@ -20,6 +20,7 @@ module.exports = (api) => {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
     ],
+    ['inline-import', { extensions: ['.sql'] }],
     'react-native-reanimated/plugin',
   ];
 

@@ -15,10 +15,10 @@ export const groups = sqliteTable(
     createdAt: integer('createdAt', { mode: 'timestamp' }).notNull(),
     updatedAt: integer('updatedAt', { mode: 'timestamp' }).notNull(),
   },
-  (table) => ({
-    updatedAtIdx: index('idx_groups_updatedAt').on(table.updatedAt),
-    archivedIdx: index('idx_groups_isArchived').on(table.isArchived),
-  }),
+  (table) => [
+    index('idx_groups_updatedAt').on(table.updatedAt),
+    index('idx_groups_isArchived').on(table.isArchived),
+  ],
 );
 
 // Memos テーブル定義
@@ -43,15 +43,8 @@ export const memos = sqliteTable(
   ],
 );
 
-// Migrations テーブル定義（バージョン管理用）
-export const migrations = sqliteTable('migrations', {
-  version: integer('version').primaryKey(),
-  appliedAt: integer('appliedAt', { mode: 'timestamp' }).notNull(),
-});
-
 // 型推論用
 export type Group = typeof groups.$inferSelect;
 export type NewGroup = typeof groups.$inferInsert;
 export type Memo = typeof memos.$inferSelect;
 export type NewMemo = typeof memos.$inferInsert;
-export type Migration = typeof migrations.$inferSelect;

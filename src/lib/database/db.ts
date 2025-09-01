@@ -6,7 +6,7 @@ import * as schema from './schema';
 type DrizzleDB = ReturnType<typeof drizzle>;
 
 // データベース名
-const DATABASE_NAME = 'chat-memo.db';
+export const DATABASE_NAME = 'chat-memo.db';
 
 // データベースインスタンス
 let db: DrizzleDB | null = null;
