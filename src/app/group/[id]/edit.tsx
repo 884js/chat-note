@@ -1,20 +1,32 @@
 import { GroupForm } from '@/features/group/components/GroupForm';
 import { GroupFormHeader } from '@/features/group/components/GroupFormHeader';
-import { useCreateGroupForm } from '@/features/group/hooks/useCreateGroupForm';
-import { Stack } from 'expo-router';
+import { useEditGroupForm } from '@/features/group/hooks/useEditGroupForm';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { YStack } from 'tamagui';
 
-export default function CreateGroupScreen() {
+export default function EditGroupScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  if (!id) {
+    return null;
+  }
+
   const {
     formData,
     errors,
-    isCreating,
+    isSubmitting,
+    isLoading,
     canSubmit,
     updateField,
-    handleCreate,
+    handleSubmit,
     handleCancel,
-  } = useCreateGroupForm();
+  } = useEditGroupForm(id);
+
+  // ローディング中は何も表示しない
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <>
@@ -32,10 +44,10 @@ export default function CreateGroupScreen() {
           {/* ヘッダー */}
           <GroupFormHeader
             onCancel={handleCancel}
-            onSubmit={handleCreate}
-            isSubmitting={isCreating}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
             canSubmit={canSubmit}
-            mode="create"
+            mode="edit"
           />
 
           {/* フォーム */}
@@ -43,7 +55,7 @@ export default function CreateGroupScreen() {
             formData={formData}
             errors={errors}
             onUpdateField={updateField}
-            isSubmitting={isCreating}
+            isSubmitting={isSubmitting}
           />
         </YStack>
       </KeyboardAvoidingView>

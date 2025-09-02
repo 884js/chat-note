@@ -64,11 +64,8 @@ export default function HomeScreen() {
   const handleGroupEdit = useCallback((group: (typeof groups)[0]) => {
     // 編集画面へ遷移
     console.log(`Edit group ${group.id}`);
-    // TODO: 編集画面実装後に遷移
-    Alert.alert('編集', `「${group.name}」を編集します`, [
-      { text: 'キャンセル', style: 'cancel' },
-    ]);
-  }, []);
+    router.push(`/group/${group.id}/edit`);
+  }, [router]);
 
   // 新規グループ作成
   const handleCreateGroup = useCallback(() => {

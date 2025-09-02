@@ -5,16 +5,18 @@ import { Button, Text, XStack } from 'tamagui';
 
 interface GroupFormHeaderProps {
   onCancel: () => void;
-  onCreate: () => void;
-  isCreating: boolean;
-  canCreate: boolean;
+  onSubmit: () => void;
+  isSubmitting: boolean;
+  canSubmit: boolean;
+  mode: 'create' | 'edit';
 }
 
 export const GroupFormHeader = memo(function GroupFormHeader({
   onCancel,
-  onCreate,
-  isCreating,
-  canCreate,
+  onSubmit,
+  isSubmitting,
+  canSubmit,
+  mode,
 }: GroupFormHeaderProps) {
   const insets = useSafeAreaInsets();
 
@@ -34,17 +36,17 @@ export const GroupFormHeader = memo(function GroupFormHeader({
         icon={X}
         onPress={onCancel}
         chromeless
-        disabled={isCreating}
+        disabled={isSubmitting}
         color="$color11"
         circular
       />
 
       <Text fontSize="$5" fontWeight="700" color="$color12">
-        新しいグループ
+        {mode === 'create' ? '新しいグループ' : 'グループ編集'}
       </Text>
 
-      <Button size="$4" onPress={onCreate} disabled={!canCreate} themeInverse>
-        作成
+      <Button size="$4" onPress={onSubmit} disabled={!canSubmit} themeInverse>
+        {mode === 'create' ? '作成' : '保存'}
       </Button>
     </XStack>
   );

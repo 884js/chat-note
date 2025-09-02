@@ -119,6 +119,48 @@ export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
     [database, fetchGroups],
   );
 
+  // 単一グループ取得
+  const getGroup = useCallback(
+    async (groupId: string) => {
+      if (!database) {
+        throw new Error('Database not ready');
+      }
+
+      try {
+        return await groupRepository.getGroupById(groupId);
+      } catch (err) {
+        console.error('Failed to get group:', err);
+        setError(err as Error);
+        throw err;
+      }
+    },
+    [database],
+  );
+
+  // グループ更新
+  const updateGroup = useCallback(
+    async (groupId: string, input: Partial<CreateGroupInput>) => {
+      if (!database) {
+        throw new Error('Database not ready');
+      }
+
+      try {
+        await groupRepository.updateGroup({
+          id: groupId,
+          ...input,
+        });
+
+        // グループリストを再取得
+        await fetchGroups();
+      } catch (err) {
+        console.error('Failed to update group:', err);
+        setError(err as Error);
+        throw err;
+      }
+    },
+    [database, fetchGroups],
+  );
+
   // リフレッシュ
   const refetch = useCallback(() => {
     fetchGroups();
@@ -136,6 +178,8 @@ export function useGroups(sortOrder: GroupSortOrder = 'lastUpdated') {
     isLoading,
     error,
     createGroup,
+    getGroup,
+    updateGroup,
     deleteGroup,
     archiveGroup,
     refetch,
