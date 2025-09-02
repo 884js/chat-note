@@ -40,12 +40,12 @@ export const lightTheme = {
   color12: colors.text.light.primary,
 
   // プライマリカラー
-  primary: colors.primary[600],
+  primary: colors.primary[500],
   primaryLight: colors.primary[100],
   primaryDark: colors.primary[800],
 
   // セカンダリカラー
-  secondary: colors.secondary[500],
+  secondary: colors.secondary[600],
   secondaryLight: colors.secondary[100],
   secondaryDark: colors.secondary[800],
 
@@ -120,7 +120,7 @@ export const darkTheme = {
   primaryDark: colors.primary[200],
 
   // セカンダリカラー（ダークモード）
-  secondary: colors.secondary[400],
+  secondary: colors.secondary[500],
   secondaryLight: colors.secondary[800],
   secondaryDark: colors.secondary[200],
 
