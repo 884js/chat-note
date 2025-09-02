@@ -134,13 +134,9 @@ export function MemoInput({
             shadowOpacity={0.1}
             pressStyle={{
               scale: 0.95,
-              shadowOpacity: 0.05,
             }}
-            hoverStyle={{
-              scale: 1.02,
-              shadowOpacity: 0.15,
-            }}
-            animation="quick"
+            animation="bouncy"
+            animateOnly={['transform']}
           />
         </XStack>
       </YStack>

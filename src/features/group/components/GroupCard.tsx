@@ -26,7 +26,6 @@ interface GroupCardProps {
 
 export function GroupCard({ group, onPress }: GroupCardProps) {
   const handlePress = () => {
-    console.log('Group card pressed:', group.id);
     onPress();
   };
 
@@ -35,20 +34,20 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
       <Card
         bordered
         borderColor="$cardBorder"
-        animation="quick"
+        animation="bouncy"
         backgroundColor="$cardBackground"
+        shadowColor="$shadowColor"
+        shadowRadius={4}
+        shadowOffset={{ width: 0, height: 1 }}
+        shadowOpacity={0.04}
         p="$4"
         cursor="pointer"
         onPress={handlePress}
-        hoverStyle={{
-          scale: 0.98,
-          shadowOpacity: 0.12,
-          borderColor: '$borderColorHover',
-        }}
         pressStyle={{
-          scale: 0.96,
-          shadowOpacity: 0.04,
+          scale: 0.97,
+          shadowOpacity: 0.02,
         }}
+        animateOnly={['transform', 'shadowOpacity']}
       >
           <XStack gap="$3" items="center">
             <Avatar circular size="$5" bg="$color5" opacity={0.85}>

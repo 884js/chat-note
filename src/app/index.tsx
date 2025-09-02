@@ -36,11 +36,9 @@ export default function HomeScreen() {
   // グループタップ時の処理
   const handleGroupPress = useCallback(
     (groupId: string) => {
-      console.log('Group pressed:', groupId);
       // メモ画面へ遷移
       try {
         router.push(`/group/${groupId}`);
-        console.log('Navigation triggered to:', `/group/${groupId}`);
       } catch (error) {
         console.error('Navigation error:', error);
       }
@@ -122,9 +120,9 @@ export default function HomeScreen() {
                 chromeless
                 icon={<Menu size={24} color="$color11" />}
                 onPress={() => setShowMenu(true)}
-                pressStyle={{ opacity: 0.5, scale: 0.95 }}
-                hoverStyle={{ bg: '$color3', opacity: 1 }}
-                animation="quick"
+                pressStyle={{ scale: 0.95 }}
+                animation="bouncy"
+                animateOnly={['transform']}
               />
 
               {/* 検索ボックス */}

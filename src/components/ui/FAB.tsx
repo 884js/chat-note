@@ -23,22 +23,17 @@ export function FAB({
       scaleIcon={1.5}
       position="absolute"
       bg="$buttonPrimary"
-      shadowRadius={16}
+      shadowRadius={8}
       shadowColor="$shadowColorFocus"
-      shadowOpacity={0.15}
-      shadowOffset={{ width: 0, height: 6 }}
+      shadowOpacity={0.12}
+      shadowOffset={{ width: 0, height: 4 }}
       borderWidth={0}
-      animation="quick"
+      animation="bouncy"
       pressStyle={{
-        scale: 0.92,
-        shadowOpacity: 0.08,
-        shadowOffset: { width: 0, height: 2 },
+        scale: 0.94,
+        shadowOpacity: 0.06,
       }}
-      hoverStyle={{
-        scale: 1.02,
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 8 },
-      }}
+      animateOnly={['transform', 'shadowOpacity']}
       {...props}
       style={{
         position: 'absolute',

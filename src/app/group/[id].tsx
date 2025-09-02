@@ -138,19 +138,16 @@ export default function GroupDetailScreen() {
             borderBottomColor="$borderColor"
             items="center"
             gap="$3"
-            animation="quick"
-            enterStyle={{ opacity: 0, y: -10 }}
-            opacity={1}
-            y={0}
+            animation="lazy"
           >
             <Button
               size="$4"
               icon={<X size={20} />}
               onPress={() => router.push('/')}
               chromeless
-              pressStyle={{ scale: 0.95, opacity: 0.6, bg: '$color3' }}
-              hoverStyle={{ bg: '$color3', opacity: 1 }}
-              animation="quick"
+              pressStyle={{ scale: 0.96 }}
+              animation="bouncy"
+              animateOnly={['transform']}
               color="$color11"
               circular
             />
@@ -172,10 +169,10 @@ export default function GroupDetailScreen() {
               onPress={() => router.push(`/group/${id}/gallery`)}
               chromeless
               circular
-              pressStyle={{ scale: 0.95, opacity: 0.6, bg: '$color3' }}
-              hoverStyle={{ bg: '$color3', opacity: 1 }}
+              pressStyle={{ scale: 0.96 }}
               color="$color11"
-              animation="quick"
+              animation="bouncy"
+              animateOnly={['transform']}
             />
 
             <Button
@@ -184,10 +181,10 @@ export default function GroupDetailScreen() {
               onPress={handleMorePress}
               chromeless
               circular
-              pressStyle={{ scale: 0.95, opacity: 0.6, bg: '$color3' }}
-              hoverStyle={{ bg: '$color3', opacity: 1 }}
+              pressStyle={{ scale: 0.96 }}
               color="$color11"
-              animation="quick"
+              animation="bouncy"
+              animateOnly={['transform']}
             />
           </XStack>
 
