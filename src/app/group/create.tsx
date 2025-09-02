@@ -26,7 +26,7 @@ export default function CreateGroupScreen() {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <YStack flex={1} bg="$background">
           {/* ヘッダー */}

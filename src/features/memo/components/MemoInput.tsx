@@ -1,6 +1,6 @@
 import { Send } from '@tamagui/lucide-icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { KeyboardAvoidingView, Platform, type TextInput } from 'react-native';
 import { Button, ScrollView, TextArea, XStack, YStack } from 'tamagui';
 import { ImagePickerButton } from './ImagePickerButton';
 import { ImagePreview } from './ImagePreview';

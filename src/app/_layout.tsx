@@ -2,6 +2,11 @@ import '../../tamagui-web.css';
 
 import { DatabaseProvider } from '@/lib/database';
 import {
+  Nunito_400Regular,
+  Nunito_600SemiBold,
+  Nunito_700Bold,
+} from '@expo-google-fonts/nunito';
+import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
@@ -36,6 +41,9 @@ export default function RootLayout() {
     MPLUSRounded: require('../../assets/fonts/MPLUSRounded1c-Regular.ttf'),
     MPLUSRoundedMedium: require('../../assets/fonts/MPLUSRounded1c-Medium.ttf'),
     MPLUSRoundedBold: require('../../assets/fonts/MPLUSRounded1c-Bold.ttf'),
+    Nunito_400Regular,
+    Nunito_600SemiBold,
+    Nunito_700Bold,
   });
 
   useEffect(() => {

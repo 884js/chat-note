@@ -76,8 +76,12 @@ export const DrawerMenu = memo(function DrawerMenu({
               borderBottomWidth={1}
               borderBottomColor="$color6"
             >
-              <Text fontSize="$8" fontWeight="bold" color="$color12">
-                ChatMemo
+              <Text
+                fontSize="$8"
+                color="$color12"
+                style={{ fontFamily: 'Nunito_700Bold', fontWeight: '700' }}
+              >
+                Memoly
               </Text>
               <Text fontSize="$3" color="$color10" mt="$1">
                 メニュー

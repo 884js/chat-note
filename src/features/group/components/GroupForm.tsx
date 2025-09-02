@@ -1,7 +1,7 @@
+import { Text, View, YStack } from 'tamagui';
 import { GroupDescriptionInput } from './GroupDescriptionInput';
 import { GroupNameInput } from './GroupNameInput';
 import { IconPicker } from './IconPicker';
-import { Text, View, YStack } from 'tamagui';
 
 export interface GroupFormData {
   name: string;
@@ -28,7 +28,7 @@ export function GroupForm({
         {/* グループ名入力 */}
         <GroupNameInput
           value={formData.name}
-          onChange={(value) => onUpdateField("name", value)}
+          onChange={(value) => onUpdateField('name', value)}
           error={errors.name}
           disabled={isSubmitting}
         />
@@ -36,7 +36,7 @@ export function GroupForm({
         {/* 説明入力 */}
         <GroupDescriptionInput
           value={formData.description}
-          onChange={(value) => onUpdateField("description", value)}
+          onChange={(value) => onUpdateField('description', value)}
           disabled={isSubmitting}
         />
 
@@ -47,7 +47,7 @@ export function GroupForm({
           </Text>
           <IconPicker
             value={formData.icon}
-            onChange={(icon) => onUpdateField("icon", icon)}
+            onChange={(icon) => onUpdateField('icon', icon)}
             disabled={isSubmitting}
           />
         </YStack>

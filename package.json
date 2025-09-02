@@ -1,5 +1,5 @@
 {
-  "name": "chat-memo",
+  "name": "memoly",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -25,6 +25,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo-google-fonts/nunito": "0.4.1",
     "@expo/vector-icons": "14.1.0",
     "@gorhom/bottom-sheet": "5.2.3",
     "@react-native-async-storage/async-storage": "2.1.2",

@@ -153,13 +153,13 @@ export default function SettingsScreen() {
               </XStack>
               <YStack gap="$1">
                 <Text fontSize="$2" color="$color10">
-                  ChatMemo
+                  Memoly
                 </Text>
                 <Text fontSize="$2" color="$color10">
                   バージョン: 1.0.0
                 </Text>
                 <Text fontSize="$2" color="$color10">
-                  © 2025 ChatMemo
+                  © 2025 Memoly
                 </Text>
               </YStack>
             </YStack>

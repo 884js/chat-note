@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
+import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
 import { openDatabaseSync } from 'expo-sqlite';
 import {
   type ReactNode,
@@ -11,7 +12,6 @@ import {
 import migrations from '../../../drizzle/migrations';
 import { DATABASE_NAME, getDatabase, openDatabase } from './db';
 import { seedDatabase } from './migrate';
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 
 interface DatabaseContextType {
   database: ReturnType<typeof getDatabase> | null;

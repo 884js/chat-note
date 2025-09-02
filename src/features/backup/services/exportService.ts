@@ -18,7 +18,7 @@ import type {
 // ========================================
 
 const BACKUP_VERSION = '1.0.0';
-const FILE_PREFIX = 'chatmemo_backup';
+const FILE_PREFIX = 'memoly_backup';
 const DATE_FORMAT = 'yyyyMMdd_HHmmss';
 const JSON_MIME_TYPE = 'application/json';
 const JSON_UTI = 'public.json';

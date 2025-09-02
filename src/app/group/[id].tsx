@@ -187,7 +187,11 @@ export default function GroupDetailScreen() {
 
           {/* メモ入力 */}
           <KeyboardAvoidingView behavior={'padding'}>
-            <MemoInput onSend={handleSend} placeholder="メモを入力..." autoFocus />
+            <MemoInput
+              onSend={handleSend}
+              placeholder="メモを入力..."
+              autoFocus
+            />
           </KeyboardAvoidingView>
         </YStack>
       </Theme>

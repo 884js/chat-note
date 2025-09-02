@@ -69,7 +69,7 @@ export async function seedDatabase(): Promise<void> {
   const welcomeGroup = {
     id: 'welcome-group',
     name: 'はじめてのメモ',
-    description: 'ChatMemoへようこそ！',
+    description: 'Memolyへようこそ！',
     color: 'blue',
     icon: '👋',
     isArchived: false,

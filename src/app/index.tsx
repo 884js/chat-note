@@ -61,11 +61,14 @@ export default function HomeScreen() {
   );
 
   // スワイプで編集
-  const handleGroupEdit = useCallback((group: (typeof groups)[0]) => {
-    // 編集画面へ遷移
-    console.log(`Edit group ${group.id}`);
-    router.push(`/group/${group.id}/edit`);
-  }, [router]);
+  const handleGroupEdit = useCallback(
+    (group: (typeof groups)[0]) => {
+      // 編集画面へ遷移
+      console.log(`Edit group ${group.id}`);
+      router.push(`/group/${group.id}/edit`);
+    },
+    [router],
+  );
 
   // 新規グループ作成
   const handleCreateGroup = useCallback(() => {
