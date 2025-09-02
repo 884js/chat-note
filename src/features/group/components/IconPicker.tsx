@@ -1,6 +1,7 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { ScrollView, Text, XStack, YStack } from 'tamagui';
+import EmojiPicker, { type EmojiType } from 'rn-emoji-keyboard';
+import { Text, XStack, YStack } from 'tamagui';
 
 interface IconPickerProps {
   value: string;
@@ -8,120 +9,61 @@ interface IconPickerProps {
   disabled?: boolean;
 }
 
-const iconGroups = [
-  {
-    category: 'よく使う',
-    icons: [
-      '📝',
-      '📔',
-      '💡',
-      '📚',
-      '💼',
-      '🏠',
-      '✨',
-      '🌟',
-      '❤️',
-      '✅',
-      '📌',
-      '🔖',
-      '📎',
-      '🗂️',
-      '📊',
-      '🎯',
-      '⚡',
-      '🔥',
-    ],
-  },
-  {
-    category: '仕事・学習',
-    icons: [
-      '📈',
-      '📉',
-      '📋',
-      '🗓️',
-      '📖',
-      '✏️',
-      '🖊️',
-      '🔍',
-      '🎓',
-      '🏆',
-      '💭',
-      '🗯️',
-      '💫',
-      '🚀',
-      '⏰',
-      '📅',
-      '📂',
-      '💻',
-    ],
-  },
-  {
-    category: '生活・趣味',
-    icons: [
-      '🛒',
-      '🍳',
-      '🌱',
-      '🌿',
-      '🌸',
-      '☕',
-      '🍎',
-      '🎨',
-      '🎭',
-      '🎸',
-      '🎮',
-      '🎲',
-      '🏃',
-      '⚽',
-      '🧺',
-      '🧹',
-      '🎪',
-      '♟️',
-    ],
-  },
-];
-
 export const IconPicker = memo(function IconPicker({
   value,
   onChange,
   disabled = false,
 }: IconPickerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleEmojiSelect = (emoji: EmojiType) => {
+    onChange(emoji.emoji);
+    setIsOpen(false);
+  };
+
   return (
-    <ScrollView height={300} showsVerticalScrollIndicator={false}>
-      <YStack gap="$3">
-        {iconGroups.map((group) => (
-          <YStack key={group.category} gap="$1.5">
-            <Text fontSize="$2" color="$color10" fontWeight="500">
-              {group.category}
-            </Text>
-            <XStack flexWrap="wrap" gap="$1.5">
-              {group.icons.map((icon) => (
-                <TouchableOpacity
-                  key={icon}
-                  onPress={() => !disabled && onChange(icon)}
-                  disabled={disabled}
-                  activeOpacity={0.7}
-                >
-                  <YStack
-                    width={45}
-                    height={45}
-                    bg={value === icon ? '$color5' : '$color2'}
-                    rounded="$2"
-                    items="center"
-                    justify="center"
-                    opacity={disabled ? 0.5 : 1}
-                    borderWidth={value === icon ? 2 : 1}
-                    borderColor={value === icon ? '$primary' : '$color6'}
-                    animation="quick"
-                    scale={value === icon ? 1.05 : 1}
-                  >
-                    <Text fontSize={40}>{icon}</Text>
-                  </YStack>
-                </TouchableOpacity>
-              ))}
-            </XStack>
+    <YStack gap="$3">
+      {/* タッチ可能な選択エリア */}
+      <TouchableOpacity
+        onPress={() => !disabled && setIsOpen(true)}
+        disabled={disabled}
+        activeOpacity={0.7}
+      >
+        <XStack
+          items="center"
+          gap="$3"
+          p="$3"
+          bg="$color2"
+          rounded="$3"
+          borderWidth={1}
+          borderColor="$color6"
+          opacity={disabled ? 0.5 : 1}
+        >
+          {/* 絵文字アイコン */}
+          <YStack
+            width={40}
+            height={40}
+            bg="$color4"
+            rounded="$6"
+            items="center"
+            justify="center"
+          >
+            <Text fontSize={20}>{value}</Text>
           </YStack>
-        ))}
-      </YStack>
-    </ScrollView>
+
+          {/* テキスト */}
+          <Text fontSize="$4" color="$color12" flex={1}>
+            アイコンを変更
+          </Text>
+        </XStack>
+      </TouchableOpacity>
+
+      {/* EmojiPicker */}
+      <EmojiPicker
+        onEmojiSelected={handleEmojiSelect}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
+    </YStack>
   );
 });

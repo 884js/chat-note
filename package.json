@@ -74,6 +74,7 @@
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "0.20.0",
+    "rn-emoji-keyboard": "1.7.0",
     "tamagui": "1.132.20"
   },
   "devDependencies": {

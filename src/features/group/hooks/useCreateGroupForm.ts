@@ -6,6 +6,7 @@ import { useGroups } from './useGroups';
 export interface GroupFormData {
   name: string;
   description: string;
+  icon: string;
 }
 
 export interface GroupFormErrors {
@@ -20,6 +21,7 @@ export function useCreateGroupForm() {
   const [formData, setFormData] = useState<GroupFormData>({
     name: '',
     description: '',
+    icon: '📝', // デフォルトアイコン
   });
 
   const [errors, setErrors] = useState<GroupFormErrors>({});
@@ -61,37 +63,11 @@ export function useCreateGroupForm() {
     setIsCreating(true);
 
     try {
-      // ランダムなカラーとアイコンを選択
-      const colors = [
-        'blue',
-        'purple',
-        'green',
-        'orange',
-        'pink',
-        'red',
-        'yellow',
-        'gray',
-      ] as const;
-      const icons = [
-        '📝',
-        '📔',
-        '💡',
-        '📚',
-        '💼',
-        '🏠',
-        '✨',
-        '🌟',
-        '📌',
-        '🎯',
-      ];
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-
       await createGroup({
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
-        color: randomColor,
-        icon: randomIcon,
+        color: 'blue', // 固定値
+        icon: formData.icon,
       });
 
       router.push('/');

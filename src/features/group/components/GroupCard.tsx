@@ -26,10 +26,6 @@ interface GroupCardProps {
 }
 
 export function GroupCard({ group, onPress }: GroupCardProps) {
-  console.log('GroupCard rendered:', group.id, {
-    onPress: !!onPress,
-  });
-
   const handlePress = () => {
     console.log('Group card pressed:', group.id);
     onPress();
@@ -46,7 +42,7 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
           cursor="pointer"
         >
           <XStack gap="$3" items="center">
-            <Avatar circular size="$5" bg="$color5" opacity={0.2}>
+            <Avatar circular size="$5" bg="$color5" opacity={0.7}>
               {group.icon ? (
                 <Text fontSize="$6">{group.icon}</Text>
               ) : (

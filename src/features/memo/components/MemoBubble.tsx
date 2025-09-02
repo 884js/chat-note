@@ -1,5 +1,5 @@
 import { formatTime } from '@/lib/dateUtils';
-import { Edit3, Trash2 } from '@tamagui/lucide-icons';
+import { Trash2 } from '@tamagui/lucide-icons';
 import { Image as ExpoImage } from 'expo-image';
 import { memo } from 'react';
 import { Alert, Linking, TouchableOpacity } from 'react-native';
