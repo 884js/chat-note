@@ -47,14 +47,14 @@ export const MemoBubble = memo(function MemoBubble({
     return (
       <XStack py="$1.5" px="$4" opacity={0.5}>
         <YStack
-          bg="$color2"
+          bg="$background"
           rounded="$4"
           p="$3"
           maxW="80%"
           borderWidth={1}
-          borderColor="$color6"
+          borderColor="$borderColor"
           borderStyle="dashed"
-          opacity={0.7}
+          opacity={0.6}
         >
           <XStack items="center" gap="$2">
             <Trash2 size="$1" color="$color8" />
@@ -72,11 +72,20 @@ export const MemoBubble = memo(function MemoBubble({
       <XStack px="$4" py="$1.5">
         <YStack
           maxW="80%"
-          bg="$color2"
+          bg="$cardBackground"
           rounded="$4"
           overflow="hidden"
+          shadowColor="$shadowColor"
+          shadowRadius={4}
+          shadowOffset={{ width: 0, height: 1 }}
+          shadowOpacity={0.05}
           borderWidth={1}
-          borderColor="$color6"
+          borderColor="$cardBorder"
+          animation="quick"
+          hoverStyle={{
+            shadowOpacity: 0.08,
+            borderColor: '$borderColorHover',
+          }}
         >
           {/* 画像セクション */}
           {memo.imageUri && (
@@ -98,18 +107,19 @@ export const MemoBubble = memo(function MemoBubble({
             {memo.content && (
               <ParsedText
                 style={{
-                  fontSize: 16,
-                  lineHeight: 24,
-                  color: '#000',
-                  letterSpacing: 0.2,
+                  fontSize: 15,
+                  lineHeight: 22,
+                  color: '#0F172A',
+                  letterSpacing: 0.15,
                   fontFamily: 'MPLUSRounded',
                 }}
                 parse={[
                   {
                     type: 'url',
                     style: {
-                      color: '#007AFF',
+                      color: '#3B82F6',
                       textDecorationLine: 'underline',
+                      fontWeight: '500',
                     },
                     onPress: handleUrlPress,
                   },
@@ -122,7 +132,7 @@ export const MemoBubble = memo(function MemoBubble({
 
             {/* メタ情報セクション - 右下配置 */}
             <XStack items="center" gap="$1.5" mt="$1" justify="flex-end">
-              <Text fontSize="$2" color="$color8" fontWeight="400">
+              <Text fontSize="$1" color="$color10" fontWeight="500" opacity={0.7}>
                 {formatTime(memo.createdAt)}
               </Text>
             </XStack>

@@ -60,7 +60,15 @@ export function MemoInput({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={90}
     >
-      <YStack bg="$background" borderTopWidth={1} borderTopColor="$color6">
+      <YStack 
+        bg="$background" 
+        borderTopWidth={1} 
+        borderTopColor="$borderColor"
+        shadowColor="$shadowColor"
+        shadowRadius={8}
+        shadowOffset={{ width: 0, height: -2 }}
+        shadowOpacity={0.05}
+      >
         {/* 選択された画像のプレビュー */}
         {selectedImage && (
           <ScrollView
@@ -93,22 +101,46 @@ export function MemoInput({
             onChangeText={setMessage}
             placeholder={placeholder}
             disabled={isLoading}
+            bg="$inputBackground"
             borderWidth={1}
-            borderColor="$color6"
-            minH={36}
+            borderColor="$inputBorder"
+            focusStyle={{
+              borderColor: '$borderColorFocus',
+              shadowColor: '$shadowColorFocus',
+              shadowRadius: 4,
+              shadowOpacity: 0.1,
+            }}
+            minH={40}
             maxH={120}
             fontFamily="$body"
+            fontSize="$4"
             multiline
             verticalAlign="middle"
+            px="$3"
+            py="$2.5"
+            // animation="quick"
           />
 
           {/* 送信ボタン */}
           <Button
             size="$4"
-            icon={<Send size={24} />}
+            icon={<Send size={20} color={canSend ? "white" : "$color8"} />}
             onPress={handleSend}
             disabled={!canSend}
             circular
+            bg={canSend ? "$buttonPrimary" : "$color5"}
+            shadowColor={canSend ? "$shadowColorFocus" : "transparent"}
+            shadowRadius={canSend ? 4 : 0}
+            shadowOpacity={0.1}
+            pressStyle={{
+              scale: 0.95,
+              shadowOpacity: 0.05,
+            }}
+            hoverStyle={{
+              scale: 1.02,
+              shadowOpacity: 0.15,
+            }}
+            animation="quick"
           />
         </XStack>
       </YStack>

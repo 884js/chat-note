@@ -16,14 +16,14 @@ export const lightTheme = {
   colorTransparent: 'rgba(0, 0, 0, 0)',
 
   borderColor: colors.border.light,
-  borderColorHover: colors.primary[300],
-  borderColorPress: colors.primary[400],
-  borderColorFocus: colors.primary[500],
+  borderColorHover: colors.primary[400],
+  borderColorPress: colors.primary[500],
+  borderColorFocus: colors.border.focus,
 
   shadowColor: colors.shadow.light,
-  shadowColorHover: colors.shadow.light,
-  shadowColorPress: colors.shadow.light,
-  shadowColorFocus: colors.shadow.light,
+  shadowColorHover: colors.shadow.medium,
+  shadowColorPress: colors.shadow.medium,
+  shadowColorFocus: colors.shadow.colored,
 
   // カスタムカラートークン
   color1: colors.background.light.primary,
@@ -73,6 +73,15 @@ export const lightTheme = {
   blue10: colors.primary[600],
   blue11: colors.primary[700],
   blue12: colors.primary[900],
+  
+  // 追加トークン
+  cardBackground: colors.background.light.elevated,
+  cardBorder: colors.border.light,
+  inputBackground: colors.background.light.primary,
+  inputBorder: colors.border.light,
+  buttonPrimary: colors.primary[500],
+  buttonSecondary: colors.secondary[600],
+  linkColor: colors.text.light.link,
 };
 
 // ダークテーマ
@@ -91,14 +100,14 @@ export const darkTheme = {
   colorTransparent: 'rgba(255, 255, 255, 0)',
 
   borderColor: colors.border.dark,
-  borderColorHover: colors.primary[600],
-  borderColorPress: colors.primary[500],
-  borderColorFocus: colors.primary[400],
+  borderColorHover: colors.primary[500],
+  borderColorPress: colors.primary[400],
+  borderColorFocus: colors.border.focus,
 
-  shadowColor: colors.shadow.dark,
+  shadowColor: colors.shadow.medium,
   shadowColorHover: colors.shadow.dark,
   shadowColorPress: colors.shadow.dark,
-  shadowColorFocus: colors.shadow.dark,
+  shadowColorFocus: colors.shadow.colored,
 
   // カスタムカラートークン（ダークモード）
   color1: colors.background.dark.primary,
@@ -148,6 +157,15 @@ export const darkTheme = {
   blue10: colors.primary[400],
   blue11: colors.primary[300],
   blue12: colors.primary[50],
+  
+  // 追加トークン（ダークモード）
+  cardBackground: colors.background.dark.elevated,
+  cardBorder: colors.border.dark,
+  inputBackground: colors.background.dark.secondary,
+  inputBorder: colors.border.dark,
+  buttonPrimary: colors.primary[500],
+  buttonSecondary: colors.secondary[500],
+  linkColor: colors.text.dark.link,
 };
 
 // ルームテーマの生成

@@ -98,15 +98,19 @@ export default function HomeScreen() {
         }}
       />
       <Theme name="light">
-        <YStack flex={1} bg="$background">
+        <YStack flex={1} bg="$backgroundHover">
           {/* ヘッダー */}
           <YStack
             bg="$background"
-            pt={insets.top}
+            pt={insets.top + 16}
             pb="$3"
             px="$4"
+            shadowColor="$shadowColor"
+            shadowRadius={4}
+            shadowOffset={{ width: 0, height: 2 }}
+            shadowOpacity={0.03}
             borderBottomWidth={1}
-            borderBottomColor="$color6"
+            borderBottomColor="$borderColor"
             gap="$2"
           >
             {/* メニューと検索ボックス */}
@@ -116,9 +120,10 @@ export default function HomeScreen() {
                 size="$4"
                 circular
                 chromeless
-                icon={<Menu size={24} />}
+                icon={<Menu size={24} color="$color11" />}
                 onPress={() => setShowMenu(true)}
-                pressStyle={{ opacity: 0.5 }}
+                pressStyle={{ opacity: 0.5, scale: 0.95 }}
+                hoverStyle={{ bg: '$color3', opacity: 1 }}
                 animation="quick"
               />
 
@@ -135,12 +140,12 @@ export default function HomeScreen() {
             {/* グループ数表示 */}
             {searchQuery
               ? filteredGroups.length > 0 && (
-                  <Text fontSize="$2" color="$color10" px="$2">
+                  <Text fontSize="$2" color="$color11" px="$2" fontWeight="500">
                     {filteredGroups.length}件の検索結果
                   </Text>
                 )
               : groups.length > 0 && (
-                  <Text fontSize="$2" color="$color10" px="$2">
+                  <Text fontSize="$2" color="$color11" px="$2" fontWeight="500">
                     {groups.length}件のグループ
                   </Text>
                 )}

@@ -29,72 +29,82 @@ export const colors = {
     950: '#1F2529',
   },
 
-  // アクセントカラー（アンバー）
+  // アクセントカラー（エメラルド）
   accent: {
-    50: '#FFFBEB',
-    100: '#FEF3C7',
-    200: '#FDE68A',
-    300: '#FCD34D',
-    400: '#FBBF24',
-    500: '#F59E0B', // メインのアクセントカラー
-    600: '#D97706',
-    700: '#B45309',
-    800: '#92400E',
-    900: '#78350F',
-    950: '#451A03',
+    50: '#ECFDF5',
+    100: '#D1FAE5',
+    200: '#A7F3D0',
+    300: '#6EE7B7',
+    400: '#34D399',
+    500: '#10B981', // メインのアクセントカラー
+    600: '#059669',
+    700: '#047857',
+    800: '#065F46',
+    900: '#064E3B',
+    950: '#022C22',
   },
 
-  // ルーム用カラーパレット
+  // ルーム用カラーパレット（洗練されたカラーセット）
   roomColors: {
-    blue: {
+    ocean: {
       light: '#DBEAFE',
       main: '#3B82F6',
       dark: '#1E40AF',
+      name: 'オーシャン',
     },
-    green: {
+    emerald: {
       light: '#D1FAE5',
       main: '#10B981',
       dark: '#065F46',
+      name: 'エメラルド',
     },
-    purple: {
+    violet: {
       light: '#EDE9FE',
       main: '#8B5CF6',
       dark: '#5B21B6',
+      name: 'バイオレット',
     },
-    orange: {
+    sunset: {
       light: '#FED7AA',
       main: '#FB923C',
       dark: '#C2410C',
+      name: 'サンセット',
     },
-    pink: {
+    rose: {
       light: '#FCE7F3',
       main: '#EC4899',
       dark: '#9F1239',
+      name: 'ローズ',
     },
-    yellow: {
+    amber: {
       light: '#FEF3C7',
-      main: '#FDE047',
-      dark: '#A16207',
+      main: '#F59E0B',
+      dark: '#92400E',
+      name: 'アンバー',
     },
-    cyan: {
-      light: '#CFFAFE',
-      main: '#06B6D4',
-      dark: '#155E75',
+    sky: {
+      light: '#E0F2FE',
+      main: '#0EA5E9',
+      dark: '#075985',
+      name: 'スカイ',
     },
-    indigo: {
-      light: '#E0E7FF',
-      main: '#6366F1',
-      dark: '#3730A3',
-    },
-    red: {
+    crimson: {
       light: '#FEE2E2',
-      main: '#EF4444',
+      main: '#DC2626',
       dark: '#991B1B',
+      name: 'クリムゾン',
     },
-    gray: {
-      light: '#EBEDEF',
-      main: '#58636B',
-      dark: '#3C444A',
+    slate: {
+      light: '#F1F5F9',
+      main: '#64748B',
+      dark: '#334155',
+      name: 'スレート',
+    },
+    teal: {
+      light: '#CCFBF1',
+      main: '#14B8A6',
+      dark: '#134E4A',
+      name: 'ティール',
     },
   },
 
@@ -110,13 +120,17 @@ export const colors = {
   background: {
     light: {
       primary: '#FFFFFF',
-      secondary: '#FAFAFA',
-      tertiary: '#F5F5F5',
+      secondary: '#F8FAFC',
+      tertiary: '#F1F5F9',
+      elevated: '#FFFFFF',
+      overlay: 'rgba(0, 0, 0, 0.5)',
     },
     dark: {
       primary: '#0F172A',
       secondary: '#1E293B',
       tertiary: '#334155',
+      elevated: '#1E293B',
+      overlay: 'rgba(0, 0, 0, 0.7)',
     },
   },
 
@@ -125,14 +139,18 @@ export const colors = {
     light: {
       primary: '#0F172A',
       secondary: '#475569',
-      tertiary: '#94A3B8',
+      tertiary: '#64748B',
       disabled: '#CBD5E1',
+      link: '#3B82F6',
+      inverse: '#FFFFFF',
     },
     dark: {
       primary: '#F8FAFC',
       secondary: '#E2E8F0',
-      tertiary: '#94A3B8',
-      disabled: '#475569',
+      tertiary: '#CBD5E1',
+      disabled: '#64748B',
+      link: '#60A5FA',
+      inverse: '#0F172A',
     },
   },
 
@@ -140,12 +158,16 @@ export const colors = {
   border: {
     light: '#E2E8F0',
     dark: '#334155',
+    focus: '#3B82F6',
+    error: '#EF4444',
   },
 
   // 影
   shadow: {
-    light: 'rgba(0, 0, 0, 0.1)',
-    dark: 'rgba(0, 0, 0, 0.3)',
+    light: 'rgba(0, 0, 0, 0.05)',
+    medium: 'rgba(0, 0, 0, 0.1)',
+    dark: 'rgba(0, 0, 0, 0.2)',
+    colored: 'rgba(59, 130, 246, 0.15)',
   },
 };
 

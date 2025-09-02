@@ -7,7 +7,7 @@ import type { Memo } from '@/features/memo/types';
 import { Image as ImageIcon, MoreVertical, X } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Alert, TouchableOpacity } from 'react-native';
+import { Alert } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Text, Theme, XStack, YStack } from 'tamagui';
@@ -119,19 +119,23 @@ export default function GroupDetailScreen() {
       <Stack.Screen
         options={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#f5f5f5' },
+          contentStyle: { backgroundColor: '#F8FAFC' },
         }}
       />
       <Theme name="light">
-        <YStack flex={1} bg="$background">
+        <YStack flex={1} bg="$backgroundHover">
           {/* カスタムヘッダー */}
           <XStack
             bg="$background"
             pt={insets.top}
             pb="$3"
             px="$4"
+            shadowColor="$shadowColor"
+            shadowRadius={4}
+            shadowOffset={{ width: 0, height: 2 }}
+            shadowOpacity={0.03}
             borderBottomWidth={1}
-            borderBottomColor="$color6"
+            borderBottomColor="$borderColor"
             items="center"
             gap="$3"
             animation="quick"
@@ -141,36 +145,50 @@ export default function GroupDetailScreen() {
           >
             <Button
               size="$4"
-              icon={X}
+              icon={<X size={20} />}
               onPress={() => router.push('/')}
               chromeless
-              pressStyle={{ scale: 0.95, opacity: 0.6 }}
+              pressStyle={{ scale: 0.95, opacity: 0.6, bg: '$color3' }}
+              hoverStyle={{ bg: '$color3', opacity: 1 }}
               animation="quick"
               color="$color11"
               circular
             />
 
             <YStack flex={1}>
-              <Text fontSize="$5" fontWeight="700" color="$color12">
+              <Text fontSize="$5" fontWeight="700" color="$color12" numberOfLines={1}>
                 {group?.name}
               </Text>
+              {group?.description && (
+                <Text fontSize="$2" color="$color11" opacity={0.8} numberOfLines={1}>
+                  {group.description}
+                </Text>
+              )}
             </YStack>
 
-            <TouchableOpacity
+            <Button
+              size="$3"
+              icon={<ImageIcon size={18} />}
               onPress={() => router.push(`/group/${id}/gallery`)}
-              activeOpacity={0.7}
-              style={{ padding: 8 }}
-            >
-              <ImageIcon size="$1.5" color="$color11" />
-            </TouchableOpacity>
+              chromeless
+              circular
+              pressStyle={{ scale: 0.95, opacity: 0.6, bg: '$color3' }}
+              hoverStyle={{ bg: '$color3', opacity: 1 }}
+              color="$color11"
+              animation="quick"
+            />
 
-            <TouchableOpacity
+            <Button
+              size="$3"
+              icon={<MoreVertical size={18} />}
               onPress={handleMorePress}
-              activeOpacity={0.7}
-              style={{ padding: 8 }}
-            >
-              <MoreVertical size="$1.5" color="$color11" />
-            </TouchableOpacity>
+              chromeless
+              circular
+              pressStyle={{ scale: 0.95, opacity: 0.6, bg: '$color3' }}
+              hoverStyle={{ bg: '$color3', opacity: 1 }}
+              color="$color11"
+              animation="quick"
+            />
           </XStack>
 
           {/* メモリスト */}

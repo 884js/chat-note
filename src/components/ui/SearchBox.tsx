@@ -25,7 +25,7 @@ export const SearchBox = memo(function SearchBox({
       bg="$color2"
       rounded="$10"
       px="$3"
-      py="$2"
+      py="$3"
       items="center"
       gap="$2"
       borderWidth={1}
@@ -39,6 +39,7 @@ export const SearchBox = memo(function SearchBox({
         borderColor: '$primary',
         bg: '$color1',
       }}
+      height={48}
     >
       <Search size="$1" color="$color10" />
       <Input
@@ -47,6 +48,7 @@ export const SearchBox = memo(function SearchBox({
         onChangeText={onChange}
         placeholder={placeholder}
         placeholderTextColor="$color10"
+        height={48}
         bg="transparent"
         borderWidth={0}
         fontSize="$4"

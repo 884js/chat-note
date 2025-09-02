@@ -1,5 +1,4 @@
 import { Clock, MessageCircle } from '@tamagui/lucide-icons';
-import { TouchableOpacity } from 'react-native';
 import {
   Avatar,
   Card,
@@ -32,17 +31,27 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={handlePress}>
-      <Theme name={group.color as ThemeName}>
-        <Card
-          bordered
-          borderColor="$color6"
-          animation="quick"
-          p="$4"
-          cursor="pointer"
-        >
+    <Theme name={group.color as ThemeName}>
+      <Card
+        bordered
+        borderColor="$cardBorder"
+        animation="quick"
+        backgroundColor="$cardBackground"
+        p="$4"
+        cursor="pointer"
+        onPress={handlePress}
+        hoverStyle={{
+          scale: 0.98,
+          shadowOpacity: 0.12,
+          borderColor: '$borderColorHover',
+        }}
+        pressStyle={{
+          scale: 0.96,
+          shadowOpacity: 0.04,
+        }}
+      >
           <XStack gap="$3" items="center">
-            <Avatar circular size="$5" bg="$color5" opacity={0.7}>
+            <Avatar circular size="$5" bg="$color5" opacity={0.85}>
               {group.icon ? (
                 <Text fontSize="$6">{group.icon}</Text>
               ) : (
@@ -52,13 +61,13 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
 
             <YStack flex={1} gap="$1">
               <XStack justify="space-between" items="center">
-                <Paragraph fontWeight="600" fontSize="$5">
+                <Paragraph fontWeight="700" fontSize="$5" color="$color12">
                   {group.name}
                 </Paragraph>
                 {group.lastMemoAt && (
                   <XStack gap="$1" items="center">
-                    <Clock size={12} opacity={0.5} />
-                    <Text fontSize="$2" opacity={0.5}>
+                    <Clock size={12} opacity={0.4} color="$color11" />
+                    <Text fontSize="$2" opacity={0.6} color="$color11">
                       {formatRelativeTime(group.lastMemoAt)}
                     </Text>
                   </XStack>
@@ -66,20 +75,19 @@ export function GroupCard({ group, onPress }: GroupCardProps) {
               </XStack>
 
               {group.description && (
-                <Paragraph fontSize="$2" opacity={0.6} numberOfLines={1}>
+                <Paragraph fontSize="$2" opacity={0.7} numberOfLines={1} color="$color11">
                   {group.description}
                 </Paragraph>
               )}
 
               {group.lastMemo && (
-                <Paragraph fontSize="$3" opacity={0.8} numberOfLines={1}>
+                <Paragraph fontSize="$3" opacity={0.85} numberOfLines={2} color="$color11">
                   {group.lastMemo}
                 </Paragraph>
               )}
             </YStack>
           </XStack>
-        </Card>
-      </Theme>
-    </TouchableOpacity>
+      </Card>
+    </Theme>
   );
 }
