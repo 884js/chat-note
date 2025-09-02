@@ -107,22 +107,7 @@ export default function GroupDetailScreen() {
       {
         text: 'グループ情報を編集',
         onPress: () => {
-          // TODO: 編集画面へ遷移
-          console.log('Edit group');
-        },
-      },
-      {
-        text: 'メモを検索',
-        onPress: () => {
-          // TODO: 検索画面へ遷移
-          console.log('Search memos');
-        },
-      },
-      {
-        text: 'エクスポート',
-        onPress: () => {
-          // TODO: エクスポート機能
-          console.log('Export memos');
+          router.push(`/group/${id}/edit`);
         },
       },
       { text: 'キャンセル', style: 'cancel' },
