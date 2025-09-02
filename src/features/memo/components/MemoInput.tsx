@@ -1,6 +1,6 @@
 import { Send } from '@tamagui/lucide-icons';
-import { useCallback, useState } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { Button, ScrollView, TextArea, XStack, YStack } from 'tamagui';
 import { ImagePickerButton } from './ImagePickerButton';
 import { ImagePreview } from './ImagePreview';
@@ -9,15 +9,18 @@ interface MemoInputProps {
   onSend: (content?: string, imageUri?: string) => void;
   placeholder?: string;
   isLoading?: boolean;
+  autoFocus?: boolean;
 }
 
 export function MemoInput({
   onSend,
   placeholder = 'メモを入力...',
   isLoading = false,
+  autoFocus = false,
 }: MemoInputProps) {
   const [message, setMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const textAreaRef = useRef<TextInput>(null);
 
   const handleSend = useCallback(() => {
     const trimmedMessage = message.trim();
@@ -37,6 +40,17 @@ export function MemoInput({
   const handleRemoveImage = useCallback(() => {
     setSelectedImage(null);
   }, []);
+
+  // 自動フォーカス
+  useEffect(() => {
+    if (autoFocus && textAreaRef.current) {
+      // 少し遅延を入れてフォーカスを確実にする
+      const timer = setTimeout(() => {
+        textAreaRef.current?.focus();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [autoFocus]);
 
   const canSend =
     (message.trim().length > 0 || selectedImage !== null) && !isLoading;
@@ -73,6 +87,7 @@ export function MemoInput({
 
           {/* テキスト入力 */}
           <TextArea
+            ref={textAreaRef}
             flex={1}
             value={message}
             onChangeText={setMessage}

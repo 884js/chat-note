@@ -11,6 +11,7 @@ import {
 import migrations from '../../../drizzle/migrations';
 import { DATABASE_NAME, getDatabase, openDatabase } from './db';
 import { seedDatabase } from './migrate';
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 
 interface DatabaseContextType {
   database: ReturnType<typeof getDatabase> | null;
@@ -36,6 +37,8 @@ export function DatabaseProvider({
   children,
   seedData = false,
 }: DatabaseProviderProps) {
+  useDrizzleStudio(expoDb);
+
   const [database, setDatabase] = useState<ReturnType<
     typeof getDatabase
   > | null>(null);
