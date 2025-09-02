@@ -216,14 +216,7 @@ export default function BackupScreen() {
 
               <YStack gap="$2">
                 <Text fontSize="$2" color="$color11">
-                  • エクスポートしたファイルは他のアプリで共有できます
-                </Text>
-                <Text fontSize="$2" color="$color11">
                   • インポート時は重複データの処理方法を選択できます
-                </Text>
-                <Text fontSize="$2" color="$color11">
-                  •
-                  画像はファイルパスのみ保存され、実際の画像ファイルは含まれません
                 </Text>
                 <Text fontSize="$2" color="$color11">
                   • バックアップファイルは安全な場所に保管してください
