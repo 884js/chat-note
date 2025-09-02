@@ -37,7 +37,7 @@ export function DatabaseProvider({
   children,
   seedData = false,
 }: DatabaseProviderProps) {
-  useDrizzleStudio(expoDb);
+  // useDrizzleStudio(expoDb);
 
   const [database, setDatabase] = useState<ReturnType<
     typeof getDatabase
