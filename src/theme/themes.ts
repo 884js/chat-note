@@ -73,7 +73,7 @@ export const lightTheme = {
   blue10: colors.primary[600],
   blue11: colors.primary[700],
   blue12: colors.primary[900],
-  
+
   // 追加トークン
   cardBackground: colors.background.light.elevated,
   cardBorder: colors.border.light,
@@ -157,7 +157,7 @@ export const darkTheme = {
   blue10: colors.primary[400],
   blue11: colors.primary[300],
   blue12: colors.primary[50],
-  
+
   // 追加トークン（ダークモード）
   cardBackground: colors.background.dark.elevated,
   cardBorder: colors.border.dark,

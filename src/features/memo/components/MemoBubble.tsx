@@ -132,7 +132,12 @@ export const MemoBubble = memo(function MemoBubble({
 
             {/* メタ情報セクション - 右下配置 */}
             <XStack items="center" gap="$1.5" mt="$1" justify="flex-end">
-              <Text fontSize="$1" color="$color10" fontWeight="500" opacity={0.7}>
+              <Text
+                fontSize="$1"
+                color="$color10"
+                fontWeight="500"
+                opacity={0.7}
+              >
                 {formatTime(memo.createdAt)}
               </Text>
             </XStack>

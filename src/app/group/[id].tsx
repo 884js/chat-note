@@ -153,11 +153,21 @@ export default function GroupDetailScreen() {
             />
 
             <YStack flex={1}>
-              <Text fontSize="$5" fontWeight="700" color="$color12" numberOfLines={1}>
+              <Text
+                fontSize="$5"
+                fontWeight="700"
+                color="$color12"
+                numberOfLines={1}
+              >
                 {group?.name}
               </Text>
               {group?.description && (
-                <Text fontSize="$2" color="$color11" opacity={0.8} numberOfLines={1}>
+                <Text
+                  fontSize="$2"
+                  color="$color11"
+                  opacity={0.8}
+                  numberOfLines={1}
+                >
                   {group.description}
                 </Text>
               )}

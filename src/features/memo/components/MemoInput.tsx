@@ -60,9 +60,9 @@ export function MemoInput({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={90}
     >
-      <YStack 
-        bg="$background" 
-        borderTopWidth={1} 
+      <YStack
+        bg="$background"
+        borderTopWidth={1}
         borderTopColor="$borderColor"
         shadowColor="$shadowColor"
         shadowRadius={8}
@@ -124,12 +124,12 @@ export function MemoInput({
           {/* 送信ボタン */}
           <Button
             size="$4"
-            icon={<Send size={20} color={canSend ? "white" : "$color8"} />}
+            icon={<Send size={20} color={canSend ? 'white' : '$color8'} />}
             onPress={handleSend}
             disabled={!canSend}
             circular
-            bg={canSend ? "$buttonPrimary" : "$color5"}
-            shadowColor={canSend ? "$shadowColorFocus" : "transparent"}
+            bg={canSend ? '$buttonPrimary' : '$color5'}
+            shadowColor={canSend ? '$shadowColorFocus' : 'transparent'}
             shadowRadius={canSend ? 4 : 0}
             shadowOpacity={0.1}
             pressStyle={{

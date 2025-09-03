@@ -11,7 +11,7 @@ config.resolver.sourceExts.push('sql');
 
 // Add wasm asset support
 config.resolver.assetExts.push('wasm');
- 
+
 // Add COEP and COOP headers to support SharedArrayBuffer
 config.server.enhanceMiddleware = (middleware) => {
   return (req, res, next) => {

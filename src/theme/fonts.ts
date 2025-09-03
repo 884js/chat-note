@@ -105,7 +105,7 @@ const headingFont = createFont({
   },
   weight: {
     4: '600',
-    5: '600', 
+    5: '600',
     6: '700',
     7: '700',
     8: '800',
