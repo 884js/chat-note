@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useMigrations } from 'drizzle-orm/expo-sqlite/migrator';
-import { useDrizzleStudio } from 'expo-drizzle-studio-plugin';
 import { openDatabaseSync } from 'expo-sqlite';
 import {
   type ReactNode,
@@ -8,9 +7,10 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
 } from 'react';
 import migrations from '../../../drizzle/migrations';
-import { DATABASE_NAME, getDatabase, openDatabase } from './db';
+import { type getDatabase } from './db';
 import { seedDatabase } from './migrate';
 
 interface DatabaseContextType {
@@ -30,14 +30,28 @@ interface DatabaseProviderProps {
   seedData?: boolean; // 開発用: 初期データを投入するか
 }
 
-const expoDb = openDatabaseSync(DATABASE_NAME);
-const db = drizzle(expoDb);
+// データベース名を定数として定義（ビルド時の問題を回避）
+const DATABASE_NAME = 'memoly.db';
+
+// グローバル変数でインスタンスを管理
+let globalExpoDb: ReturnType<typeof openDatabaseSync> | null = null;
+let globalDb: ReturnType<typeof drizzle> | null = null;
+
+// 初期化関数
+function initializeDb() {
+  if (!globalExpoDb) {
+    globalExpoDb = openDatabaseSync(DATABASE_NAME);
+    globalDb = drizzle(globalExpoDb);
+  }
+  return globalDb;
+}
 
 export function DatabaseProvider({
   children,
   seedData = false,
 }: DatabaseProviderProps) {
-  // useDrizzleStudio(expoDb);
+  // データベースインスタンスをメモ化して初期化
+  const db = useMemo(() => initializeDb(), []);
 
   const [database, setDatabase] = useState<ReturnType<
     typeof getDatabase
@@ -60,9 +74,6 @@ export function DatabaseProvider({
       try {
         console.log('Initializing database after migrations...');
 
-        // データベースを開く
-        await openDatabase();
-
         if (!isMounted) {
           return;
         }
@@ -80,9 +91,8 @@ export function DatabaseProvider({
           }
         }
 
-        const db = getDatabase();
         if (isMounted) {
-          setDatabase(db);
+          setDatabase(globalDb);
           setIsReady(true);
           console.log('Database initialized successfully');
         }
