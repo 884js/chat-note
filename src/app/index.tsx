@@ -205,8 +205,9 @@ export default function HomeScreen() {
                   fontSize="$2"
                   px="$2.5"
                   py="$1"
-                  animation="quick"
+                  animation="bouncy"
                   pressStyle={{ scale: 0.98 }}
+                  animateOnly={['transform', 'opacity']}
                 >
                   表示
                 </Button>
@@ -257,7 +258,7 @@ export default function HomeScreen() {
             zIndex={100000}
           >
             <Sheet.Overlay
-              animation="lazy"
+              animation="quick"
               enterStyle={{ opacity: 0 }}
               exitStyle={{ opacity: 0 }}
               bg="rgba(0, 0, 0, 0.3)"
@@ -290,7 +291,9 @@ export default function HomeScreen() {
                     setShowViewOptions(false);
                   }}
                   rounded="$3"
-                  animation="quick"
+                  animation="bouncy"
+                  animateOnly={['transform', 'backgroundColor', 'borderColor']}
+                  pressStyle={{ scale: 0.98 }}
                 >
                   <YStack flex={1} items="flex-start">
                     <Text fontSize="$4" fontWeight="500">
@@ -315,7 +318,9 @@ export default function HomeScreen() {
                     setShowViewOptions(false);
                   }}
                   rounded="$3"
-                  animation="quick"
+                  animation="bouncy"
+                  animateOnly={['transform', 'backgroundColor', 'borderColor']}
+                  pressStyle={{ scale: 0.98 }}
                 >
                   <YStack flex={1} items="flex-start">
                     <Text fontSize="$4" fontWeight="500">
