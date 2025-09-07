@@ -15,9 +15,12 @@
     "icon": "./src/assets/images/icon.png",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.memoly",
+      "bundleIdentifier": "com.uki884.memoly",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "このアプリはFace IDを使用してアプリのロックを解除します。"
+        "NSFaceIDUsageDescription": "このアプリはFace IDを使用してアプリのロックを解除します。",
+        "NSCameraUsageDescription": "写真を撮影してメモに添付するためにカメラを使用します。",
+        "NSMicrophoneUsageDescription": "動画撮影時に音声を録音するためにマイクを使用します。",
+        "NSPhotoLibraryUsageDescription": "写真や画像をメモに添付するためにフォトライブラリにアクセスします。"
       }
     },
     "android": {
@@ -26,7 +29,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.memoly",
+      "package": "com.uki884.memoly",
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.USE_BIOMETRIC",
@@ -45,7 +48,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "photosPermission": "写真や画像をメモに添付するためにフォトライブラリにアクセスします。"
         }
       ],
       "expo-font",
