@@ -4,14 +4,16 @@ import type { GroupWithLastMemo } from '@/features/group/types';
 import { groupRepository } from '@/lib/database';
 import { Archive, ArrowLeft } from '@tamagui/lucide-icons';
 import { Stack, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, FlatList, RefreshControl } from 'react-native';
+import { Alert, FlatList, RefreshControl, useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Text, Theme, XStack, YStack } from 'tamagui';
 
 export default function ArchiveScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
   const [archivedGroups, setArchivedGroups] = useState<GroupWithLastMemo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -93,12 +95,16 @@ export default function ArchiveScreen() {
 
   return (
     <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
       <Stack.Screen
         options={{
           headerShown: false,
         }}
       />
-      <Theme name="light">
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
         <YStack flex={1} bg="$background">
           {/* ヘッダー */}
           <YStack

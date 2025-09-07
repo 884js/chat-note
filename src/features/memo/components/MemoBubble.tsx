@@ -2,7 +2,7 @@ import { formatTime } from '@/lib/dateUtils';
 import { Trash2 } from '@tamagui/lucide-icons';
 import { Image as ExpoImage } from 'expo-image';
 import { memo } from 'react';
-import { Alert, Linking, TouchableOpacity } from 'react-native';
+import { Alert, Linking, TouchableOpacity, useColorScheme } from 'react-native';
 import ParsedText from 'react-native-parsed-text';
 import { Text, XStack, YStack } from 'tamagui';
 import type { Memo } from '../types';
@@ -18,6 +18,7 @@ export const MemoBubble = memo(function MemoBubble({
   onLongPress,
   onImagePress,
 }: MemoBubbleProps) {
+  const colorScheme = useColorScheme();
   const handleLongPress = () => {
     if (onLongPress && !memo.isDeleted) {
       onLongPress(memo);
@@ -109,7 +110,7 @@ export const MemoBubble = memo(function MemoBubble({
                 style={{
                   fontSize: 15,
                   lineHeight: 22,
-                  color: '#0F172A',
+                  color: colorScheme === 'dark' ? '#F8FAFC' : '#0F172A',
                   letterSpacing: 0.15,
                   fontFamily: 'MPLUSRounded',
                 }}
@@ -117,7 +118,7 @@ export const MemoBubble = memo(function MemoBubble({
                   {
                     type: 'url',
                     style: {
-                      color: '#3B82F6',
+                      color: colorScheme === 'dark' ? '#60A5FA' : '#3B82F6',
                       textDecorationLine: 'underline',
                       fontWeight: '500',
                     },

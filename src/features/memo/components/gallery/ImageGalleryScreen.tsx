@@ -1,8 +1,9 @@
 import { useGroup } from '@/features/group/hooks/useGroup';
 import { ChevronLeft } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { memo, useCallback } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -24,6 +25,7 @@ export const ImageGalleryScreen = memo(function ImageGalleryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
 
   // Custom hooks
   const { group } = useGroup({ groupId: id || '' });
@@ -53,13 +55,17 @@ export const ImageGalleryScreen = memo(function ImageGalleryScreen() {
 
   return (
     <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
       <Stack.Screen
         options={{
           headerShown: false,
           contentStyle: { backgroundColor: '#000' },
         }}
       />
-      <Theme name="light">
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
         <YStack flex={1} bg="$background">
           {/* ヘッダー */}
           <XStack

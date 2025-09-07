@@ -13,7 +13,9 @@ import {
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -22,6 +24,7 @@ import {
   Separator,
   Spinner,
   Text,
+  Theme,
   XStack,
   YStack,
 } from 'tamagui';
@@ -29,6 +32,7 @@ import {
 export default function BackupScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
   const {
     isSaving,
     isSharing,
@@ -77,7 +81,13 @@ export default function BackupScreen() {
   };
 
   return (
-    <YStack flex={1} bg="$background">
+    <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+        <YStack flex={1} bg="$background">
       {/* ヘッダー */}
       <XStack
         pt={insets.top}
@@ -225,7 +235,9 @@ export default function BackupScreen() {
             </YStack>
           </Card>
         </YStack>
-      </ScrollView>
-    </YStack>
+        </ScrollView>
+        </YStack>
+      </Theme>
+    </>
   );
 }

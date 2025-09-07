@@ -2,11 +2,13 @@ import { GroupForm } from '@/features/group/components/GroupForm';
 import { GroupFormHeader } from '@/features/group/components/GroupFormHeader';
 import { useEditGroupForm } from '@/features/group/hooks/useEditGroupForm';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { YStack } from 'tamagui';
+import { StatusBar } from 'expo-status-bar';
+import { KeyboardAvoidingView, Platform, useColorScheme } from 'react-native';
+import { Theme, YStack } from 'tamagui';
 
 export default function EditGroupScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const colorScheme = useColorScheme();
 
   if (!id) {
     return null;
@@ -30,17 +32,22 @@ export default function EditGroupScreen() {
 
   return (
     <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
       <Stack.Screen
         options={{
           headerShown: false,
         }}
       />
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <YStack flex={1} bg="$background">
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <YStack flex={1} bg="$background">
           {/* ヘッダー */}
           <GroupFormHeader
             onCancel={handleCancel}
@@ -57,8 +64,9 @@ export default function EditGroupScreen() {
             onUpdateField={updateField}
             isSubmitting={isSubmitting}
           />
-        </YStack>
-      </KeyboardAvoidingView>
+          </YStack>
+        </KeyboardAvoidingView>
+      </Theme>
     </>
   );
 }

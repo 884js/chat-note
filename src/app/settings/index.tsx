@@ -9,7 +9,9 @@ import {
   Palette,
 } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import type { ReactElement } from 'react';
+import { useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -17,6 +19,7 @@ import {
   ListItem,
   ScrollView,
   Text,
+  Theme,
   XStack,
   YGroup,
   YStack,
@@ -35,6 +38,7 @@ interface SettingMenuItem {
 export default function SettingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
 
   const handleBack = () => {
     router.back();
@@ -87,7 +91,13 @@ export default function SettingsScreen() {
   ];
 
   return (
-    <YStack flex={1} bg="$background">
+    <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+        <YStack flex={1} bg="$background">
       {/* ヘッダー */}
       <XStack
         pt={insets.top}
@@ -203,7 +213,9 @@ export default function SettingsScreen() {
             </YStack>
           </Card>
         </YStack>
-      </ScrollView>
-    </YStack>
+        </ScrollView>
+        </YStack>
+      </Theme>
+    </>
   );
 }

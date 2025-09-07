@@ -6,8 +6,9 @@ import { useMemos } from '@/features/memo/hooks/useMemos';
 import type { Memo } from '@/features/memo/types';
 import { Image as ImageIcon, MoreVertical, X } from '@tamagui/lucide-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, useColorScheme } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Text, Theme, XStack, YStack } from 'tamagui';
@@ -16,6 +17,7 @@ export default function GroupDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
 
@@ -116,13 +118,17 @@ export default function GroupDetailScreen() {
 
   return (
     <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
       <Stack.Screen
         options={{
           headerShown: false,
           contentStyle: { backgroundColor: '#F8FAFC' },
         }}
       />
-      <Theme name="light">
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
         <YStack flex={1} bg="$backgroundHover">
           {/* カスタムヘッダー */}
           <XStack

@@ -2,10 +2,12 @@ import { GroupForm } from '@/features/group/components/GroupForm';
 import { GroupFormHeader } from '@/features/group/components/GroupFormHeader';
 import { useCreateGroupForm } from '@/features/group/hooks/useCreateGroupForm';
 import { Stack } from 'expo-router';
-import { KeyboardAvoidingView, Platform } from 'react-native';
-import { YStack } from 'tamagui';
+import { StatusBar } from 'expo-status-bar';
+import { KeyboardAvoidingView, Platform, useColorScheme } from 'react-native';
+import { Theme, YStack } from 'tamagui';
 
 export default function CreateGroupScreen() {
+  const colorScheme = useColorScheme();
   const {
     formData,
     errors,
@@ -18,17 +20,22 @@ export default function CreateGroupScreen() {
 
   return (
     <>
+      <StatusBar 
+        style={colorScheme === 'dark' ? 'light' : 'dark'} 
+        translucent 
+      />
       <Stack.Screen
         options={{
           headerShown: false,
         }}
       />
 
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <YStack flex={1} bg="$background">
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <YStack flex={1} bg="$background">
           {/* ヘッダー */}
           <GroupFormHeader
             onCancel={handleCancel}
@@ -45,8 +52,9 @@ export default function CreateGroupScreen() {
             onUpdateField={updateField}
             isSubmitting={isCreating}
           />
-        </YStack>
-      </KeyboardAvoidingView>
+          </YStack>
+        </KeyboardAvoidingView>
+      </Theme>
     </>
   );
 }
