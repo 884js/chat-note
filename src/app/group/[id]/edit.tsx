@@ -4,7 +4,7 @@ import { useEditGroupForm } from '@/features/group/hooks/useEditGroupForm';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, Platform, useColorScheme } from 'react-native';
-import { Theme, YStack } from 'tamagui';
+import { Spinner, Theme, YStack } from 'tamagui';
 
 export default function EditGroupScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,16 +25,11 @@ export default function EditGroupScreen() {
     handleCancel,
   } = useEditGroupForm(id);
 
-  // ローディング中は何も表示しない
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <>
-      <StatusBar 
-        style={colorScheme === 'dark' ? 'light' : 'dark'} 
-        translucent 
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        translucent
       />
       <Stack.Screen
         options={{
@@ -48,22 +43,43 @@ export default function EditGroupScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <YStack flex={1} bg="$background">
-          {/* ヘッダー */}
-          <GroupFormHeader
-            onCancel={handleCancel}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            canSubmit={canSubmit}
-            mode="edit"
-          />
+            {/* ローディング中のUI */}
+            {isLoading ? (
+              <>
+                {/* ヘッダー（ローディング時は無効化） */}
+                <GroupFormHeader
+                  onCancel={handleCancel}
+                  onSubmit={() => {}}
+                  isSubmitting={true}
+                  canSubmit={false}
+                  mode="edit"
+                />
 
-          {/* フォーム */}
-          <GroupForm
-            formData={formData}
-            errors={errors}
-            onUpdateField={updateField}
-            isSubmitting={isSubmitting}
-          />
+                {/* ローディングスピナー */}
+                <YStack flex={1} justify="center" items="center">
+                  <Spinner size="large" />
+                </YStack>
+              </>
+            ) : (
+              <>
+                {/* ヘッダー */}
+                <GroupFormHeader
+                  onCancel={handleCancel}
+                  onSubmit={handleSubmit}
+                  isSubmitting={isSubmitting}
+                  canSubmit={canSubmit}
+                  mode="edit"
+                />
+
+                {/* フォーム */}
+                <GroupForm
+                  formData={formData}
+                  errors={errors}
+                  onUpdateField={updateField}
+                  isSubmitting={isSubmitting}
+                />
+              </>
+            )}
           </YStack>
         </KeyboardAvoidingView>
       </Theme>

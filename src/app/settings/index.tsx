@@ -92,128 +92,128 @@ export default function SettingsScreen() {
 
   return (
     <>
-      <StatusBar 
-        style={colorScheme === 'dark' ? 'light' : 'dark'} 
-        translucent 
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        translucent
       />
       <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
         <YStack flex={1} bg="$background">
-      {/* ヘッダー */}
-      <XStack
-        pt={insets.top}
-        pb="$3"
-        px="$4"
-        bg="$color3"
-        borderBottomWidth={1}
-        borderBottomColor="$borderColor"
-        gap="$3"
-      >
-        <Button
-          size="$3"
-          chromeless
-          icon={<ArrowLeft size={24} />}
-          onPress={handleBack}
-        />
-        <Text fontSize="$6" fontWeight="bold" flex={1}>
-          設定
-        </Text>
-      </XStack>
+          {/* ヘッダー */}
+          <XStack
+            pt={insets.top}
+            pb="$3"
+            px="$4"
+            bg="$color3"
+            borderBottomWidth={1}
+            borderBottomColor="$borderColor"
+            gap="$3"
+          >
+            <Button
+              size="$3"
+              chromeless
+              icon={<ArrowLeft size={24} />}
+              onPress={handleBack}
+            />
+            <Text fontSize="$6" fontWeight="bold" flex={1}>
+              設定
+            </Text>
+          </XStack>
 
-      <ScrollView flex={1} showsVerticalScrollIndicator={false}>
-        <YStack p="$4" gap="$4">
-          {/* 設定メニュー */}
-          <YGroup bordered>
-            {menuItems.map((item) => (
-              <YGroup.Item key={item.id}>
-                <ListItem
-                  hoverTheme
-                  pressTheme
-                  title={item.title}
-                  subTitle={item.subtitle}
-                  icon={item.icon}
-                  iconAfter={
-                    item.badge ? (
-                      <XStack bg="$color5" px="$2" py="$0.5">
-                        <Text fontSize="$1" color="$color10">
-                          {item.badge}
-                        </Text>
-                      </XStack>
-                    ) : (
-                      <ChevronRight size={20} color="$color10" />
-                    )
-                  }
-                  onPress={item.onPress}
-                  disabled={item.disabled}
-                  opacity={item.disabled ? 0.5 : 1}
-                  bg="$background"
-                  py="$3"
-                />
-              </YGroup.Item>
-            ))}
-          </YGroup>
+          <ScrollView flex={1} showsVerticalScrollIndicator={false}>
+            <YStack p="$4" gap="$4">
+              {/* 設定メニュー */}
+              <YGroup bordered>
+                {menuItems.map((item) => (
+                  <YGroup.Item key={item.id}>
+                    <ListItem
+                      hoverTheme
+                      pressTheme
+                      title={item.title}
+                      subTitle={item.subtitle}
+                      icon={item.icon}
+                      iconAfter={
+                        item.badge ? (
+                          <XStack bg="$color5" px="$2" py="$0.5">
+                            <Text fontSize="$1" color="$color10">
+                              {item.badge}
+                            </Text>
+                          </XStack>
+                        ) : (
+                          <ChevronRight size={20} color="$color10" />
+                        )
+                      }
+                      onPress={item.onPress}
+                      disabled={item.disabled}
+                      opacity={item.disabled ? 0.5 : 1}
+                      bg="$background"
+                      py="$3"
+                    />
+                  </YGroup.Item>
+                ))}
+              </YGroup>
 
-          {/* アプリ情報 */}
-          <Card p="$4" bordered>
-            <YStack gap="$3">
-              <XStack gap="$2">
-                <Info size={20} color="$color11" />
-                <Text fontSize="$4" fontWeight="bold">
-                  アプリ情報
-                </Text>
-              </XStack>
-              <YStack gap="$1">
-                <Text fontSize="$2" color="$color10">
-                  Memoly
-                </Text>
-                <Text fontSize="$2" color="$color10">
-                  バージョン: 1.0.0
-                </Text>
-                <Text fontSize="$2" color="$color10">
-                  © 2025 Memoly
-                </Text>
-              </YStack>
+              {/* アプリ情報 */}
+              <Card p="$4" bordered>
+                <YStack gap="$3">
+                  <XStack gap="$2">
+                    <Info size={20} color="$color11" />
+                    <Text fontSize="$4" fontWeight="bold">
+                      アプリ情報
+                    </Text>
+                  </XStack>
+                  <YStack gap="$1">
+                    <Text fontSize="$2" color="$color10">
+                      Memoly
+                    </Text>
+                    <Text fontSize="$2" color="$color10">
+                      バージョン: 1.0.0
+                    </Text>
+                    <Text fontSize="$2" color="$color10">
+                      © 2025 Memoly
+                    </Text>
+                  </YStack>
+                </YStack>
+              </Card>
+
+              {/* ヘルプとサポート */}
+              <Card p="$4" bordered>
+                <YStack gap="$3">
+                  <XStack gap="$2">
+                    <HelpCircle size={20} color="$color11" />
+                    <Text fontSize="$4" fontWeight="bold">
+                      ヘルプとサポート
+                    </Text>
+                  </XStack>
+                  <YStack gap="$2">
+                    <Button
+                      size="$3"
+                      variant="outlined"
+                      onPress={() => handleComingSoon('利用規約')}
+                      disabled
+                    >
+                      利用規約
+                    </Button>
+                    <Button
+                      size="$3"
+                      variant="outlined"
+                      onPress={() => handleComingSoon('プライバシーポリシー')}
+                      disabled
+                    >
+                      プライバシーポリシー
+                    </Button>
+                    <Button
+                      size="$3"
+                      variant="outlined"
+                      onPress={() => handleComingSoon('お問い合わせ')}
+                      disabled
+                    >
+                      お問い合わせ
+                    </Button>
+                  </YStack>
+                </YStack>
+              </Card>
             </YStack>
-          </Card>
-
-          {/* ヘルプとサポート */}
-          <Card p="$4" bordered>
-            <YStack gap="$3">
-              <XStack gap="$2">
-                <HelpCircle size={20} color="$color11" />
-                <Text fontSize="$4" fontWeight="bold">
-                  ヘルプとサポート
-                </Text>
-              </XStack>
-              <YStack gap="$2">
-                <Button
-                  size="$3"
-                  variant="outlined"
-                  onPress={() => handleComingSoon('利用規約')}
-                  disabled
-                >
-                  利用規約
-                </Button>
-                <Button
-                  size="$3"
-                  variant="outlined"
-                  onPress={() => handleComingSoon('プライバシーポリシー')}
-                  disabled
-                >
-                  プライバシーポリシー
-                </Button>
-                <Button
-                  size="$3"
-                  variant="outlined"
-                  onPress={() => handleComingSoon('お問い合わせ')}
-                  disabled
-                >
-                  お問い合わせ
-                </Button>
-              </YStack>
-            </YStack>
-          </Card>
-        </YStack>
-        </ScrollView>
+          </ScrollView>
         </YStack>
       </Theme>
     </>

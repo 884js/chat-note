@@ -13,10 +13,10 @@ import {
   Plus,
 } from '@tamagui/lucide-icons';
 import { Stack, useFocusEffect, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
 import { Button, Sheet, Text, Theme, XStack, YStack } from 'tamagui';
 
 export default function HomeScreen() {

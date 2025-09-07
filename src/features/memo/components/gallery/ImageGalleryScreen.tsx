@@ -55,9 +55,9 @@ export const ImageGalleryScreen = memo(function ImageGalleryScreen() {
 
   return (
     <>
-      <StatusBar 
-        style={colorScheme === 'dark' ? 'light' : 'dark'} 
-        translucent 
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        translucent
       />
       <Stack.Screen
         options={{

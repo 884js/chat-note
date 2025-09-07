@@ -95,9 +95,9 @@ export default function ArchiveScreen() {
 
   return (
     <>
-      <StatusBar 
-        style={colorScheme === 'dark' ? 'light' : 'dark'} 
-        translucent 
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        translucent
       />
       <Stack.Screen
         options={{

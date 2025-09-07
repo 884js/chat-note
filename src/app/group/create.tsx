@@ -20,9 +20,9 @@ export default function CreateGroupScreen() {
 
   return (
     <>
-      <StatusBar 
-        style={colorScheme === 'dark' ? 'light' : 'dark'} 
-        translucent 
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        translucent
       />
       <Stack.Screen
         options={{
@@ -36,22 +36,22 @@ export default function CreateGroupScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <YStack flex={1} bg="$background">
-          {/* ヘッダー */}
-          <GroupFormHeader
-            onCancel={handleCancel}
-            onSubmit={handleCreate}
-            isSubmitting={isCreating}
-            canSubmit={canSubmit}
-            mode="create"
-          />
+            {/* ヘッダー */}
+            <GroupFormHeader
+              onCancel={handleCancel}
+              onSubmit={handleCreate}
+              isSubmitting={isCreating}
+              canSubmit={canSubmit}
+              mode="create"
+            />
 
-          {/* フォーム */}
-          <GroupForm
-            formData={formData}
-            errors={errors}
-            onUpdateField={updateField}
-            isSubmitting={isCreating}
-          />
+            {/* フォーム */}
+            <GroupForm
+              formData={formData}
+              errors={errors}
+              onUpdateField={updateField}
+              isSubmitting={isCreating}
+            />
           </YStack>
         </KeyboardAvoidingView>
       </Theme>
