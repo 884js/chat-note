@@ -44,11 +44,7 @@ export function MemoInput({
   // 自動フォーカス
   useEffect(() => {
     if (autoFocus && textAreaRef.current) {
-      // 少し遅延を入れてフォーカスを確実にする
-      const timer = setTimeout(() => {
-        textAreaRef.current?.focus();
-      }, 300);
-      return () => clearTimeout(timer);
+      textAreaRef.current?.focus();
     }
   }, [autoFocus]);
 
