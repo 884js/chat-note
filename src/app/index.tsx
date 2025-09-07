@@ -14,13 +14,15 @@ import {
 } from '@tamagui/lucide-icons';
 import { Stack, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, useColorScheme } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { Button, Sheet, Text, Theme, XStack, YStack } from 'tamagui';
 
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
   const { groups, isLoading, refetch, archiveGroup } = useGroups('lastUpdated');
   const { viewMode, setViewMode } = useViewMode();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -127,17 +129,21 @@ export default function HomeScreen() {
 
   return (
     <>
+      <StatusBar
+        style={colorScheme === 'dark' ? 'light' : 'dark'}
+        translucent
+      />
       <Stack.Screen
         options={{
           headerShown: false,
         }}
       />
-      <Theme name="light">
+      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
         <YStack flex={1} bg="$backgroundHover">
           {/* ヘッダー */}
           <YStack
             bg="$background"
-            pt={insets.top + 16}
+            pt={Math.max(insets.top, 44) + 16} // 最小44px（ステータスバー高さ）を確保
             pb="$3"
             px="$4"
             shadowColor="$shadowColor"
