@@ -65,9 +65,9 @@ export function DatabaseProvider({
 
         setDatabase(db);
         setIsReady(true);
-        console.log("Database initialized successfully");
+        console.log('Database initialized successfully');
       } catch (err) {
-        console.error("Failed to initialize database:", err);
+        console.error('Failed to initialize database:', err);
         setError(err as Error);
         setIsReady(true); // エラーでも ready にして、エラー表示可能にする
       }
@@ -77,7 +77,7 @@ export function DatabaseProvider({
   }, []);
 
   return (
-      <DatabaseContext.Provider value={{ database, isReady, error }}>
+    <DatabaseContext.Provider value={{ database, isReady, error }}>
       {children}
     </DatabaseContext.Provider>
   );
