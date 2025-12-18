@@ -1,5 +1,5 @@
 import { Send } from '@tamagui/lucide-icons';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, type TextInput } from 'react-native';
 import { Button, ScrollView, TextArea, XStack, YStack } from 'tamagui';
 import { ImagePickerButton } from './ImagePickerButton';
@@ -40,13 +40,6 @@ export function MemoInput({
   const handleRemoveImage = useCallback(() => {
     setSelectedImage(null);
   }, []);
-
-  // 自動フォーカス
-  useEffect(() => {
-    if (autoFocus && textAreaRef.current) {
-      textAreaRef.current?.focus();
-    }
-  }, [autoFocus]);
 
   const canSend =
     (message.trim().length > 0 || selectedImage !== null) && !isLoading;
